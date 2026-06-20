@@ -133,16 +133,15 @@ Carregador GoodWe HCA G2
 ```
 
 ---
-
 ## Equipe
 
-**Integrantes do Projeto**
-
-* Lucas Ribeiro Gesini RM569383
-* Caleb Gonçalves Garcia de Souza RM568743
-* Filipe Souza Nascimento RM573758
-* Raphael De Freitas Silva RM570089
-* Paulo Henrique Gonçalves Bueno RM570456
+| Nome | RM |
+|------|------|
+| Lucas Ribeiro Gesini | RM569383 |
+| Calebe Gonçalves Garcia de Souza | RM568743 |
+| Filipe Souza Nascimento | RM573758 |
+| Rafael De Freitas Silva | RM570089 |
+| Paulo Henrique Gonçalves Bueno | RM570456 |
 ---
 
 ## Parceria
