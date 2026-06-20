@@ -122,12 +122,3 @@ O documento deve conter:
 * Treinamento;
 * Inferência;
 * Atualização dos modelos.
-
----
-
-# Conclusão
-
-A arquitetura proposta para o EV ChargeOps integra dispositivos físicos, conectividade, processamento de dados e Inteligência Artificial em uma única plataforma. A combinação de previsão de consumo e detecção de anomalias permite otimizar o uso da infraestrutura de recarga, reduzir custos operacionais e oferecer uma experiência mais eficiente para gestores e usuários.
-
-Essa abordagem transforma os carregadores compartilhados em uma infraestrutura inteligente, preparada para atender ao crescimento da mobilidade elétrica e às demandas futuras de gestão energética.
-
