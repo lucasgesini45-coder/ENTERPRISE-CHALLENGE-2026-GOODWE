@@ -1,105 +1,54 @@
-# Fluxo de Dados da Plataforma EV ChargeOps
+## Fluxograma de Dados
 
-## Visão Geral
-
-O fluxo de dados descreve o caminho percorrido pelas informações desde a coleta realizada pelo carregador até a geração da fatura para o usuário.
+Representação do caminho percorrido pelos dados:
 
 ```text
-Veículo
-   ↓
-Carregador GoodWe
-   ↓
-API SEMS
-   ↓
+Carregador
+    ↓
+API GoodWe SEMS
+    ↓
 Banco de Dados
-   ↓
-Motor de IA
-   ↓
+    ↓
+Modelos de IA
+    ↓
 Dashboard
-   ↓
-Faturamento
+    ↓
+Fatura
 ```
 
 ---
 
-## Etapa 1 – Coleta
+## Documento de IA
 
-Durante a sessão de carregamento, o carregador registra:
+O documento deve conter:
 
-- Potência instantânea
-- Energia consumida
-- Duração da sessão
-- Status operacional
+### Previsão de Consumo
 
----
+* Algoritmo utilizado;
+* Variáveis de entrada;
+* Variáveis de saída;
+* Métricas de avaliação.
 
-## Etapa 2 – Transmissão
+### Detecção de Anomalias
 
-Os dados são enviados para a nuvem através da API GoodWe SEMS.
+* Técnica escolhida;
+* Estratégia de detecção;
+* Critérios de alerta;
+* Taxa esperada de falsos positivos.
 
-### Tecnologias
+### Pipeline de Dados
 
-- LAN
-- Wi-Fi
-- API REST
-
----
-
-## Etapa 3 – Persistência
-
-Os dados são armazenados em banco de dados relacional.
-
-### Informações Registradas
-
-- Usuário
-- Veículo
-- Sessão
-- Consumo
-- Carregador
+* Coleta;
+* Pré-processamento;
+* Treinamento;
+* Inferência;
+* Atualização dos modelos.
 
 ---
 
-## Etapa 4 – Processamento por IA
+# Conclusão
 
-Os dados armazenados alimentam os modelos de Inteligência Artificial.
+A arquitetura proposta para o EV ChargeOps integra dispositivos físicos, conectividade, processamento de dados e Inteligência Artificial em uma única plataforma. A combinação de previsão de consumo e detecção de anomalias permite otimizar o uso da infraestrutura de recarga, reduzir custos operacionais e oferecer uma experiência mais eficiente para gestores e usuários.
 
-### Objetivos
+Essa abordagem transforma os carregadores compartilhados em uma infraestrutura inteligente, preparada para atender ao crescimento da mobilidade elétrica e às demandas futuras de gestão energética.
 
-- Previsão de consumo
-- Detecção de anomalias
-- Análise comportamental
-
----
-
-## Etapa 5 – Visualização
-
-As informações processadas são disponibilizadas em dashboards.
-
-### Usuário
-
-- Consumo individual
-- Histórico de sessões
-- Custos
-
-### Gestor
-
-- Indicadores operacionais
-- Utilização dos carregadores
-- Alertas
-
----
-
-## Etapa 6 – Faturamento
-
-Ao final do ciclo mensal:
-
-1. O sistema consolida todas as sessões.
-2. Calcula o consumo total.
-3. Aplica a tarifa vigente.
-4. Gera a fatura individual.
-
----
-
-## Resultado Esperado
-
-O fluxo de dados garante rastreabilidade completa desde a sessão de carregamento até a cobrança final do usuário.
