@@ -2,35 +2,60 @@
 
 ## Recarga Gratuita
 
-A instituição responsável absorve os custos de energia e operação.
+O usuário não paga pela energia consumida.
+
+A instituição responsável absorve os custos da instalação e operação.
+
+Comum em:
+
+* Universidades;
+* Empresas;
+* Centros comerciais.
+
+---
 
 ## Cobrança por kWh
 
-O usuário paga apenas pela energia efetivamente consumida.
+O usuário paga pela quantidade de energia efetivamente consumida.
 
 ### Vantagens
 
-* Transparência;
-* Justiça na cobrança;
-* Fácil auditoria.
+* Modelo mais justo;
+* Cobrança proporcional ao consumo real.
+
+---
 
 ## Cobrança por Tempo
 
-A cobrança ocorre conforme o período de permanência conectado ao carregador.
+O valor é calculado com base no tempo em que o veículo permanece conectado ao carregador.
 
 ### Objetivo
 
-Estimular a rotatividade das vagas.
+* Aumentar a rotatividade das vagas;
+* Evitar ocupação desnecessária.
+
+---
 
 ## Assinatura Mensal
 
-O usuário paga uma mensalidade para utilizar a infraestrutura.
+Os usuários pagam uma mensalidade fixa para utilizar a infraestrutura.
+
+Dependendo do plano contratado, podem existir:
+
+* Limites de utilização;
+* Uso ilimitado;
+* Benefícios adicionais.
+
+---
 
 ## Rateio Condominial
 
-Os custos são divididos entre os moradores.
+Modelo amplamente utilizado em condomínios residenciais.
 
-O rateio pode ocorrer:
+Os custos são distribuídos entre os moradores considerando:
 
-* De forma igualitária;
-* Proporcional ao consumo individual.
+* Consumo individual;
+* Custos de manutenção;
+* Custos de instalação.
+
+---
