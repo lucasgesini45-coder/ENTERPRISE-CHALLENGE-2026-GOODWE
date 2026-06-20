@@ -1,157 +1,180 @@
-# EV ChargeOps — Sprint 02
+# Regulamentação — ANEEL RN 1.000/2021
 
-## Regulamentação — ANEEL RN 1.000/2021
-
-**Junho de 2026**
+**Atualizado em:** Junho de 2026
 
 ---
 
-## O que a norma cobre
+# O que a norma cobre
 
 A **Resolução Normativa (RN) 1.000/2021 da ANEEL** consolidou as regras sobre fornecimento de energia elétrica no Brasil, revogando diversas normas anteriores, incluindo a RN 819/2018, que tratava especificamente da recarga de veículos elétricos.
 
-O tema de recarga de veículos elétricos está localizado no **Capítulo V**, a partir do **Artigo 550**, dentro do bloco de atividades acessórias.
+O tema de recarga de veículos elétricos (VEs) está localizado no **Capítulo V**, a partir do **Artigo 550**, dentro do bloco de **Atividades Acessórias**.
 
-### Definição de Estação de Recarga
+A norma define uma **Estação de Recarga** como:
 
-Uma estação de recarga é composta por:
+> Conjunto de softwares e equipamentos destinados ao fornecimento de corrente alternada (CA) ou corrente contínua (CC) para veículos elétricos, incluindo funções de controle, supervisão e comunicação, instalados externamente ao veículo.
 
-- Softwares;
-- Equipamentos para fornecimento de energia em corrente alternada (CA) ou contínua (CC);
-- Sistemas de controle;
-- Sistemas de comunicação;
+Para o projeto **EV ChargeOps**, três pilares regulatórios devem ser observados:
 
-Todos instalados externamente ao veículo.
+1. Exploração comercial da recarga;
+2. Comunicação com a distribuidora de energia;
+3. Utilização de protocolos abertos de comunicação.
 
 ---
 
-## Três pilares da regulamentação
+# Exploração Comercial da Recarga
 
-### 1. Exploração Comercial da Recarga
-
-A norma estabelece que qualquer pessoa física ou jurídica pode instalar e operar estações de recarga mediante cobrança pelo serviço.
+A RN 1.000/2021 estabelece que qualquer pessoa física ou jurídica pode instalar e operar estações de recarga para veículos elétricos.
 
 Exemplos:
 
 - Condomínios;
 - Postos de combustível;
-- Shopping centers;
-- Empresas privadas.
+- Shoppings;
+- Empresas privadas;
+- Operadores de eletropostos.
 
-### Regras Importantes
+## Regras principais
 
-Os preços são livremente negociados entre operador e usuário.
+- A atividade é livre e não exige concessão para venda do serviço de recarga.
+- Os preços podem ser definidos livremente pelo operador.
+- A cobrança pelo carregamento não é considerada comercialização de energia elétrica.
+- A atividade é classificada como atividade acessória ao serviço de distribuição.
 
-A recarga de veículos elétricos **não é considerada comercialização de energia elétrica**.
+## Participação das Distribuidoras
 
-Distribuidoras podem instalar estações públicas, desde que a atividade seja contabilizada separadamente do serviço regulado.
+As distribuidoras podem instalar estações públicas de recarga, desde que:
 
-### Restrições
+- Operem por sua conta e risco;
+- Mantenham separação contábil da atividade regulada de distribuição.
 
-É proibido utilizar tecnologia **V2G (Vehicle-to-Grid)** para injetar energia do veículo na rede.
+## Restrições
 
-A atividade de recarga não pode ser caracterizada como venda regulada de energia elétrica.
+- ❌ É proibida a injeção de energia do veículo na rede elétrica (**Vehicle-to-Grid – V2G**).
+- ❌ A operação não pode ser caracterizada como comercialização regulada de energia elétrica.
 
 ---
 
-### 2. Comunicação com a Distribuidora
+# Comunicação com a Distribuidora
 
-Antes da ativação de uma estação, o responsável deve comunicar a distribuidora quando houver:
+Antes da energização da estação, o responsável pela instalação deve comunicar a distribuidora local quando houver necessidade de:
 
-- Necessidade de reforço da rede elétrica;
+- Reforço da rede elétrica;
 - Alteração do sistema de medição;
-- Mudança do nível de tensão.
+- Mudança do nível de tensão de atendimento.
 
-#### Quando não é necessário?
+## Quando não é obrigatório comunicar?
 
-Pequenas instalações em baixa tensão que não causem impactos na rede normalmente não exigem comunicação prévia.
+A comunicação prévia pode não ser necessária em instalações pequenas que:
 
-### Requisitos para o EV ChargeOps
+- Não alterem a demanda da rede;
+- Não exijam adequações elétricas;
+- Permaneçam dentro das condições já contratadas.
 
-- Registrar a comunicação realizada;
-- Armazenar comprovantes;
-- Vincular a documentação ao cadastro da estação.
+## Responsabilidades das Distribuidoras
+
+As distribuidoras devem:
+
+- Consolidar os dados recebidos;
+- Reportar informações à ANEEL semestralmente.
+
+Os custos de adequação da rede seguem os critérios definidos pelo:
+
+- PRODIST;
+- Condições Gerais de Fornecimento.
+
+## Aplicação no EV ChargeOps
+
+O sistema deverá:
+
+- Registrar a comunicação enviada à distribuidora;
+- Armazenar documentos e comprovantes;
+- Vincular o registro à estação cadastrada;
+- Permitir auditoria futura.
 
 ---
 
-### 3. Protocolos Abertos
+# Protocolos Abertos
 
-Estações operadas comercialmente devem utilizar protocolos abertos para:
+A RN 1.000/2021 determina que estações de recarga operadas por terceiros (não exclusivas para uso privado) utilizem protocolos abertos para comunicação e supervisão remota.
 
-- Comunicação;
-- Supervisão;
-- Controle remoto.
+## Objetivo
 
-O objetivo é garantir:
+Garantir:
 
 - Interoperabilidade;
-- Independência de fabricante;
-- Facilidade de auditoria;
-- Escalabilidade futura.
+- Integração entre fabricantes;
+- Fiscalização;
+- Auditoria;
+- Livre concorrência.
+
+O sistema não deve depender de protocolos proprietários.
 
 ---
 
-## 🔌 Protocolos Compatíveis
+# Protocolos Relevantes para o Projeto
 
 | Protocolo | Camada | Finalidade |
-|------------|---------|-------------|
-| **OCPP 1.6 / 2.0.1** | Aplicação | Comunicação entre carregadores e sistema de gestão |
-| **OCPI** | Aplicação | Troca de dados entre operadores de recarga |
-| **Modbus RTU/TCP** | Campo/LAN | Comunicação com inversores e medidores |
-| **RS-485** | Física/Serial | Interface utilizada pelo GoodWe HCA G2 |
-| **LAN / Wi-Fi** | Rede | Integração com portal SEMS e APIs |
-| **Bluetooth** | Rede Local | Configuração inicial via SolarGo |
-| **RFID (ISO 14443)** | Autenticação | Identificação do usuário para iniciar a recarga |
+|------------|---------|------------|
+| OCPP 1.6 / 2.0.1 | Aplicação | Comunicação entre carregadores e sistema de gestão (back-end) |
+| OCPI | Aplicação | Integração entre operadores de recarga, roaming e faturamento |
+| Modbus RTU/TCP | Campo / LAN | Comunicação industrial entre carregadores, inversores e medidores |
+| RS-485 | Física / Serial | Comunicação do GoodWe HCA G2 com inversores e medidores |
+| LAN / Wi-Fi | Rede | Conexão ao portal SEMS e APIs REST |
+| Bluetooth | Rede Local | Configuração inicial via aplicativo SolarGo |
+| RFID (ISO 14443) | Autenticação | Identificação do usuário para iniciar recargas |
 
 ---
 
-## Aplicação no Projeto EV ChargeOps
+# Aplicação no EV ChargeOps
 
-### OCPP como padrão principal
+Para garantir conformidade regulatória e escalabilidade futura:
 
-O sistema deve adotar o protocolo:
+## Controle dos Carregadores
 
-```text
-OCPP 1.6 ou OCPP 2.0.1
-```
+Utilizar:
 
-Motivos:
+- ✅ OCPP 1.6
+- ✅ OCPP 2.0.1
 
-- Conformidade regulatória;
-- Compatibilidade com diversos fabricantes;
-- Maior escalabilidade;
-- Facilidade de manutenção.
+Como protocolo principal de comunicação.
 
-### Integração Complementar
+## Monitoramento e Telemetria
 
-- API SEMS → Monitoramento e coleta de dados.
-- OCPP → Controle operacional dos carregadores.
+Utilizar:
 
----
+- ✅ API SEMS GoodWe
 
-## Impacto da Norma no Sistema
+Para:
 
-| Exigência da ANEEL | Implementação no EV ChargeOps |
-|-------------------|------------------------------|
-| Exploração comercial livre | Permitir tarifa configurável pelo operador |
-| Comunicação à distribuidora | Criar fluxo de cadastro com registro da comunicação |
-| Protocolos abertos | Utilizar OCPP para controle dos carregadores |
-| V2G proibido | Não implementar injeção de energia na rede |
-| Responsabilidade por danos elétricos | Registrar logs de tensão e eventos por sessão |
+- Monitoramento da estação;
+- Coleta de dados energéticos;
+- Integração com geração fotovoltaica.
+
+## Evitar Dependência de Fabricante
+
+O sistema deve permitir integração futura com carregadores de diferentes fabricantes sem necessidade de alterações estruturais.
 
 ---
 
-## Conclusão
+# Resumo do Impacto no Projeto
 
-A RN 1.000/2021 estabelece diretrizes claras para a operação de estações de recarga de veículos elétricos no Brasil.
+| Exigência da RN 1.000/2021 | Implementação no EV ChargeOps |
+|----------------------------|-------------------------------|
+| Exploração comercial livre | Tarifas configuráveis por operador |
+| Comunicação à distribuidora | Fluxo de cadastro com registro e armazenamento do comprovante |
+| Protocolos abertos | Utilização de OCPP como protocolo principal |
+| Integração operacional | Uso da API SEMS para monitoramento e coleta de dados |
+| Proibição de V2G | Não implementar injeção de energia na rede |
+| Responsabilidade por danos elétricos | Armazenar logs de tensão e dados de cada sessão |
 
-Para manter a conformidade regulatória, o **EV ChargeOps** deverá:
+---
 
-- Utilizar protocolos abertos;
-- Registrar comunicações obrigatórias à distribuidora;
-- Permitir cobrança livre pelos operadores;
-- Evitar funcionalidades de V2G;
-- Manter histórico e logs operacionais para auditoria e suporte.
+# Conclusão
+
+A RN 1.000/2021 permite a exploração comercial da recarga de veículos elétricos de forma livre, desde que sejam observadas as exigências de comunicação com a distribuidora e o uso de protocolos abertos.
+
+Para garantir conformidade regulatória, interoperabilidade e escalabilidade, o **EV ChargeOps** adotará o protocolo **OCPP** como padrão de comunicação dos carregadores, utilizará a **API SEMS da GoodWe** para monitoramento e manterá registros de todas as comunicações e eventos operacionais da infraestrutura de recarga.
 
 ---
 
