@@ -1,114 +1,206 @@
-# Arquitetura da Plataforma EV ChargeOps
+# Arquitetura da Plataforma e Inteligência Artificial
 
 ## Introdução
 
-A plataforma EV ChargeOps foi projetada utilizando uma arquitetura em camadas, permitindo escalabilidade, modularidade e integração com diferentes fabricantes de carregadores e sistemas de gestão energética.
+O EV ChargeOps é uma plataforma inteligente para monitoramento e gestão de carregadores de veículos elétricos. A solução integra dispositivos físicos, conectividade, processamento de dados e Inteligência Artificial para transformar informações operacionais em conhecimento útil para usuários e gestores.
 
-O modelo arquitetural é dividido em quatro camadas principais:
+A arquitetura foi estruturada em quatro camadas principais:
 
-1. Camada Física
-2. Camada de Conectividade
-3. Camada de Aplicação
-4. Camada de Apresentação
+* Camada Física;
+* Camada de Conectividade;
+* Camada de Aplicação;
+* Camada de Apresentação.
+
+A plataforma também incorpora modelos de Inteligência Artificial voltados para:
+
+* Previsão de consumo energético;
+* Detecção de anomalias;
+* Análise comportamental de usuários.
 
 ---
 
-## Camada Física
+# Arquitetura da Plataforma
 
-A camada física é responsável pela coleta dos dados gerados durante as sessões de carregamento.
+A arquitetura segue o modelo de camadas amplamente utilizado em soluções de Internet das Coisas (IoT), permitindo modularidade, escalabilidade e facilidade de manutenção.
 
-### Componentes
+## Camada Física (Carregador)
 
-- Carregador GoodWe HCA G2
-- Medidores de energia
-- Veículos elétricos
-- Cartões RFID
+A camada física corresponde aos dispositivos responsáveis pela coleta de dados e interação direta com os veículos elétricos.
 
-### Funções
+### Responsabilidades
 
-- Fornecimento de energia ao veículo
-- Identificação dos usuários
-- Registro de potência e consumo
-- Comunicação com sistemas externos
+* Leitura de tensão, corrente e potência em tempo real;
+* Registro das sessões de carregamento;
+* Identificação de usuários;
+* Comunicação com os sistemas superiores.
+
+### Dados Coletados
+
+* Tensão (V);
+* Corrente (A);
+* Potência (kW);
+* Energia consumida (kWh);
+* Data e hora da sessão;
+* Identificação do usuário.
+
+### Tecnologias Utilizadas
+
+* RFID;
+* Wi-Fi;
+* RS-485;
+* MQTT.
 
 ---
 
 ## Camada de Conectividade
 
-Responsável pela transmissão dos dados entre os equipamentos físicos e a plataforma.
+Responsável pela transmissão segura e confiável dos dados coletados.
 
-### Tecnologias Utilizadas
+### Principais Funções
 
-- RS-485
-- Modbus RTU
-- Ethernet (LAN)
-- Wi-Fi
-- Bluetooth
-- API GoodWe SEMS
+* Envio de dados para a nuvem;
+* Comunicação entre dispositivos e plataforma;
+* Autenticação e segurança;
+* Integração com APIs externas.
 
-### Objetivos
+### Tecnologias
 
-- Garantir comunicação segura
-- Transmitir dados em tempo real
-- Integrar dispositivos e sistemas
+* MQTT;
+* HTTPS;
+* Wi-Fi;
+* Redes 4G/5G;
+* API GoodWe SEMS.
 
 ---
 
 ## Camada de Aplicação
 
-Representa o núcleo operacional do EV ChargeOps.
+Representa o núcleo da plataforma.
+
+### Responsabilidades
+
+* Processamento dos dados;
+* Armazenamento de informações;
+* Execução dos modelos de IA;
+* Geração de relatórios;
+* Cálculo de faturas.
 
 ### Componentes
 
-#### Backend
-
-Responsável pelo processamento das regras de negócio.
-
 #### Banco de Dados
 
-Armazena:
+Armazenamento de:
 
-- Usuários
-- Veículos
-- Sessões
-- Faturas
+* Usuários;
+* Veículos;
+* Sessões de recarga;
+* Histórico de consumo;
+* Faturas.
 
-#### Motor de Rateio
+#### APIs REST
 
-Calcula os custos individuais de cada usuário.
+Disponibilizam os dados para dashboards e aplicações externas.
 
-#### Módulos de IA
+#### Motor de Inteligência Artificial
 
-Executam análises preditivas e monitoramento inteligente.
+Executa os algoritmos responsáveis pelas análises preditivas e detecção de anomalias.
 
 ---
 
 ## Camada de Apresentação
 
-Camada responsável pela interação com os usuários.
+Interface utilizada pelos usuários e administradores.
 
-### Dashboard do Usuário
+### Funcionalidades
 
-Permite:
+* Dashboard em tempo real;
+* Relatórios de consumo;
+* Alertas operacionais;
+* Consulta de faturas;
+* Visualização de previsões de consumo.
 
-- Visualizar consumo
-- Consultar histórico
-- Acompanhar faturas
+### Plataformas
 
-### Dashboard do Gestor
-
-Permite:
-
-- Monitorar carregadores
-- Gerenciar usuários
-- Emitir relatórios
+* Aplicação Web;
+* Aplicação Mobile.
 
 ---
 
-## Benefícios da Arquitetura
+# Fluxo de Dados
 
-- Escalabilidade
-- Modularidade
-- Interoperabilidade
-- Conformidade regulatória
-- Facilidade de manutenção
+O fluxo de dados da plataforma ocorre em seis etapas principais.
+
+## 1. Coleta
+
+O carregador registra:
+
+* Tensão;
+* Corrente;
+* Potência;
+* Energia consumida.
+
+## 2. Transmissão
+
+Os dados são enviados para a nuvem por meio da API GoodWe SEMS.
+
+## 3. Persistência
+
+As informações são armazenadas em banco de dados relacional.
+
+## 4. Processamento
+
+Os modelos de Inteligência Artificial analisam os dados armazenados.
+
+## 5. Visualização
+
+Os resultados são apresentados em dashboards e relatórios.
+
+## 6. Faturamento
+
+O sistema calcula automaticamente os valores devidos pelos usuários.
+
+---
+
+# Inteligência Artificial
+
+A Inteligência Artificial é responsável por transformar dados operacionais em informações úteis para tomada de decisão.
+
+## IA 1 — Previsão de Consumo
+
+### Objetivo
+
+Prever o consumo energético futuro dos usuários.
+
+### Técnica Utilizada
+
+Modelos de Regressão:
+
+* Regressão Linear;
+* Random Forest Regressor;
+* XGBoost.
+
+### Dados Necessários
+
+* Histórico de sessões;
+* Horário de carregamento;
+* Duração da sessão;
+* Energia consumida;
+* Tipo de veículo;
+* Temperatura ambiente;
+* Tarifas energéticas;
+* Dia da semana;
+* Mês;
+* Feriados.
+
+### Benefícios
+
+* Planejamento de gastos;
+* Previsão de demanda;
+* Otimização da rede elétrica;
+* Redução de desperdícios energéticos.
+
+### Métricas de Avaliação
+
+* MAPE (Mean Absolute Percentage Error);
+* RMSE (Root Mean Squared Error);
+* R² (Coeficiente de Determinação).
