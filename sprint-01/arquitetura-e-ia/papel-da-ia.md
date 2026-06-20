@@ -1,197 +1,258 @@
-# Aplicações de Inteligência Artificial
+# Inteligência Artificial
 
-## Introdução
+A Inteligência Artificial desempenha um papel estratégico no EV ChargeOps, transformando dados brutos de consumo em informações acionáveis para usuários e gestores. Nesta etapa do projeto, foram definidas duas aplicações principais de IA:
 
-A Inteligência Artificial ocupa papel estratégico na plataforma EV ChargeOps, transformando dados brutos de consumo em informações acionáveis. A proposta prevê o desenvolvimento de aplicações capazes de apoiar a gestão da infraestrutura de recarga compartilhada, otimizar o consumo energético e identificar comportamentos anormais durante as sessões de carregamento.
+* Previsão de Consumo Energético;
+* Detecção de Anomalias.
 
-Foram definidas duas aplicações principais de IA:
-
-1. Previsão de Consumo Energético;
-2. Detecção de Anomalias.
-
-Além disso, são apresentadas aplicações complementares que poderão ser incorporadas em futuras versões da plataforma.
+Além dessas aplicações, foram identificadas oportunidades futuras para ampliar a inteligência da plataforma.
 
 ---
 
-# IA 1 – Previsão de Consumo
+## IA 1 — Previsão de Consumo
 
-## Objetivo
+### Técnica Utilizada
 
-Prever o consumo futuro de energia com base no histórico de utilização dos carregadores, permitindo um melhor planejamento da demanda energética e dos custos associados às recargas.
+**Regressão**
 
-## Técnica Utilizada
+A regressão é uma das técnicas mais utilizadas para previsão de consumo energético. Seu objetivo é identificar a relação entre variáveis de entrada e o consumo de energia esperado.
 
-### Regressão
+A **Regressão Linear** utiliza o método dos mínimos quadrados para ajustar coeficientes que minimizam os erros de previsão, considerando variáveis como:
 
-A regressão é uma das principais técnicas utilizadas para previsão de consumo energético.
+* Hora do dia;
+* Dia da semana;
+* Temperatura ambiente;
+* Tipo de veículo elétrico.
 
-A Regressão Linear ajusta coeficientes capazes de minimizar a soma dos quadrados dos resíduos (Método dos Mínimos Quadrados), identificando relações entre variáveis de entrada e o consumo energético.
+Para cenários mais complexos, podem ser utilizados algoritmos mais robustos, como:
 
-Para cenários mais complexos, algoritmos como:
+* Random Forest Regressor;
+* XGBoost.
 
-- Random Forest Regressor
-- XGBoost
+Esses modelos conseguem capturar padrões não lineares, sazonalidades e comportamentos complexos de consumo.
 
-podem apresentar desempenho superior, sendo capazes de capturar padrões não lineares e comportamentos sazonais.
-
----
-
-## Dados Necessários
-
-O treinamento dos modelos requer informações históricas sobre o uso da infraestrutura:
-
-- Histórico de sessões de carregamento;
-- Data e hora das sessões;
-- Duração da recarga;
-- Energia consumida (kWh);
-- Identificação do usuário;
-- Identificação do veículo;
-- Temperatura ambiente;
-- Tarifas de energia;
-- Dia da semana;
-- Mês;
-- Feriados.
-
----
-
-## Benefícios
-
-A utilização de modelos preditivos permite:
-
-- Planejamento das recargas em períodos de menor tarifa;
-- Previsão da demanda agregada da infraestrutura;
-- Melhor distribuição da carga elétrica;
-- Geração de estimativas de gasto mensal;
-- Redução de desperdícios energéticos;
-- Agendamento inteligente das sessões de carregamento.
-
-Estudos recentes demonstram que modelos de Machine Learning podem alcançar valores de Erro Percentual Absoluto Médio (MAPE) inferiores a 5%, evidenciando elevada precisão para previsão de consumo energético.
-
----
-
-## Pipeline da IA de Previsão
+### Pipeline da IA
 
 ```text
-Dados Históricos
-        ↓
+Coleta de Dados
+       ↓
 Pré-processamento
-        ↓
+       ↓
 Treinamento do Modelo
-        ↓
-Predição de Consumo
-        ↓
+       ↓
+Previsão de Consumo
+       ↓
 Dashboard e Relatórios
 ```
 
+### Dados Necessários
+
+* Histórico de sessões de carregamento;
+* Data e horário das sessões;
+* Duração da recarga;
+* Energia consumida (kWh);
+* Identificação do usuário;
+* Identificação do veículo;
+* Temperatura ambiente;
+* Tarifas energéticas;
+* Dia da semana;
+* Mês;
+* Feriados.
+
+### Benefícios
+
+* Planejamento de recargas em horários de menor tarifa;
+* Previsão da demanda energética da infraestrutura;
+* Otimização da distribuição de carga elétrica;
+* Estimativa mais precisa de gastos mensais;
+* Redução de desperdícios energéticos;
+* Apoio à tomada de decisões operacionais.
+
+Estudos recentes demonstram que modelos de Machine Learning aplicados à previsão de consumo energético podem alcançar índices de erro (MAPE) próximos de 3,33%, evidenciando alta precisão preditiva.
+
 ---
 
-# IA 2 – Detecção de Anomalias
+## IA 2 — Detecção de Anomalias
 
-## Objetivo
+### Técnicas Utilizadas
 
-Identificar padrões incomuns de consumo que possam indicar:
+* Isolation Forest;
+* Autoencoder.
 
-- Falhas técnicas;
-- Problemas operacionais;
-- Fraudes;
-- Uso indevido da infraestrutura;
-- Mau funcionamento do carregador.
+A detecção de anomalias tem como objetivo identificar comportamentos incomuns que possam indicar:
 
----
-
-## Técnicas Utilizadas
+* Falhas técnicas;
+* Fraudes;
+* Uso indevido dos carregadores;
+* Problemas operacionais.
 
 ### Isolation Forest
 
 O Isolation Forest é um algoritmo não supervisionado baseado em árvores de decisão.
 
-Seu princípio consiste em isolar observações anômalas utilizando sucessivos particionamentos dos dados. Como as anomalias apresentam características distintas do comportamento normal, elas tendem a ser isoladas mais rapidamente.
+Seu funcionamento consiste em isolar observações incomuns em menos divisões da estrutura de dados, permitindo identificar rapidamente comportamentos fora do padrão.
 
 ### Autoencoder
 
-Autoencoders são redes neurais capazes de aprender representações compactas dos dados.
+Autoencoders são redes neurais treinadas para reconstruir dados de entrada.
 
-Durante a operação, o modelo tenta reconstruir as entradas recebidas. Quando uma observação apresenta elevado erro de reconstrução, ela pode ser classificada como uma anomalia.
+Quando um comportamento apresenta erro elevado de reconstrução, ele pode ser classificado como uma possível anomalia.
 
----
-
-## Dados Necessários
-
-Para a detecção de anomalias serão utilizados:
-
-- Consumo energético por sessão;
-- Potência instantânea;
-- Duração das recargas;
-- Frequência de utilização;
-- Horários de uso;
-- Histórico de sessões anteriores.
-
----
-
-## Benefícios
-
-A detecção automática de anomalias permite:
-
-- Identificação precoce de falhas;
-- Monitoramento contínuo da infraestrutura;
-- Redução de perdas operacionais;
-- Detecção de fraudes;
-- Aumento da confiabilidade do sistema;
-- Geração automática de alertas para gestores.
-
----
-
-## Pipeline da IA de Detecção de Anomalias
+### Pipeline da IA
 
 ```text
-Dados das Sessões
-        ↓
-Normalização
-        ↓
-Isolation Forest / Autoencoder
-        ↓
-Detecção de Eventos Atípicos
-        ↓
+Dados Históricos
+       ↓
+Treinamento do Modelo
+       ↓
+Análise dos Padrões
+       ↓
+Detecção de Anomalias
+       ↓
 Geração de Alertas
 ```
 
----
-
-# Aplicações Futuras de Inteligência Artificial
-
-Além das aplicações principais, a plataforma poderá incorporar funcionalidades adicionais.
-
-## Clustering de Usuários
-
-Utilizando algoritmos como K-Means, os usuários podem ser agrupados de acordo com seus padrões de consumo.
-
 ### Benefícios
 
-- Segmentação de perfis;
-- Tarifação personalizada;
-- Programas de fidelidade;
-- Melhor gestão da demanda energética.
+* Identificação precoce de falhas;
+* Detecção de fraudes;
+* Maior confiabilidade da infraestrutura;
+* Monitoramento contínuo do sistema;
+* Redução de custos operacionais.
 
 ---
 
-## Chatbot com Processamento de Linguagem Natural (NLP)
+## Aplicações Futuras de Inteligência Artificial
 
-Um assistente virtual poderá auxiliar usuários e gestores na utilização da plataforma.
+Além das aplicações principais, o EV ChargeOps poderá incorporar funcionalidades adicionais baseadas em IA.
 
-### Funcionalidades
+### Clustering de Usuários
 
-- Consulta de consumo;
-- Consulta de faturas;
-- Respostas a dúvidas frequentes;
-- Agendamento de manutenção;
-- Orientações sobre tarifas e recarga.
+Utilização de algoritmos como **K-Means** para segmentação de usuários conforme seus padrões de consumo.
+
+#### Possíveis Aplicações
+
+* Tarifação personalizada;
+* Programas de fidelidade;
+* Perfis de utilização;
+* Planejamento de expansão da infraestrutura.
+
+---
+
+### Chatbot com NLP
+
+Desenvolvimento de um assistente virtual utilizando **Processamento de Linguagem Natural (NLP)**.
+
+#### Funcionalidades
+
+* Consulta de consumo;
+* Consulta de faturas;
+* Suporte ao usuário;
+* Agendamento de manutenção;
+* Resolução de dúvidas frequentes.
 
 ---
 
 # Conclusão
 
-A integração de Inteligência Artificial à plataforma EV ChargeOps transforma dados operacionais em informações estratégicas para usuários e gestores.
+A integração entre as camadas física, conectividade, aplicação e apresentação, aliada às aplicações de Inteligência Artificial, transforma uma simples rede de carregadores elétricos em uma plataforma inteligente de gestão energética.
 
-A previsão de consumo permite otimizar a utilização da infraestrutura e reduzir custos operacionais, enquanto a detecção de anomalias contribui para a segurança e confiabilidade do sistema.
+A previsão de consumo permite que usuários e administradores tomem decisões mais eficientes sobre utilização e custos. Já a detecção de anomalias aumenta a segurança operacional ao identificar automaticamente falhas, fraudes e comportamentos incomuns.
 
-Em conjunto, essas aplicações tornam o EV ChargeOps uma solução inteligente para gestão de carregadores compartilhados, alinhada aos princípios de eficiência energética, sustentabilidade e transformação digital.
+Em conjunto, essas tecnologias formam um ecossistema capaz de gerar valor operacional, econômico e ambiental, contribuindo para o avanço da mobilidade elétrica e da gestão sustentável de energia.
+
+---
+
+# Entregáveis
+
+A execução desta etapa do projeto resulta em três entregáveis principais.
+
+## 1. Diagrama de Arquitetura
+
+Representação visual das quatro camadas da plataforma:
+
+* Camada Física;
+* Camada de Conectividade;
+* Camada de Aplicação;
+* Camada de Apresentação.
+
+### Objetivos
+
+* Identificar os componentes da solução;
+* Demonstrar a comunicação entre as camadas;
+* Posicionar os módulos de Inteligência Artificial na arquitetura.
+
+### Formatos Recomendados
+
+* UML de Componentes;
+* Modelo C4.
+
+---
+
+## 2. Fluxograma de Dados
+
+Representação do fluxo completo das informações.
+
+```text
+Carregador
+    ↓
+API GoodWe
+    ↓
+Banco de Dados
+    ↓
+Modelos de IA
+    ↓
+Dashboard
+    ↓
+Fatura
+```
+
+### Etapas
+
+1. Coleta de dados no carregador;
+2. Transmissão para a nuvem;
+3. Armazenamento em banco de dados;
+4. Processamento pelos modelos de IA;
+5. Visualização em dashboards;
+6. Geração automática de faturas.
+
+---
+
+## 3. Documento de IA
+
+Documento técnico contendo detalhes sobre os modelos utilizados.
+
+### IA 1 — Previsão de Consumo
+
+* Algoritmo utilizado;
+* Dados de treinamento;
+* Variáveis de entrada;
+* Variáveis de saída;
+* Métricas de avaliação:
+
+  * MAPE;
+  * RMSE;
+  * R².
+
+### IA 2 — Detecção de Anomalias
+
+* Isolation Forest;
+* Autoencoder;
+* Estratégia de detecção;
+* Limiar de anomalia;
+* Taxa esperada de falsos positivos.
+
+### Pipeline de Dados
+
+* Coleta;
+* Limpeza;
+* Normalização;
+* Divisão treino/teste;
+* Atualização periódica dos modelos.
+
+### Integração com a Plataforma
+
+* APIs de inferência;
+* Frequência de execução;
+* Sistema de alertas;
+* Exposição dos resultados ao dashboard.
