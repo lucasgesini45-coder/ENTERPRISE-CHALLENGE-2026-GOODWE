@@ -17,6 +17,7 @@ A plataforma também incorpora modelos de Inteligência Artificial voltados para
 * Detecção de anomalias;
 * Análise comportamental de usuários.
 
+## Opçao B - Definiçao Do Papel Da Ia
 ---
 
 # Arquitetura da Plataforma
