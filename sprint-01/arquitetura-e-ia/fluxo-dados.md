@@ -71,16 +71,3 @@ Utiliza técnicas de regressão para estimar o consumo energético futuro com ba
 * Auxiliar no planejamento de custos;
 * Otimizar a utilização da infraestrutura de recarga;
 * Apoiar decisões operacionais.
-
-### Detecção de Anomalias
-
-Utiliza algoritmos de aprendizado de máquina para identificar comportamentos incomuns que possam indicar falhas técnicas, uso indevido ou problemas operacionais.
-
-**Objetivos:**
-
-* Detectar fraudes;
-* Identificar falhas nos carregadores;
-* Monitorar padrões anormais de consumo;
-* Gerar alertas preventivos para gestores.
-
-A combinação dessas aplicações permite que a plataforma ofereça uma gestão mais eficiente, inteligente e sustentável da infraestrutura de recarga compartilhada.
