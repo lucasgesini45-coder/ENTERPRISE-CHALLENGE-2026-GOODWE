@@ -1,28 +1,20 @@
 from fastapi import APIRouter
 from schemas.carregador import CarregadorCreate
+from services.carregador_service import listar_todos_carregadores, criar_novo_carregador
 
 router = APIRouter(
     prefix="/carregadores",
     tags=["Carregadores"]
 )
 
-carregadores = []
-
 
 @router.get("/")
 def listar_carregadores():
     return {
-        "carregadores": carregadores
+        "carregadores": listar_todos_carregadores()
     }
 
 
 @router.post("/")
 def criar_carregador(carregador: CarregadorCreate):
-    novo_carregador = {
-        "id": len(carregadores) + 1,
-        **carregador.model_dump()
-    }
-
-    carregadores.append(novo_carregador)
-
-    return novo_carregador
+    return criar_novo_carregador(carregador)
