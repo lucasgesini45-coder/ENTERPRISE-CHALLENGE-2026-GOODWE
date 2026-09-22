@@ -14,3 +14,10 @@ def criar_nova_sessao(sessao):
     sessoes.append(nova_sessao)
 
     return nova_sessao
+
+def buscar_sessao(sessao_id: int):
+    for sessao in sessoes:
+        if sessao["ïd"] == sessao_id:
+            return sessao
+
+    return None
