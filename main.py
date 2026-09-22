@@ -1,9 +1,19 @@
 from fastapi import FastAPI
 
+from routes.consumo import router as consumo_router
+from routes.carregadores import router as carregadores_router
+from routes.sessoes import router as sessoes_router
+from routes.usuarios import router as usuarios_router
+
 app = FastAPI(
     title="EV ChargeOps API",
     version="1.0.0"
 )
+
+app.include_router(consumo_router)
+app.include_router(carregadores_router)
+app.include_router(sessoes_router)
+app.include_router(usuarios_router)
 
 
 @app.get("/")
@@ -17,29 +27,4 @@ def home():
 def health():
     return {
         "status": "online"
-    }
-
-
-@app.get("/carregadores")
-def listar_carregadores():
-    return {
-        "carregadores": []
-    }
-
-
-@app.get("/sessoes")
-def listar_sessoes():
-    return {
-        "sessoes": []
-    }
-
-
-@app.get("/consumo/calcular")
-def calcular_recarga(kwh: float, tarifa: float):
-    valor = kwh * tarifa
-
-    return {
-        "consumo_kwh": kwh,
-        "tarifa": tarifa,
-        "valor_total": round(valor, 2)
     }
