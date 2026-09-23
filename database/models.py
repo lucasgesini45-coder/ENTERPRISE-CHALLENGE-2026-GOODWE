@@ -46,4 +46,8 @@ class Sessao(Base):
 
     consumo_kwh = Column(Float, default=0.0)
     duracao = Column(Float)
+
+    tarifa = Column(Float, default=0.0)
+    valor_total = Column(Float, default=0.0)
+
     status = Column(String)

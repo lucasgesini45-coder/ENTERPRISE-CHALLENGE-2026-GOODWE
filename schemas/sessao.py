@@ -9,6 +9,9 @@ class SessaoBase(BaseModel):
     inicio: datetime
     fim: Optional[datetime] = None
     consumo_kwh: float = 0.0
+    tarifa: float = 0.0
+    valor_total: float = 0.0
+    status: str = "AGUARDANDO"
 
 
 class SessaoCreate(SessaoBase):
