@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from database.database import get_db
 from database.models import Sessao
 from schemas.sessao import SessaoCreate
-
-from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException
+from services.sessao_service import (
+    listar_todas_sessoes,
+    finalizar_sessao
+)
 
 router = APIRouter(
     prefix="/sessoes",
@@ -16,10 +17,8 @@ router = APIRouter(
 
 @router.get("/")
 def listar_sessoes(db: Session = Depends(get_db)):
-    sessoes = db.query(Sessao).all()
-
     return {
-        "sessoes": sessoes
+        "sessoes": listar_todas_sessoes(db)
     }
 
 
@@ -45,30 +44,23 @@ def criar_sessao(
 
     return nova_sessao
 
-from datetime import datetime
-from fastapi import HTTPException
-
 
 @router.put("/{sessao_id}/finalizar")
-def finalizar_sessao(
+def finalizar(
     sessao_id: int,
     consumo_kwh: float,
     db: Session = Depends(get_db)
 ):
-    sessao = db.query(Sessao).filter(Sessao.id == sessao_id).first()
+    sessao = finalizar_sessao(
+        db,
+        sessao_id,
+        consumo_kwh
+    )
 
-    if not sessao:
+    if sessao is None:
         raise HTTPException(
             status_code=404,
             detail="Sessao nao encontrada"
         )
-
-    sessao.fim = datetime.now()
-    sessao.consumo_kwh = consumo_kwh
-    sessao.valor_total = round(consumo_kwh * sessao.tarifa, 2)
-    sessao.status = "CONCLUIDA"
-
-    db.commit()
-    db.refresh(sessao)
 
     return sessao
