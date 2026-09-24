@@ -148,11 +148,27 @@ def associar_usuarios_em_lote(
 
 def listar_sessoes_por_usuario(
     db: Session,
-    usuario_id: int
+    usuario_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None
 ):
-    return (
+    consulta = (
         db.query(Sessao)
         .filter(Sessao.usuario_id == usuario_id)
+    )
+
+    if inicio is not None:
+        consulta = consulta.filter(
+            Sessao.inicio >= inicio
+        )
+
+    if fim is not None:
+        consulta = consulta.filter(
+            Sessao.inicio <= fim
+        )
+
+    return (
+        consulta
         .order_by(Sessao.inicio.desc())
         .all()
     )
@@ -160,11 +176,27 @@ def listar_sessoes_por_usuario(
 
 def listar_sessoes_por_carregador(
     db: Session,
-    carregador_id: int
+    carregador_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None
 ):
-    return (
+    consulta = (
         db.query(Sessao)
         .filter(Sessao.carregador_id == carregador_id)
+    )
+
+    if inicio is not None:
+        consulta = consulta.filter(
+            Sessao.inicio >= inicio
+        )
+
+    if fim is not None:
+        consulta = consulta.filter(
+            Sessao.inicio <= fim
+        )
+
+    return (
+        consulta
         .order_by(Sessao.inicio.desc())
         .all()
     )

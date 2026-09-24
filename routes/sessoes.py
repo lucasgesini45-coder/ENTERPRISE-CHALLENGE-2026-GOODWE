@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from datetime import datetime
 from database.database import get_db
 from database.models import Sessao
 from schemas.sessao import SessaoCreate
@@ -112,11 +113,15 @@ def associar_lote(
 @router.get("/usuario/{usuario_id}")
 def historico_usuario(
     usuario_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None,
     db: Session = Depends(get_db)
 ):
     sessoes = listar_sessoes_por_usuario(
-        db,
-        usuario_id
+        db=db,
+        usuario_id=usuario_id,
+        inicio=inicio,
+        fim=fim
     )
 
     consumo_total = round(
@@ -137,6 +142,10 @@ def historico_usuario(
 
     return {
         "usuario_id": usuario_id,
+        "periodo": {
+            "inicio": inicio,
+            "fim": fim
+        },
         "total_sessoes": len(sessoes),
         "consumo_total_kwh": consumo_total,
         "valor_total": valor_total,
@@ -146,11 +155,15 @@ def historico_usuario(
 @router.get("/carregador/{carregador_id}")
 def historico_carregador(
     carregador_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None,
     db: Session = Depends(get_db)
 ):
     sessoes = listar_sessoes_por_carregador(
-        db,
-        carregador_id
+        db=db,
+        carregador_id=carregador_id,
+        inicio=inicio,
+        fim=fim
     )
 
     consumo_total = round(
@@ -171,6 +184,10 @@ def historico_carregador(
 
     return {
         "carregador_id": carregador_id,
+        "periodo": {
+            "inicio": inicio,
+            "fim": fim
+        },
         "total_sessoes": len(sessoes),
         "consumo_total_kwh": consumo_total,
         "valor_total": valor_total,
