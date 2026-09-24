@@ -1,3 +1,7 @@
+import os
+import shutil
+from fastapi import UploadFile, File
+
 from datetime import datetime
 
 from fastapi import APIRouter, Depends
@@ -8,7 +12,8 @@ from services.goodwe_service import importar_sessao_goodwe
 from schemas.goodwe import ImportacaoGoodWeLote
 from services.goodwe_service import (
     importar_sessao_goodwe,
-    importar_sessoes_lote
+    importar_sessoes_lote,
+    importar_csv_goodwe
 )
 
 router = APIRouter(
@@ -46,3 +51,30 @@ def importar_lote(
         db,
         dados.sessoes
     )
+
+@router.post("/importar-csv")
+def importar_csv(
+    arquivo: UploadFile = File(...),
+    tarifa: float = 0.0,
+    db: Session = Depends(get_db)
+):
+    caminho_temporario = f"temp_{arquivo.filename}"
+
+    with open(caminho_temporario, "wb") as buffer:
+        shutil.copyfileobj(
+            arquivo.file,
+            buffer
+        )
+
+    try:
+        resultado = importar_csv_goodwe(
+            db=db,
+            caminho_arquivo=caminho_temporario,
+            tarifa=tarifa
+        )
+
+        return resultado
+
+    finally:
+        if os.path.exists(caminho_temporario):
+            os.remove(caminho_temporario)

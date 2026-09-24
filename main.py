@@ -12,6 +12,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
 app.include_router(consumo_router)
 app.include_router(carregadores_router)
 app.include_router(sessoes_router)

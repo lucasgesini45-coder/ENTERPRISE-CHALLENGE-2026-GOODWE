@@ -2,6 +2,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from database.models import Carregador, Sessao
+from services.csv_service import ler_csv_goodwe
 
 
 def buscar_carregador_por_serial(
@@ -134,6 +135,49 @@ def importar_sessoes_lote(
 
     return {
         "total_recebidas": len(sessoes),
+        "importadas": importadas,
+        "duplicadas": duplicadas,
+        "erros": erros,
+        "resultados": resultados
+    }
+
+def importar_csv_goodwe(
+    db: Session,
+    caminho_arquivo: str,
+    tarifa: float = 0.0
+):
+    sessoes = ler_csv_goodwe(caminho_arquivo)
+
+    resultados = []
+
+    importadas = 0
+    duplicadas = 0
+    erros = 0
+
+    for sessao in sessoes:
+        resultado = importar_sessao_goodwe(
+            db=db,
+            serial_number=sessao["serial_number"],
+            inicio=sessao["inicio"],
+            fim=sessao["fim"],
+            consumo_kwh=sessao["consumo_kwh"],
+            tarifa=tarifa,
+            usuario_id=None
+        )
+
+        resultados.append(resultado)
+
+        if resultado.get("sucesso"):
+            importadas += 1
+
+        elif resultado.get("erro") == "Sessao ja importada":
+            duplicadas += 1
+
+        else:
+            erros += 1
+
+    return {
+        "total_lidas": len(sessoes),
         "importadas": importadas,
         "duplicadas": duplicadas,
         "erros": erros,
