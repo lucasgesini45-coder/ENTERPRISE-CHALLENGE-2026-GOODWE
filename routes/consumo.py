@@ -1,5 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from database.database import get_db
 from services.consumo_service import calcular_valor_recarga
+from services.consumo_rateio import gerar_relatorio_rateio
 
 router = APIRouter(
     prefix="/consumo",
@@ -16,3 +20,8 @@ def calcular_recarga(kwh: float, tarifa: float):
         "tarifa": tarifa,
         "valor_total": valor_total
     }
+
+
+@router.get("/rateio")
+def consultar_rateio(db: Session = Depends(get_db)):
+    return gerar_relatorio_rateio(db)
