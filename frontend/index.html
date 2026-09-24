@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>EV ChargeOps</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <!-- Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- LOGO -->
+
+        <div class="brand">
+
+            <div class="brand-mark">
+
+                <svg
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M14 8
+                           C8 12 5 18 5 24
+                           C5 34 13 42 23 42
+                           C30 42 36 38 40 32"
+                    />
+
+                    <path
+                        d="M19 20
+                           H28
+                           V15
+                           L38 24
+                           L28 33
+                           V28
+                           H19"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="brand-text">
+
+                <span class="brand-ev">
+                    EV
+                </span>
+
+                <span>
+                    Charge
+                </span>
+
+                <span class="brand-ops">
+                    Ops
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- MENU -->
+
+        <nav class="sidebar-menu">
+
+
+            <button
+                class="menu-item active"
+                data-page="overview"
+                type="button"
+            >
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M4 13h6V4H4v9zm0 7h6v-5H4v5zm10 0h6v-9h-6v9zm0-16v5h6V4h-6z"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Visão Geral
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="chargers"
+                type="button"
+            >
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M7 2h10v9h2a2 2 0 0 1 2 2v5a4 4 0 0 1-8 0v-1h2v1a2 2 0 0 0 4 0v-5h-2v3H7V2zm2 2v10h6V4H9z"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Carregadores
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="users"
+                type="button"
+            >
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M16 11a4 4 0 1 0-3.9-5
+                            A4 4 0 0 0 16 11z
+                            M8 12a3 3 0 1 0 0-6
+                            a3 3 0 0 0 0 6z
+                            M16 13c-3.3 0-6 1.8-6 4v3h12v-3c0-2.2-2.7-4-6-4z
+                            M8 14c-3 0-5.5 1.5-5.5 3.5V20H8v-3c0-1.1.4-2.1 1.2-3A7 7 0 0 0 8 14z"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Usuários
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="sessions"
+                type="button"
+            >
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M6 2h12a2 2 0 0 1 2 2v16
+                            a2 2 0 0 1-2 2H6
+                            a2 2 0 0 1-2-2V4
+                            a2 2 0 0 1 2-2zm2 5v2h8V7H8zm0 4v2h8v-2H8zm0 4v2h5v-2H8z"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Sessões
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="invoices"
+                type="button"
+            >
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M6 2h12v20l-3-2-3 2-3-2-3 2V2zm3 5v2h6V7H9zm0 4v2h6v-2H9zm0 4v2h4v-2H9z"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Faturas
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="rateio"
+                type="button"
+            >
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M12 2a10 10 0 1 0 10 10
+                            A10 10 0 0 0 12 2zm1 5v1.2
+                            c1.7.3 3 1.3 3 2.8h-2
+                            c0-.7-.8-1.2-2-1.2
+                            s-2 .5-2 1.2.7 1 2.4 1.4
+                            c2.6.6 4 1.5 4 3.4
+                            0 1.6-1.3 2.8-3.4 3.1V20h-2v-1.2
+                            c-2-.3-3.5-1.5-3.5-3.3h2
+                            c0 .9 1 1.5 2.5 1.5
+                            1.4 0 2.4-.5 2.4-1.3
+                            0-.7-.7-1.1-2.7-1.6
+                            C9.2 13.5 8 12.7 8 11
+                            c0-1.5 1.2-2.6 3-2.9V7h2z"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Rateio
+                </span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="ai"
+                type="button"
+            >
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M12 2l1.7 5.3L19 9l-5.3 1.7L12 16
+                            l-1.7-5.3L5 9l5.3-1.7L12 2zm7 11
+                            l.9 2.6L22.5 17l-2.6.9L19 20.5
+                            l-.9-2.6-2.6-.9 2.6-.9L19 13z"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Inteligência Artificial
+                </span>
+
+            </button>
+
+
+        </nav>
+
+
+        <!-- CONDOMÍNIO -->
+
+        <div class="property-card">
+
+            <div class="property-icon">
+                RA
+            </div>
+
+
+            <div>
+
+                <span class="property-label">
+                    Condomínio
+                </span>
+
+                <strong>
+                    Residencial Aurora
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- ==========================================
+         CONTEÚDO PRINCIPAL
+    =========================================== -->
+
+    <main class="main">
+
+
+        <!-- ==========================================
+             TOPBAR
+        =========================================== -->
+
+        <header class="topbar">
+
+
+            <div class="topbar-title">
+
+                <span class="page-eyebrow">
+                    Dashboard
+                </span>
+
+                <h1>
+                    Visão Geral
+                </h1>
+
+                <p>
+                    Gestão inteligente da recarga em ambientes compartilhados.
+                </p>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+
+                <div class="period-badge">
+
+                    <span>
+                        Período
+                    </span>
+
+                    <strong>
+                        Setembro 2026
+                    </strong>
+
+                </div>
+
+
+                <div
+                    id="api-status"
+                    class="api-status online"
+                >
+
+                    <span class="status-dot"></span>
+
+                    <span>
+                        Online
+                    </span>
+
+                </div>
+
+
+                <!-- MODO ESCURO -->
+
+                <button
+                    id="theme-toggle"
+                    class="theme-toggle"
+                    type="button"
+                    aria-label="Alternar modo claro e escuro"
+                    title="Alternar tema"
+                >
+
+                    <span class="theme-icon moon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5
+                                9 3.3 9.1 2.7 8.7 2.5
+                                A10 10 0 1 0 21.5 15.3
+                                c-.2-.4-.7-.3-1-.1z"
+                            />
+
+                        </svg>
+
+                    </span>
+
+
+                    <span class="theme-icon sun">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M12 7a5 5 0 1 0 0 10
+                                5 5 0 0 0 0-10zm0-5h1v3h-2V2h1zm0 17h1v3h-2v-3h1z
+                                M2 11h3v2H2v-2zm17 0h3v2h-3v-2z
+                                M4.9 4.9l2.1 2.1-1.4 1.4-2.1-2.1 1.4-1.4zm12.5 12.5
+                                2.1 2.1-1.4 1.4-2.1-2.1 1.4-1.4zm0-10.4
+                                2.1-2.1 1.4 1.4-2.1 2.1-1.4-1.4z
+                                M4.9 19.1 7 17l1.4 1.4-2.1 2.1-1.4-1.4z"
+                            />
+
+                        </svg>
+
+                    </span>
+
+                </button>
+
+
+                <div class="profile">
+
+                    <div class="profile-avatar">
+                        LG
+                    </div>
+
+                    <div class="profile-info">
+
+                        <strong>
+                            Administrador
+                        </strong>
+
+                        <span>
+                            EV ChargeOps
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==========================================
+             CARDS DE RESUMO
+        =========================================== -->
+
+        <section class="metrics-grid">
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon energy">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M13 2 5 14h6l-1 8 9-13h-6V2z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Energia
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="consumo-total">
+                        --
+                    </strong>
+
+                    <span>
+                        kWh
+                    </span>
+
+                </div>
+
+
+                <p>
+                    Consumo total registrado
+                </p>
+
+            </article>
+
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon billing">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M12 2a10 10 0 1 0 0 20
+                                10 10 0 0 0 0-20zm1 5v1
+                                c1.7.3 3 1.3 3 2.8h-2
+                                c0-.7-.8-1.2-2-1.2s-2 .5-2 1.2
+                                c0 .6.6 1 2.4 1.4 2.6.6 4 1.5 4 3.4
+                                0 1.6-1.3 2.8-3.4 3.1V20h-2v-1.2
+                                c-2-.3-3.5-1.5-3.5-3.3h2c0 .9 1 1.5
+                                2.5 1.5 1.4 0 2.4-.5 2.4-1.3
+                                0-.7-.7-1.1-2.7-1.6C9.2 13.5 8 12.7
+                                8 11c0-1.5 1.2-2.6 3-2.9V7h2z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Faturamento
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="valor-total">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <p>
+                    Valor total das recargas
+                </p>
+
+            </article>
+
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon sessions">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M6 3h12v18H6V3zm3 4v2h6V7H9zm0 4v2h6v-2H9zm0 4v2h4v-2H9z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Sessões
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="total-sessoes">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <p>
+                    Recargas concluídas
+                </p>
+
+            </article>
+
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon chargers">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M7 2h10v10h2a2 2 0 0 1 2 2v4
+                                a4 4 0 0 1-8 0v-1h2v1a2 2 0 1 0 4 0v-4h-2v3H7V2zm2 2v11h6V4H9z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Infraestrutura
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="total-carregadores">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <p>
+                    Carregadores cadastrados
+                </p>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             PREVISÃO + IA
+        =========================================== -->
+
+        <section class="dashboard-grid">
+
+
+            <!-- GRÁFICO -->
+
+            <article class="dashboard-card forecast-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Inteligência preditiva
+                        </span>
+
+                        <h2>
+                            Previsão de Consumo
+                        </h2>
+
+                        <p>
+                            Estimativa energética para os próximos 7 dias.
+                        </p>
+
+                    </div>
+
+
+                    <span class="model-badge">
+                        Random Forest
+                    </span>
+
+                </div>
+
+
+
+                <div class="forecast-summary">
+
+
+                    <div>
+
+                        <span>
+                            Consumo previsto
+                        </span>
+
+                        <strong id="previsao-consumo">
+                            --
+                        </strong>
+
+                        <small>
+                            kWh
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Horário de pico
+                        </span>
+
+                        <strong id="horario-pico">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Demanda
+                        </span>
+
+                        <strong id="nivel-demanda">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="chart-container">
+
+                    <canvas id="grafico-consumo"></canvas>
+
+                </div>
+
+
+            </article>
+
+
+
+            <!-- INTELIGÊNCIA DO SISTEMA -->
+
+            <article class="dashboard-card intelligence-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Monitoramento
+                        </span>
+
+                        <h2>
+                            Inteligência do Sistema
+                        </h2>
+
+                        <p>
+                            Análise automática das sessões.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="intelligence-status">
+
+                    <div class="attention-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M12 2 1 21h22L12 2zm0 6 1 7h-2l1-7zm0 10
+                                a1.3 1.3 0 1 1 0 2.6A1.3 1.3 0 0 1 12 18z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Nível de atenção
+                        </span>
+
+                        <strong id="nivel-atencao">
+                            Analisando...
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="intelligence-metric">
+
+                    <span>
+                        Anomalias detectadas
+                    </span>
+
+                    <strong id="total-anomalias">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="detalhe-anomalia"
+                    class="anomaly-detail"
+                >
+                    Aguardando análise das sessões.
+                </div>
+
+
+                <div class="model-footer">
+
+                    <span>
+                        Modelo
+                    </span>
+
+                    <strong>
+                        Isolation Forest
+                    </strong>
+
+                </div>
+
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             RATEIO + STATUS
+        =========================================== -->
+
+        <section class="dashboard-grid bottom-grid">
+
+
+            <!-- RATEIO -->
+
+            <article class="dashboard-card rateio-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Financeiro
+                        </span>
+
+                        <h2>
+                            Rateio Mensal
+                        </h2>
+
+                        <p>
+                            Consumo e cobrança individual por morador.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="text-button"
+                        type="button"
+                    >
+                        Ver detalhes
+                    </button>
+
+                </div>
+
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>
+                                Usuário
+                            </th>
+
+                            <th>
+                                Sessões
+                            </th>
+
+                            <th>
+                                Consumo
+                            </th>
+
+                            <th>
+                                Valor
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+
+                        <tbody id="tabela-rateio">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </article>
+
+
+
+            <!-- STATUS -->
+
+            <article class="dashboard-card system-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Infraestrutura
+                        </span>
+
+                        <h2>
+                            Status do Sistema
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="system-list">
+
+
+                    <div>
+
+                        <span>
+                            FastAPI
+                        </span>
+
+                        <strong class="system-online">
+                            Online
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Banco de dados
+                        </span>
+
+                        <strong class="system-online">
+                            Online
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Inteligência Artificial
+                        </span>
+
+                        <strong class="system-online">
+                            Ativa
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Integração GoodWe
+                        </span>
+
+                        <strong>
+                            CSV
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             FOOTER
+        =========================================== -->
+
+        <footer class="footer">
+
+            EV ChargeOps • Gestão inteligente de recarga
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+<script src="app.js"></script>
+<script src="carregadores-ui.js"></script>
+
+</body>
+
+</html>
