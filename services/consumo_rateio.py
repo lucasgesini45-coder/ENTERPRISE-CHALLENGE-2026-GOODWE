@@ -1,7 +1,11 @@
 from sqlalchemy.orm import Session
 
-from database.models import Sessao, Usuario
-
+from database.models import (
+    Sessao,
+    Usuario,
+    Carregador
+)
+from datetime import datetime
 
 def calcular_valor_individual(
     consumo_kwh: float,
@@ -267,12 +271,35 @@ def gerar_fatura_usuario(
         2
     ) if tarifas else 0.0
 
+    numero_fatura = (
+        f"FAT-{usuario.id}-"
+        f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    )
+
+    data_emissao = datetime.now()
+
     detalhes = []
 
     for sessao in sessoes:
+        carregador = (
+            db.query(Carregador)
+            .filter(Carregador.id == sessao.carregador_id)
+            .first()
+        )
+
         detalhes.append({
             "sessao_id": sessao.id,
             "carregador_id": sessao.carregador_id,
+            "carregador_nome": (
+                carregador.nome
+                if carregador
+                else "Nao identificado"
+            ),
+            "serial_number": (
+                carregador.serial_number
+                if carregador
+                else None
+            ),
             "inicio": sessao.inicio,
             "fim": sessao.fim,
             "consumo_kwh": sessao.consumo_kwh,
@@ -282,6 +309,8 @@ def gerar_fatura_usuario(
 
     return {
         "sucesso": True,
+        "numero_fatura": numero_fatura,
+        "data_emissao": data_emissao,
         "usuario": {
             "id": usuario.id,
             "nome": usuario.nome,
