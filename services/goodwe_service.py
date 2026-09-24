@@ -146,13 +146,18 @@ def importar_csv_goodwe(
     caminho_arquivo: str,
     tarifa: float = 0.0
 ):
-    sessoes = ler_csv_goodwe(caminho_arquivo)
+    leitura = ler_csv_goodwe(
+        caminho_arquivo
+    )
+
+    sessoes = leitura["sessoes"]
+    erros_csv = leitura["erros"]
 
     resultados = []
 
     importadas = 0
     duplicadas = 0
-    erros = 0
+    erros = len(erros_csv)
 
     for sessao in sessoes:
         resultado = importar_sessao_goodwe(
@@ -181,5 +186,6 @@ def importar_csv_goodwe(
         "importadas": importadas,
         "duplicadas": duplicadas,
         "erros": erros,
+        "erros_csv": erros_csv,
         "resultados": resultados
     }
