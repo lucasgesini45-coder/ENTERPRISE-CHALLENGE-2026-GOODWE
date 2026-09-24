@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from database.database import get_db
 from database.models import Usuario
 from schemas.usuario import UsuarioCreate
+
 
 router = APIRouter(
     prefix="/usuarios",
@@ -12,7 +14,9 @@ router = APIRouter(
 
 
 @router.get("/")
-def listar_usuarios(db: Session = Depends(get_db)):
+def listar_usuarios(
+    db: Session = Depends(get_db)
+):
     usuarios = db.query(Usuario).all()
 
     return {
@@ -27,11 +31,25 @@ def criar_usuario(
 ):
     novo_usuario = Usuario(
         nome=usuario.nome,
-        email=usuario.email
+        email=usuario.email,
+        telefone=usuario.telefone
     )
 
-    db.add(novo_usuario)
-    db.commit()
-    db.refresh(novo_usuario)
+    try:
 
-    return novo_usuario
+        db.add(novo_usuario)
+
+        db.commit()
+
+        db.refresh(novo_usuario)
+
+        return novo_usuario
+
+    except IntegrityError:
+
+        db.rollback()
+
+        raise HTTPException(
+            status_code=400,
+            detail="Já existe um usuário cadastrado com este e-mail."
+        )

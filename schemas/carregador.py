@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -6,6 +8,9 @@ class CarregadorBase(BaseModel):
     serial_number: str
     localizacao: str
     status: str
+
+    modelo: Optional[str] = None
+    potencia_maxima: Optional[float] = None
 
 
 class CarregadorCreate(CarregadorBase):

@@ -95,10 +95,12 @@ const carregarPaginaCarregadores = () => {
                 <div class="form-grid">
 
 
+                    <!-- NOME -->
+
                     <div class="form-group">
 
                         <label for="charger-name">
-                            Nome
+                            Nome do carregador
                         </label>
 
                         <input
@@ -111,6 +113,8 @@ const carregarPaginaCarregadores = () => {
 
                     </div>
 
+
+                    <!-- SERIAL -->
 
                     <div class="form-group">
 
@@ -129,6 +133,46 @@ const carregarPaginaCarregadores = () => {
                     </div>
 
 
+                    <!-- MODELO -->
+
+                    <div class="form-group">
+
+                        <label for="charger-model">
+                            Modelo
+                        </label>
+
+                        <input
+                            id="charger-model"
+                            name="modelo"
+                            type="text"
+                            placeholder="HCA G2"
+                        >
+
+                    </div>
+
+
+                    <!-- POTÊNCIA -->
+
+                    <div class="form-group">
+
+                        <label for="charger-power">
+                            Potência máxima (kW)
+                        </label>
+
+                        <input
+                            id="charger-power"
+                            name="potencia_maxima"
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            placeholder="7.4"
+                        >
+
+                    </div>
+
+
+                    <!-- LOCALIZAÇÃO -->
+
                     <div class="form-group form-full">
 
                         <label for="charger-location">
@@ -145,6 +189,8 @@ const carregarPaginaCarregadores = () => {
 
                     </div>
 
+
+                    <!-- STATUS -->
 
                     <div class="form-group">
 
@@ -219,7 +265,7 @@ const carregarPaginaCarregadores = () => {
 
 
     /* =========================================
-       ABRIR / FECHAR
+       ABRIR / FECHAR MODAL
     ========================================= */
 
     function abrirModal() {
@@ -246,9 +292,17 @@ const carregarPaginaCarregadores = () => {
         ).reset();
 
 
-        document.getElementById(
-            "charger-form-message"
-        ).textContent = "";
+        const mensagem =
+            document.getElementById(
+                "charger-form-message"
+            );
+
+
+        mensagem.textContent =
+            "";
+
+        mensagem.className =
+            "form-message";
     }
 
 
@@ -285,6 +339,7 @@ const carregarPaginaCarregadores = () => {
             ) {
 
                 fecharModal();
+
             }
 
         }
@@ -316,6 +371,12 @@ const carregarPaginaCarregadores = () => {
                 );
 
 
+            const potenciaInput =
+                document.getElementById(
+                    "charger-power"
+                ).value;
+
+
             const carregador = {
 
                 nome:
@@ -328,6 +389,16 @@ const carregarPaginaCarregadores = () => {
                         "charger-serial"
                     ).value.trim(),
 
+                modelo:
+                    document.getElementById(
+                        "charger-model"
+                    ).value.trim() || null,
+
+                potencia_maxima:
+                    potenciaInput
+                        ? Number(potenciaInput)
+                        : null,
+
                 localizacao:
                     document.getElementById(
                         "charger-location"
@@ -339,6 +410,31 @@ const carregarPaginaCarregadores = () => {
                     ).value
 
             };
+
+
+            /* =========================================
+               VALIDAÇÃO
+            ========================================= */
+
+            if (
+                carregador.potencia_maxima !== null &&
+                (
+                    Number.isNaN(
+                        carregador.potencia_maxima
+                    ) ||
+                    carregador.potencia_maxima < 0
+                )
+            ) {
+
+                mensagem.className =
+                    "form-message error";
+
+
+                mensagem.textContent =
+                    "Informe uma potência válida.";
+
+                return;
+            }
 
 
             botaoSalvar.disabled =
@@ -385,12 +481,34 @@ const carregarPaginaCarregadores = () => {
 
                 if (!resposta.ok) {
 
-                    const erro =
-                        await resposta.json();
+                    let textoErro =
+                        "Não foi possível cadastrar o carregador.";
+
+
+                    try {
+
+                        const erro =
+                            await resposta.json();
+
+
+                        if (erro.detail) {
+
+                            textoErro =
+                                typeof erro.detail === "string"
+                                    ? erro.detail
+                                    : textoErro;
+
+                        }
+
+                    } catch (_) {
+
+                        // Mantém mensagem padrão.
+
+                    }
+
 
                     throw new Error(
-                        erro.detail ??
-                        "Não foi possível cadastrar."
+                        textoErro
                     );
                 }
 
@@ -420,6 +538,7 @@ const carregarPaginaCarregadores = () => {
 
                 mensagem.textContent =
                     erro.message;
+
 
             } finally {
 

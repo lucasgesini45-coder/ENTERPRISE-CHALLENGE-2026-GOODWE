@@ -2129,3 +2129,1352 @@ tbody tr:hover {
     }
 
 }
+
+/* =========================================
+   DETALHES DO USUÁRIO
+========================================= */
+
+.user-phone {
+    margin-top: 14px;
+
+    padding-top: 12px;
+
+    border-top:
+        1px solid var(--border);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.user-phone span {
+    color: var(--text-light);
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+.user-phone strong {
+    color: var(--text);
+
+    font-size: 10px;
+}
+
+
+.user-card-footer {
+    padding-top: 12px;
+
+    border-top:
+        1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.user-card-footer .user-status {
+    padding-top: 0;
+
+    border-top: none;
+}
+
+
+.user-detail-button {
+    border: none;
+
+    background: transparent;
+
+    color: var(--primary);
+
+    font-size: 9px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.user-detail-button:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   SESSÕES
+========================================= */
+
+.sessions-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 17px;
+
+    margin-bottom: 20px;
+}
+
+
+.sessions-filters-card {
+    margin-bottom: 20px;
+}
+
+
+.sessions-filters {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr))
+        auto;
+
+    gap: 15px;
+
+    align-items: end;
+}
+
+
+.sessions-filter-action {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+.sessions-filter-action button {
+    min-height: 44px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   TABELA DE SESSÕES
+========================================= */
+
+.sessions-table {
+    min-width: 1000px;
+}
+
+
+.sessions-table td {
+    vertical-align: middle;
+}
+
+
+.session-id {
+    color: var(--primary);
+
+    font-size: 10px;
+}
+
+
+.session-user-cell {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    white-space: nowrap;
+}
+
+
+.session-user-dot {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: var(--success);
+}
+
+
+.session-user-dot.unassigned {
+    background: var(--warning);
+}
+
+
+/* =========================================
+   STATUS DAS SESSÕES
+========================================= */
+
+.session-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        5px
+        8px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+.session-status.completed {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+
+.session-status.charging {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+
+.session-status.waiting {
+    background: #fff5dc;
+    color: #bb7a00;
+}
+
+
+body.dark .session-status.waiting {
+    background: #362c16;
+    color: #ffc65e;
+}
+
+
+.session-status.authorized {
+    background: #edf3ff;
+    color: #4d72e6;
+}
+
+
+body.dark .session-status.authorized {
+    background: #1f2944;
+    color: #7698ff;
+}
+
+
+.session-status.cancelled {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+
+.session-status.unknown {
+    background: var(--card-soft);
+    color: var(--text-soft);
+}
+
+
+/* =========================================
+   VER DETALHES
+========================================= */
+
+.session-detail-button {
+    border: none;
+
+    background: transparent;
+
+    color: var(--primary);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+
+.session-detail-button:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   ESTADO VAZIO
+========================================= */
+
+.sessions-empty {
+    padding:
+        30px
+        15px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: var(--text-soft);
+}
+
+
+.sessions-empty strong {
+    color: var(--text);
+
+    font-size: 12px;
+}
+
+
+.sessions-empty span {
+    font-size: 9px;
+}
+
+
+.sessions-empty.error strong {
+    color: var(--danger);
+}
+
+
+/* =========================================
+   RESPONSIVO
+========================================= */
+
+@media (max-width: 1180px) {
+
+    .sessions-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .sessions-filters {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .sessions-summary {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .sessions-filters {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .sessions-filter-action button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================
+   FATURAS
+========================================= */
+
+.invoice-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 17px;
+
+    margin-bottom: 20px;
+}
+
+
+.invoice-filter-card {
+    margin-bottom: 20px;
+}
+
+
+.invoice-filters {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 240px))
+        auto;
+
+    gap: 15px;
+
+    align-items: end;
+}
+
+
+.invoice-filter-action {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+.invoice-filter-action button {
+    min-height: 44px;
+}
+
+
+/* =========================================
+   TABELA
+========================================= */
+
+.invoice-table {
+    min-width: 850px;
+}
+
+
+.invoice-user {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.invoice-user > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.invoice-user strong {
+    font-size: 10px;
+}
+
+
+.invoice-user span {
+    color: var(--text-soft);
+
+    font-size: 8px;
+}
+
+
+.invoice-value {
+    color: var(--text);
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   AÇÕES
+========================================= */
+
+.invoice-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.invoice-view-button,
+.invoice-pdf-button {
+    min-height: 30px;
+
+    padding:
+        0 10px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+.invoice-view-button {
+    border:
+        1px solid var(--border);
+
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text);
+}
+
+
+.invoice-pdf-button {
+    border:
+        1px solid var(--primary);
+
+    background:
+        var(--primary-soft);
+
+    color:
+        var(--primary);
+}
+
+
+.invoice-view-button:hover,
+.invoice-pdf-button:hover {
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================
+   MODAL DA FATURA
+========================================= */
+
+.invoice-modal {
+    max-width: 850px;
+}
+
+
+.invoice-detail-user {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+.invoice-detail-user > div {
+    padding: 12px;
+
+    background:
+        var(--card-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 11px;
+}
+
+
+.invoice-detail-user span,
+.invoice-detail-summary span {
+    display: block;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+
+    margin-bottom: 5px;
+}
+
+
+.invoice-detail-user strong {
+    font-size: 10px;
+}
+
+
+.invoice-detail-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+
+.invoice-detail-summary > div {
+    padding: 13px;
+
+    background:
+        var(--card-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 11px;
+}
+
+
+.invoice-detail-summary strong {
+    font-size: 12px;
+}
+
+
+.invoice-modal-total {
+    color: var(--primary);
+}
+
+
+.invoice-detail-table {
+    min-width: 650px;
+}
+
+
+.invoice-modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 20px;
+}
+
+
+/* =========================================
+   RESPONSIVO
+========================================= */
+
+@media (max-width: 1180px) {
+
+    .invoice-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .invoice-summary {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .invoice-filters {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .invoice-filter-action button {
+        width: 100%;
+    }
+
+
+    .invoice-detail-user {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .invoice-detail-summary {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+/* =========================================
+   RATEIO
+========================================= */
+
+.rateio-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 17px;
+
+    margin-bottom: 20px;
+}
+
+
+.rateio-filter-card {
+    margin-bottom: 20px;
+}
+
+
+.rateio-filters {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 240px))
+        auto;
+
+    gap: 15px;
+
+    align-items: end;
+}
+
+
+.rateio-filter-action {
+    display: flex;
+
+    align-items: flex-end;
+}
+
+
+.rateio-filter-action button {
+    min-height: 44px;
+}
+
+
+/* GRÁFICO */
+
+.rateio-chart-container {
+    width: 100%;
+
+    height: 300px;
+}
+
+
+/* INDICADORES */
+
+.rateio-indicators {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+
+.rateio-indicators > div {
+    background:
+        var(--card-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        11px;
+
+    padding:
+        13px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.rateio-indicators span {
+    color:
+        var(--text-light);
+
+    font-size:
+        8px;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.4px;
+}
+
+
+.rateio-indicators strong {
+    font-size:
+        11px;
+}
+
+
+/* TABELA */
+
+.rateio-table {
+    min-width:
+        750px;
+}
+
+
+.rateio-value {
+    color:
+        var(--primary);
+}
+
+
+/* PARTICIPAÇÃO */
+
+.rateio-share {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-width:
+        150px;
+}
+
+
+.rateio-share-bar {
+    width:
+        100px;
+
+    height:
+        6px;
+
+    background:
+        var(--border);
+
+    border-radius:
+        999px;
+
+    overflow:
+        hidden;
+}
+
+
+.rateio-share-bar span {
+    display:
+        block;
+
+    height:
+        100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+
+    border-radius:
+        999px;
+}
+
+
+.rateio-share strong {
+    min-width:
+        40px;
+
+    font-size:
+        9px;
+
+    color:
+        var(--text-soft);
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 1180px) {
+
+    .rateio-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .rateio-summary {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .rateio-filters {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .rateio-filter-action button {
+        width:
+            100%;
+    }
+
+}
+
+/* =========================================
+   INTELIGÊNCIA ARTIFICIAL
+========================================= */
+
+.ai-metrics-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 17px;
+
+    margin-bottom: 20px;
+}
+
+
+.ai-main-grid {
+    align-items: stretch;
+}
+
+
+/* =========================================
+   GRÁFICO
+========================================= */
+
+.ai-chart-container {
+    width: 100%;
+
+    height: 310px;
+
+    margin-top: 15px;
+}
+
+
+/* =========================================
+   AVISO DE TREINAMENTO
+========================================= */
+
+.ai-training-warning {
+    display: none;
+}
+
+
+.ai-training-warning.show {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 12px;
+
+    margin-bottom: 15px;
+
+    border:
+        1px solid
+        rgba(240, 160, 32, 0.28);
+
+    border-radius: 11px;
+
+    background:
+        rgba(240, 160, 32, 0.08);
+
+    color: var(--warning);
+}
+
+
+.ai-training-warning strong {
+    font-size: 10px;
+}
+
+
+.ai-training-warning span {
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   INDICADORES
+========================================= */
+
+.ai-indicator-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.ai-indicator-list > div {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 12px;
+
+    background:
+        var(--card-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+}
+
+
+.ai-indicator-list span {
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+}
+
+
+.ai-indicator-list strong {
+    font-size: 10px;
+
+    text-align: right;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.ai-analysis-status.normal {
+    color:
+        var(--success);
+}
+
+
+.ai-analysis-status.attention {
+    color:
+        var(--warning);
+}
+
+
+/* =========================================
+   ANOMALIAS
+========================================= */
+
+.ai-anomaly-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.ai-loading {
+    padding: 35px;
+
+    text-align: center;
+
+    color:
+        var(--text-soft);
+
+    font-size: 10px;
+}
+
+
+.ai-anomaly-card {
+    padding: 15px;
+
+    background:
+        var(--card-soft);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+}
+
+
+.ai-anomaly-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+.ai-anomaly-header > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+
+.ai-anomaly-header span {
+    color:
+        var(--text-light);
+
+    font-size: 9px;
+}
+
+
+.ai-anomaly-header strong {
+    font-size: 12px;
+}
+
+
+.ai-anomaly-badge {
+    padding:
+        5px 9px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(240, 160, 32, 0.12);
+
+    color:
+        var(--warning) !important;
+
+    font-weight: 800;
+}
+
+
+/* =========================================
+   MÉTRICAS DA ANOMALIA
+========================================= */
+
+.ai-anomaly-metrics {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-bottom: 14px;
+}
+
+
+.ai-anomaly-metrics > div {
+    padding: 10px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 9px;
+
+    background:
+        var(--card);
+}
+
+
+.ai-anomaly-metrics span {
+    display: block;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    margin-bottom: 4px;
+}
+
+
+.ai-anomaly-metrics strong {
+    font-size: 10px;
+}
+
+
+/* =========================================
+   MOTIVOS
+========================================= */
+
+.ai-anomaly-reasons {
+    padding-top: 12px;
+
+    border-top:
+        1px solid var(--border);
+}
+
+
+.ai-anomaly-reasons > span {
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+.ai-anomaly-reasons ul {
+    margin:
+        8px 0 0 16px;
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   SEM ANOMALIAS
+========================================= */
+
+.ai-no-anomaly {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 18px;
+
+    background:
+        var(--success-soft);
+
+    border:
+        1px solid
+        rgba(20, 150, 87, 0.18);
+
+    border-radius: 13px;
+}
+
+
+.ai-ok-icon {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        var(--success);
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+
+.ai-no-anomaly strong {
+    display: block;
+
+    color:
+        var(--success);
+
+    font-size: 11px;
+
+    margin-bottom: 4px;
+}
+
+
+.ai-no-anomaly p {
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   CARD INFORMATIVO
+========================================= */
+
+.ai-info-card {
+    display: flex;
+
+    gap: 13px;
+
+    align-items: flex-start;
+
+    padding: 16px;
+
+    margin-bottom: 20px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    background:
+        var(--card);
+}
+
+
+.ai-info-icon {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        var(--primary-soft);
+
+    color:
+        var(--primary);
+
+    font-weight: 800;
+}
+
+
+.ai-info-card strong {
+    display: block;
+
+    font-size: 10px;
+
+    margin-bottom: 5px;
+}
+
+
+.ai-info-card p {
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   RESPONSIVO
+========================================= */
+
+@media (max-width: 1180px) {
+
+    .ai-metrics-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .ai-metrics-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .ai-anomaly-metrics {
+        grid-template-columns:
+            1fr;
+    }
+
+}

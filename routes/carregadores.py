@@ -5,6 +5,7 @@ from database.database import get_db
 from database.models import Carregador
 from schemas.carregador import CarregadorCreate
 
+
 router = APIRouter(
     prefix="/carregadores",
     tags=["Carregadores"]
@@ -12,7 +13,9 @@ router = APIRouter(
 
 
 @router.get("/")
-def listar_carregadores(db: Session = Depends(get_db)):
+def listar_carregadores(
+    db: Session = Depends(get_db)
+):
     carregadores = db.query(Carregador).all()
 
     return {
@@ -29,11 +32,15 @@ def criar_carregador(
         nome=carregador.nome,
         serial_number=carregador.serial_number,
         localizacao=carregador.localizacao,
-        status=carregador.status
+        status=carregador.status,
+        modelo=carregador.modelo,
+        potencia_maxima=carregador.potencia_maxima
     )
 
     db.add(novo_carregador)
+
     db.commit()
+
     db.refresh(novo_carregador)
 
     return novo_carregador
