@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 
-from database.models import Sessao
+from database.models import Sessao, Usuario
 
 
 def buscar_sessao(db: Session, sessao_id: int):
@@ -47,14 +47,34 @@ def associar_usuario_sessao(
     sessao = buscar_sessao(db, sessao_id)
 
     if sessao is None:
-        return None
+        return {
+            "sucesso": False,
+            "erro": "Sessao nao encontrada"
+        }
 
-    sessao.usuario_id = usuario_id
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id == usuario_id)
+        .first()
+    )
+
+    if usuario is None:
+        return {
+            "sucesso": False,
+            "erro": "Usuario nao encontrado"
+        }
+
+    sessao.usuario_id = usuario.id
 
     db.commit()
     db.refresh(sessao)
 
-    return sessao
+    return {
+        "sucesso": True,
+        "sessao_id": sessao.id,
+        "usuario_id": usuario.id,
+        "usuario_nome": usuario.nome
+    }
 
 def listar_sessoes_sem_usuario(db: Session):
     return (
@@ -88,14 +108,32 @@ def associar_usuarios_em_lote(
             erros += 1
             continue
 
-        sessao.usuario_id = item.usuario_id
+        usuario = (
+            db.query(Usuario)
+            .filter(Usuario.id == item.usuario_id)
+            .first()
+        )
+
+        if usuario is None:
+            resultados.append({
+                "sessao_id": item.sessao_id,
+                "usuario_id": item.usuario_id,
+                "sucesso": False,
+                "erro": "Usuario nao encontrado"
+            })
+
+            erros += 1
+            continue
+
+        sessao.usuario_id = usuario.id
 
         db.commit()
         db.refresh(sessao)
 
         resultados.append({
             "sessao_id": sessao.id,
-            "usuario_id": sessao.usuario_id,
+            "usuario_id": usuario.id,
+            "usuario_nome": usuario.nome,
             "sucesso": True
         })
 
