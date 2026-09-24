@@ -63,7 +63,7 @@ O **EV ChargeOps** transforma os dados gerados pelas sessões de recarga em info
 * Backend;
 * Frontend;
 * Banco de Dados;
-* Integração com GoodWe SEMS API;
+* Importação de dados via CSV exportado do GoodWe SEMS+;
 * Módulos de Inteligência Artificial;
 * Dashboard Gerencial.
 
@@ -86,7 +86,7 @@ O **EV ChargeOps** transforma os dados gerados pelas sessões de recarga em info
 
 ### Integrações
 
-* GoodWe SEMS API
+* GoodWe SEMS+ (exportação/importação via CSV)
 
 ### Inteligência Artificial
 
@@ -115,7 +115,7 @@ O **EV ChargeOps** transforma os dados gerados pelas sessões de recarga em info
 Carregador GoodWe HCA G2
            │
            ▼
-      GoodWe SEMS API
+     SEMS+ (Exportação CSV)
            │
            ▼
        EV ChargeOps
@@ -649,7 +649,7 @@ Responsável pela transmissão segura e confiável dos dados coletados.
 * HTTPS;
 * Wi-Fi;
 * Redes 4G/5G;
-* API GoodWe SEMS.
+* Exportação/Importação CSV do SEMS+ GoodWe.
 
 ---
 
@@ -721,9 +721,9 @@ O carregador inicia uma sessão de recarga e registra os principais parâmetros 
 * Potência (kW);
 * Energia consumida (kWh).
 
-#### 2. API GoodWe
+#### 2. Exportação CSV (SEMS+)
 
-Os dados coletados são enviados para o ambiente em nuvem por meio da API GoodWe, onde são recebidos, validados e disponibilizados para processamento.
+Os dados registrados pelo carregador são consolidados pelo portal SEMS+ e exportados em CSV (Relatório Estatístico ou Operacional). O EV ChargeOps lê esse arquivo, valida e disponibiliza os dados para processamento.
 
 #### 3. Banco de Dados
 
@@ -750,7 +750,7 @@ Com base no consumo registrado e nas tarifas configuradas, o sistema realiza aut
 ```text
 Carregador
     ↓
-API GoodWe
+Exportação CSV (SEMS+)
     ↓
 Banco de Dados
     ↓
@@ -980,7 +980,7 @@ Representação do fluxo completo das informações.
 ```text
 Carregador
     ↓
-API GoodWe
+Exportação CSV (SEMS+)
     ↓
 Banco de Dados
     ↓
@@ -1187,13 +1187,15 @@ Como protocolo principal de comunicação.
 
 Utilizar:
 
-- ✅ API SEMS GoodWe
+- ✅ Exportação CSV do SEMS+ GoodWe
 
 Para:
 
 - Monitoramento da estação;
 - Coleta de dados energéticos;
 - Integração com geração fotovoltaica.
+
+> Observação: o MVP não depende da API oficial da GoodWe nesta etapa. Os dados operacionais (energia carregada, geração, consumo, potência etc.) são obtidos por meio dos relatórios Estatístico e Operacional exportados em CSV pelo próprio portal SEMS+.
 
 ## Evitar Dependência de Fabricante
 
@@ -1208,7 +1210,7 @@ O sistema deve permitir integração futura com carregadores de diferentes fabri
 | Exploração comercial livre | Tarifas configuráveis por operador |
 | Comunicação à distribuidora | Fluxo de cadastro com registro e armazenamento do comprovante |
 | Protocolos abertos | Utilização de OCPP como protocolo principal |
-| Integração operacional | Uso da API SEMS para monitoramento e coleta de dados |
+| Integração operacional | Importação de dados via CSV exportado do SEMS+ para monitoramento e coleta |
 | Proibição de V2G | Não implementar injeção de energia na rede |
 | Responsabilidade por danos elétricos | Armazenar logs de tensão e dados de cada sessão |
 
@@ -1218,7 +1220,7 @@ O sistema deve permitir integração futura com carregadores de diferentes fabri
 
 A RN 1.000/2021 permite a exploração comercial da recarga de veículos elétricos de forma livre, desde que sejam observadas as exigências de comunicação com a distribuidora e o uso de protocolos abertos.
 
-Para garantir conformidade regulatória, interoperabilidade e escalabilidade, o **EV ChargeOps** adotará o protocolo **OCPP** como padrão de comunicação dos carregadores, utilizará a **API SEMS da GoodWe** para monitoramento e manterá registros de todas as comunicações e eventos operacionais da infraestrutura de recarga.
+Para garantir conformidade regulatória, interoperabilidade e escalabilidade, o **EV ChargeOps** adotará o protocolo **OCPP** como padrão de comunicação dos carregadores, utilizará os **relatórios CSV exportados do SEMS+ da GoodWe** para monitoramento e manterá registros de todas as comunicações e eventos operacionais da infraestrutura de recarga.
 
 ---
 
@@ -1228,15 +1230,15 @@ Para garantir conformidade regulatória, interoperabilidade e escalabilidade, o 
 
 ---
 
-# API GoodWe SEMS
+# Integração GoodWe SEMS+ (Exportação CSV)
 
 ## Visão Geral
 
 O GoodWe HCA G2 é um carregador AC para veículos elétricos disponível em versões de 7 kW, 11 kW e 22 kW.
 
-O equipamento pode ser integrado ao portal SEMS (Smart Energy Management System), plataforma em nuvem da GoodWe responsável pelo monitoramento e gerenciamento de inversores, baterias e carregadores elétricos.
+O equipamento é integrado ao portal SEMS+ (Smart Energy Management System), plataforma em nuvem da GoodWe responsável pelo monitoramento e gerenciamento de inversores, baterias e carregadores elétricos.
 
-A integração do EV ChargeOps será realizada através da API REST disponibilizada pelo portal SEMS.
+Como a equipe não possui acesso à API REST oficial disponibilizada pelo portal SEMS+ (Open API / SEMS Portal API, voltada a contas de organização), a integração do EV ChargeOps neste MVP é realizada por meio dos **relatórios exportados em CSV** diretamente pelo portal SEMS+. A estrutura foi construída de forma que, no futuro, a fonte de dados possa ser trocada por uma chamada de API sem alterar o restante do sistema.
 
 ---
 
@@ -1245,257 +1247,117 @@ A integração do EV ChargeOps será realizada através da API REST disponibiliz
 | Interface | Tipo | Função |
 |------------|--------|---------|
 | RS-485 | Serial / Modbus RTU | Comunicação com inversores e medidores |
-| LAN (RJ-45) | Ethernet TCP/IP | Integração com o portal SEMS |
+| LAN (RJ-45) | Ethernet TCP/IP | Integração com o portal SEMS+ |
 | Wi-Fi | IEEE 802.11 | Conexão sem fio |
 | Bluetooth | BLE | Configuração inicial |
 | RFID | ISO 14443 | Identificação dos usuários |
 
 ---
 
-# Processo de Autenticação
+# Relatórios Disponíveis no SEMS+
 
-A API utiliza autenticação baseada em token.
+O portal SEMS+ permite exportar dois tipos de relatório em CSV para uma estação.
 
-O processo ocorre em duas etapas:
+## Relatório Estatístico
 
-1. Login
-2. Utilização do token em todas as requisições subsequentes
+Traz 1 valor total + 1 valor por dia, para o período selecionado (ex.: um mês). É a principal fonte de dados do EV ChargeOps, porque disponibiliza o indicador **Energia Carregada**, que corresponde à recarga do veículo.
 
----
+| Indicador (SEMS+) | Uso no EV ChargeOps |
+|---|---|
+| Energy Generation | Geração fotovoltaica da estação |
+| Charged Energy | Energia entregue ao veículo — base do `consumo_kwh` da Sessão |
+| Discharge Energy | Energia de descarga da bateria |
+| Grid Export Energy | Excedente exportado para a rede |
+| Import Energy | Energia importada da rede |
+| Energy Consumption | Consumo da infraestrutura |
+| Import Cost | Custo de importação (BRL) |
 
-## Endpoint de Login
+## Relatório Operacional
 
-### CrossLogin
+Traz 1 valor por horário (ou por intervalo de 5 minutos, dependendo do filtro escolhido) de um único dia. É usado para acompanhar o comportamento da infraestrutura ao longo do tempo (dashboard, IA), mais do que para faturamento.
 
-```http
-POST /api/v1/Common/CrossLogin
-```
+| Indicador (SEMS+) | Uso no EV ChargeOps |
+|---|---|
+| Load Power | Potência de carga da instalação no horário |
+| Grid Power | Potência importada/exportada da rede no horário |
+| Power Factor | Fator de potência |
+| Grid Frequency | Frequência da rede elétrica |
 
-### Headers
-
-```json
-{
-  "Content-Type": "application/json"
-}
-```
-
-### Body
-
-```json
-{
-  "account": "email@dominio.com",
-  "pwd": "senha"
-}
-```
-
-### Dados Retornados
-
-| Campo | Descrição |
-|---------|------------|
-| uid | Identificador do usuário |
-| timestamp | Momento do login |
-| token | Token de autenticação |
-| api | URL base da API |
-
----
-
-## Header de Autenticação
-
-Após o login:
-
-```json
-{
-  "version": "v2.1.0",
-  "client": "ios",
-  "language": "pt",
-  "timestamp": "...",
-  "uid": "...",
-  "token": "..."
-}
-```
-
----
-
-# Endpoints Principais
-
-## Listagem de Estações
-
-```http
-POST /v1/PowerStation/List
-```
-
-Retorna todas as estações vinculadas à conta.
-
----
-
-## Dados da Estação
-
-```http
-POST /v1/PowerStation/GetMonitorDetailByPowerstationId
-```
-
-Retorna dados gerais da estação.
-
----
-
-## Dados do Carregador
-
-```http
-GET /powerstation/EvChargerDetail
-```
-
-Endpoint principal utilizado pelo EV ChargeOps.
-
-Retorna:
-
-- Status do carregador;
-- Potência instantânea;
-- Energia consumida;
-- Tempo de carregamento.
-
----
-
-# Campos Disponíveis
-
-| Campo | Tipo | Descrição |
-|---------|---------|-------------|
-| evChargerStatus | int | Status do carregador |
-| power | decimal | Potência instantânea (kW) |
-| eChargeToday | decimal | Energia consumida no dia |
-| eChargeTotal | decimal | Energia acumulada |
-| chargeDuration | int | Duração da sessão |
-| sn | string | Número de série |
-| model | string | Modelo do equipamento |
-
----
-
-## Status do Carregador
-
-| Código | Situação |
-|----------|-----------|
-| 0 | Offline |
-| 1 | Disponível |
-| 2 | Carregando |
-| 3 | Erro |
+Os indicadores efetivamente presentes no arquivo dependem da seleção feita na tela "Selecionar indicadores" do SEMS+ no momento da exportação. Por isso, a leitura do CSV é feita de forma dinâmica, sem exigir colunas fixas.
 
 ---
 
 # Fluxo de Integração com o EV ChargeOps
 
-## Etapa 1 — Autenticação
+## Etapa 1 — Exportação
 
-Realizar login e armazenar:
+Exportar o Relatório Estatístico (ou Operacional) da estação no portal SEMS+, em formato CSV.
 
-- Token;
-- UID;
-- URL da API.
+## Etapa 2 — Leitura e Validação
 
-## Etapa 2 — Monitoramento
+Responsabilidade de `services/csv_service.py`:
 
-Consultar o endpoint `EvChargerDetail` periodicamente.
+- Detectar o tipo de relatório (Estatístico ou Operacional);
+- Ler os metadados da estação (nome, endereço, potência nominal);
+- Ler os indicadores disponíveis e seus valores por dia/horário;
+- Validar a consistência dos dados (ex.: total do período x soma dos dias).
 
-Sugestão:
+## Etapa 3 — Normalização
 
-- Atualização a cada 60 segundos.
+Responsabilidade de `services/goodwe_service.py`:
 
-## Etapa 3 — Início da Sessão
+- Montar os dados do Carregador (nome, localização, potência, status);
+- Extrair a Energia Carregada total e por dia;
+- Extrair a potência de carga por horário (quando disponível);
+- Inferir o status da estação (`em_uso` / `disponivel`) a partir da potência de carga.
 
-Quando:
+## Etapa 4 — Persistência
 
-```text
-evChargerStatus
-1 → 2
-```
+Gravar os dados normalizados no banco (Carregador + leituras de energia), para uso pelos módulos de Sessões, Consumo/Rateio e Histórico.
 
-Registrar:
+## Etapa 5 — Reconciliação com Sessões
 
-- Usuário;
-- Data;
-- Hora de início.
-
-## Etapa 4 — Acompanhamento
-
-Monitorar:
-
-- Potência;
-- Energia acumulada;
-- Tempo de sessão.
-
-## Etapa 5 — Encerramento
-
-Quando:
-
-```text
-evChargerStatus
-2 → 1
-```
-
-Registrar:
-
-- Energia total consumida;
-- Horário final;
-- Duração.
+Como o CSV traz dados agregados da estação (e não por sessão individual), a energia carregada é conciliada com as sessões registradas pelo módulo de Sessões para chegar ao consumo individual de cada morador.
 
 ---
 
 # Mapeamento para o Banco de Dados
 
-| Campo API | Campo Banco |
+| Campo SEMS+ (CSV) | Campo Banco |
 |------------|------------|
-| evChargerStatus | status |
-| eChargeToday | energia_kwh |
-| chargeDuration | duração |
-| sn | carregador_id |
+| Charged Energy (total/dia) | energia_kwh / consumo_kwh |
+| Station Name | nome (Carregador) |
+| Station Address | localizacao |
+| Rated Power | potencia_maxima |
+| Load Power (por horário) | usado para inferir `status` |
 
 ---
 
 # Pontos de Atenção
 
-## Expiração do Token
+## Formato do Arquivo
 
-A API pode retornar:
+O CSV exportado pelo SEMS+ não é uma tabela simples: traz linhas de metadados soltas antes da tabela e uma célula com várias informações da estação separadas por quebra de linha. A leitura já trata esse formato.
 
-```text
-The authorization has expired, please log in again.
-```
+## Indicadores Variáveis
 
-O sistema deverá realizar reautenticação automática.
+A seleção de indicadores no SEMS+ pode variar entre exportações. O parser não exige colunas fixas — ele lê o que estiver disponível no arquivo.
 
----
+## Sem Identificação do Morador
 
-## URL Dinâmica
+O relatório traz o consumo agregado da estação, não por sessão de recarga individual. A ligação usuário → sessão → consumo é feita em conjunto com o módulo de Sessões.
 
-A URL retornada no login pode variar conforme a região.
+## Preparação para a API
 
-Sempre utilizar a URL retornada pelo endpoint de autenticação.
-
----
-
-## Polling
-
-Evitar intervalos inferiores a 30 segundos.
-
-Recomendação:
-
-- Atualização a cada 60 segundos.
-
----
-
-## Fallback
-
-Caso a API fique indisponível:
-
-- Manter o último estado conhecido;
-- Registrar o incidente;
-- Retomar a sincronização automaticamente.
+A leitura do CSV (`csv_service.py`) fica separada da lógica de domínio GoodWe (`goodwe_service.py`) justamente para que uma futura integração via API oficial da GoodWe possa alimentar as mesmas funções sem alterar o restante do sistema.
 
 ---
 
 ## Conclusão
 
-A API GoodWe SEMS fornece todas as informações necessárias para monitorar sessões de carregamento, registrar consumo energético e alimentar o sistema de faturamento do EV ChargeOps.
+Os relatórios do SEMS+ fornecem as informações necessárias para monitorar a recarga, registrar o consumo energético e alimentar o sistema de faturamento do EV ChargeOps neste MVP.
 
-Sua integração permitirá a construção de uma plataforma capaz de controlar usuários, registrar sessões, calcular cobranças e gerar inteligência operacional baseada em dados reais de utilização.
+A exportação em CSV permite iniciar a integração sem depender do acesso à API oficial da GoodWe, mantendo a estrutura preparada para essa evolução futura.
 ---
 # Carregador GoodWe HCA G2
 
