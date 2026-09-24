@@ -55,3 +55,55 @@ def associar_usuario_sessao(
     db.refresh(sessao)
 
     return sessao
+
+def listar_sessoes_sem_usuario(db: Session):
+    return (
+        db.query(Sessao)
+        .filter(Sessao.usuario_id.is_(None))
+        .all()
+    )
+
+def associar_usuarios_em_lote(
+    db: Session,
+    associacoes: list
+):
+    resultados = []
+
+    associadas = 0
+    erros = 0
+
+    for item in associacoes:
+        sessao = buscar_sessao(
+            db,
+            item.sessao_id
+        )
+
+        if sessao is None:
+            resultados.append({
+                "sessao_id": item.sessao_id,
+                "sucesso": False,
+                "erro": "Sessao nao encontrada"
+            })
+
+            erros += 1
+            continue
+
+        sessao.usuario_id = item.usuario_id
+
+        db.commit()
+        db.refresh(sessao)
+
+        resultados.append({
+            "sessao_id": sessao.id,
+            "usuario_id": sessao.usuario_id,
+            "sucesso": True
+        })
+
+        associadas += 1
+
+    return {
+        "total_recebidas": len(associacoes),
+        "associadas": associadas,
+        "erros": erros,
+        "resultados": resultados
+    }

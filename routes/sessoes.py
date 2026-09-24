@@ -4,10 +4,13 @@ from sqlalchemy.orm import Session
 from database.database import get_db
 from database.models import Sessao
 from schemas.sessao import SessaoCreate
+from schemas.associacao import AssociacaoLote
 from services.sessao_service import (
     listar_todas_sessoes,
     finalizar_sessao,
-    associar_usuario_sessao
+    associar_usuario_sessao,
+    listar_sessoes_sem_usuario,
+    associar_usuarios_em_lote
 )
 
 router = APIRouter(
@@ -85,3 +88,21 @@ def associar_usuario(
         )
 
     return sessao
+
+@router.get("/sem-usuario")
+def sessoes_sem_usuario(
+    db: Session = Depends(get_db)
+):
+    return {
+        "sessoes": listar_sessoes_sem_usuario(db)
+    }
+
+@router.put("/associar-usuarios-lote")
+def associar_lote(
+    dados: AssociacaoLote,
+    db: Session = Depends(get_db)
+):
+    return associar_usuarios_em_lote(
+        db,
+        dados.associacoes
+    )
