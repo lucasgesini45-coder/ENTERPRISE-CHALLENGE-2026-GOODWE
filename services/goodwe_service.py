@@ -1,0 +1,101 @@
+from datetime import datetime
+from sqlalchemy.orm import Session
+
+from database.models import Carregador, Sessao
+
+
+def buscar_carregador_por_serial(
+    db: Session,
+    serial_number: str
+):
+    return (
+        db.query(Carregador)
+        .filter(Carregador.serial_number == serial_number)
+        .first()
+    )
+
+
+def buscar_sessao_existente(
+    db: Session,
+    carregador_id: int,
+    inicio: datetime,
+    fim: datetime
+):
+    return (
+        db.query(Sessao)
+        .filter(
+            Sessao.carregador_id == carregador_id,
+            Sessao.inicio == inicio,
+            Sessao.fim == fim
+        )
+        .first()
+    )
+
+
+def importar_sessao_goodwe(
+    db: Session,
+    serial_number: str,
+    inicio: datetime,
+    fim: datetime,
+    consumo_kwh: float,
+    usuario_id: int | None = None,
+    tarifa: float = 0.0
+):
+    carregador = buscar_carregador_por_serial(
+        db,
+        serial_number
+    )
+
+    if carregador is None:
+        return {
+            "sucesso": False,
+            "erro": "Carregador nao encontrado"
+        }
+
+    sessao_existente = buscar_sessao_existente(
+        db,
+        carregador.id,
+        inicio,
+        fim
+    )
+
+    if sessao_existente:
+        return {
+            "sucesso": False,
+            "erro": "Sessao ja importada",
+            "sessao_id": sessao_existente.id
+        }
+
+    duracao_minutos = (
+        fim - inicio
+    ).total_seconds() / 60
+
+    valor_total = round(
+        consumo_kwh * tarifa,
+        2
+    )
+
+    nova_sessao = Sessao(
+        usuario_id=usuario_id,
+        carregador_id=carregador.id,
+        inicio=inicio,
+        fim=fim,
+        consumo_kwh=consumo_kwh,
+        duracao=round(duracao_minutos, 2),
+        tarifa=tarifa,
+        valor_total=valor_total,
+        status="CONCLUIDA"
+    )
+
+    db.add(nova_sessao)
+    db.commit()
+    db.refresh(nova_sessao)
+
+    return {
+        "sucesso": True,
+        "sessao_id": nova_sessao.id,
+        "carregador_id": carregador.id,
+        "consumo_kwh": nova_sessao.consumo_kwh,
+        "duracao_minutos": nova_sessao.duracao,
+        "valor_total": nova_sessao.valor_total
+    }

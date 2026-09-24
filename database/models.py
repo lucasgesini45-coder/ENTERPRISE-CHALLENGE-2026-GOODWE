@@ -19,6 +19,7 @@ class Carregador(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String, nullable=False)
+    serial_number = Column(String, unique=True, index=True)
     localizacao = Column(String)
     potencia_maxima = Column(Float)
     status = Column(String)

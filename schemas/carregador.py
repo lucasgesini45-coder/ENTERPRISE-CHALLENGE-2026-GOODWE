@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class CarregadorBase(BaseModel):
     nome: str
+    serial_number: str
     localizacao: str
     status: str
 

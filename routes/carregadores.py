@@ -27,6 +27,7 @@ def criar_carregador(
 ):
     novo_carregador = Carregador(
         nome=carregador.nome,
+        serial_number=carregador.serial_number,
         localizacao=carregador.localizacao,
         status=carregador.status
     )
