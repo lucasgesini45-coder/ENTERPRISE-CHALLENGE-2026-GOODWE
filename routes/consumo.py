@@ -7,7 +7,8 @@ from database.database import get_db
 from services.consumo_service import calcular_valor_recarga
 from services.consumo_rateio import (
     gerar_relatorio_rateio,
-    gerar_rateio_por_periodo
+    gerar_rateio_por_periodo,
+    gerar_fatura_usuario
 )
 
 router = APIRouter(
@@ -48,6 +49,20 @@ def consultar_rateio_mensal(
 ):
     return gerar_rateio_por_periodo(
         db=db,
+        inicio=inicio,
+        fim=fim
+    )
+
+@router.get("/fatura-usuario/{usuario_id}")
+def fatura_usuario(
+    usuario_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None,
+    db: Session = Depends(get_db)
+):
+    return gerar_fatura_usuario(
+        db=db,
+        usuario_id=usuario_id,
         inicio=inicio,
         fim=fim
     )

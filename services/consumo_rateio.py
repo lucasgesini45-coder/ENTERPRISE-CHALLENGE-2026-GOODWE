@@ -197,3 +197,103 @@ def gerar_rateio_por_periodo(
         "valor_total": valor_total,
         "usuarios": usuarios
     }
+
+def gerar_fatura_usuario(
+    db: Session,
+    usuario_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id == usuario_id)
+        .first()
+    )
+
+    if usuario is None:
+        return {
+            "sucesso": False,
+            "erro": "Usuario nao encontrado"
+        }
+
+    consulta = (
+        db.query(Sessao)
+        .filter(
+            Sessao.usuario_id == usuario_id,
+            Sessao.status == "CONCLUIDA"
+        )
+    )
+
+    if inicio is not None:
+        consulta = consulta.filter(
+            Sessao.inicio >= inicio
+        )
+
+    if fim is not None:
+        consulta = consulta.filter(
+            Sessao.inicio <= fim
+        )
+
+    sessoes = (
+        consulta
+        .order_by(Sessao.inicio.asc())
+        .all()
+    )
+
+    consumo_total = round(
+        sum(
+            sessao.consumo_kwh or 0
+            for sessao in sessoes
+        ),
+        3
+    )
+
+    valor_total = round(
+        sum(
+            sessao.valor_total or 0
+            for sessao in sessoes
+        ),
+        2
+    )
+
+    tarifas = [
+        sessao.tarifa
+        for sessao in sessoes
+        if sessao.tarifa is not None
+    ]
+
+    tarifa_media = round(
+        sum(tarifas) / len(tarifas),
+        2
+    ) if tarifas else 0.0
+
+    detalhes = []
+
+    for sessao in sessoes:
+        detalhes.append({
+            "sessao_id": sessao.id,
+            "carregador_id": sessao.carregador_id,
+            "inicio": sessao.inicio,
+            "fim": sessao.fim,
+            "consumo_kwh": sessao.consumo_kwh,
+            "tarifa": sessao.tarifa,
+            "valor": sessao.valor_total
+        })
+
+    return {
+        "sucesso": True,
+        "usuario": {
+            "id": usuario.id,
+            "nome": usuario.nome,
+            "email": usuario.email
+        },
+        "periodo": {
+            "inicio": inicio,
+            "fim": fim
+        },
+        "total_sessoes": len(sessoes),
+        "consumo_total_kwh": consumo_total,
+        "tarifa_media": tarifa_media,
+        "valor_total": valor_total,
+        "sessoes": detalhes
+    }
