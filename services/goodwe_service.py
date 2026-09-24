@@ -99,3 +99,43 @@ def importar_sessao_goodwe(
         "duracao_minutos": nova_sessao.duracao,
         "valor_total": nova_sessao.valor_total
     }
+
+def importar_sessoes_lote(
+    db: Session,
+    sessoes: list
+):
+    resultados = []
+
+    importadas = 0
+    duplicadas = 0
+    erros = 0
+
+    for sessao in sessoes:
+        resultado = importar_sessao_goodwe(
+            db=db,
+            serial_number=sessao.serial_number,
+            inicio=sessao.inicio,
+            fim=sessao.fim,
+            consumo_kwh=sessao.consumo_kwh,
+            usuario_id=sessao.usuario_id,
+            tarifa=sessao.tarifa
+        )
+
+        resultados.append(resultado)
+
+        if resultado.get("sucesso"):
+            importadas += 1
+
+        elif resultado.get("erro") == "Sessao ja importada":
+            duplicadas += 1
+
+        else:
+            erros += 1
+
+    return {
+        "total_recebidas": len(sessoes),
+        "importadas": importadas,
+        "duplicadas": duplicadas,
+        "erros": erros,
+        "resultados": resultados
+    }
