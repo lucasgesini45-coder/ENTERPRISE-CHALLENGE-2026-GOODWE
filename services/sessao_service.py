@@ -107,3 +107,26 @@ def associar_usuarios_em_lote(
         "erros": erros,
         "resultados": resultados
     }
+
+def listar_sessoes_por_usuario(
+    db: Session,
+    usuario_id: int
+):
+    return (
+        db.query(Sessao)
+        .filter(Sessao.usuario_id == usuario_id)
+        .order_by(Sessao.inicio.desc())
+        .all()
+    )
+
+
+def listar_sessoes_por_carregador(
+    db: Session,
+    carregador_id: int
+):
+    return (
+        db.query(Sessao)
+        .filter(Sessao.carregador_id == carregador_id)
+        .order_by(Sessao.inicio.desc())
+        .all()
+    )

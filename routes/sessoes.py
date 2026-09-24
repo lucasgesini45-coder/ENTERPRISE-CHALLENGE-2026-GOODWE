@@ -10,7 +10,9 @@ from services.sessao_service import (
     finalizar_sessao,
     associar_usuario_sessao,
     listar_sessoes_sem_usuario,
-    associar_usuarios_em_lote
+    associar_usuarios_em_lote,
+    listar_sessoes_por_usuario,
+    listar_sessoes_por_carregador
 )
 
 router = APIRouter(
@@ -106,3 +108,71 @@ def associar_lote(
         db,
         dados.associacoes
     )
+
+@router.get("/usuario/{usuario_id}")
+def historico_usuario(
+    usuario_id: int,
+    db: Session = Depends(get_db)
+):
+    sessoes = listar_sessoes_por_usuario(
+        db,
+        usuario_id
+    )
+
+    consumo_total = round(
+        sum(
+            sessao.consumo_kwh or 0
+            for sessao in sessoes
+        ),
+        3
+    )
+
+    valor_total = round(
+        sum(
+            sessao.valor_total or 0
+            for sessao in sessoes
+        ),
+        2
+    )
+
+    return {
+        "usuario_id": usuario_id,
+        "total_sessoes": len(sessoes),
+        "consumo_total_kwh": consumo_total,
+        "valor_total": valor_total,
+        "sessoes": sessoes
+    }
+
+@router.get("/carregador/{carregador_id}")
+def historico_carregador(
+    carregador_id: int,
+    db: Session = Depends(get_db)
+):
+    sessoes = listar_sessoes_por_carregador(
+        db,
+        carregador_id
+    )
+
+    consumo_total = round(
+        sum(
+            sessao.consumo_kwh or 0
+            for sessao in sessoes
+        ),
+        3
+    )
+
+    valor_total = round(
+        sum(
+            sessao.valor_total or 0
+            for sessao in sessoes
+        ),
+        2
+    )
+
+    return {
+        "carregador_id": carregador_id,
+        "total_sessoes": len(sessoes),
+        "consumo_total_kwh": consumo_total,
+        "valor_total": valor_total,
+        "sessoes": sessoes
+    }
