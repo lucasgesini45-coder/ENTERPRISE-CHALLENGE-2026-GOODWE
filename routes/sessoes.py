@@ -6,7 +6,8 @@ from database.models import Sessao
 from schemas.sessao import SessaoCreate
 from services.sessao_service import (
     listar_todas_sessoes,
-    finalizar_sessao
+    finalizar_sessao,
+    associar_usuario_sessao
 )
 
 router = APIRouter(
@@ -55,6 +56,26 @@ def finalizar(
         db,
         sessao_id,
         consumo_kwh
+    )
+
+    if sessao is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Sessao nao encontrada"
+        )
+
+    return sessao
+
+@router.put("/{sessao_id}/associar-usuario")
+def associar_usuario(
+    sessao_id: int,
+    usuario_id: int,
+    db: Session = Depends(get_db)
+):
+    sessao = associar_usuario_sessao(
+        db,
+        sessao_id,
+        usuario_id
     )
 
     if sessao is None:

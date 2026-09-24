@@ -38,3 +38,20 @@ def finalizar_sessao(
     db.refresh(sessao)
 
     return sessao
+
+def associar_usuario_sessao(
+    db: Session,
+    sessao_id: int,
+    usuario_id: int
+):
+    sessao = buscar_sessao(db, sessao_id)
+
+    if sessao is None:
+        return None
+
+    sessao.usuario_id = usuario_id
+
+    db.commit()
+    db.refresh(sessao)
+
+    return sessao
