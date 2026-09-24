@@ -1,5 +1,14 @@
-from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, Float
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import (
+    create_engine,
+    Column,
+    String,
+    Integer,
+    ForeignKey,
+    Float,
+    DateTime,
+)
+from sqlalchemy.orm import declarative_base, Session
+from datetime import datetime
 
 # escolhi usar sqlalchemy ao inves do sqlite porque assim fica mais facil de fazer futuras manutenções
 # vou usar tipagem de dados para o codigo ficar mais rapido
@@ -45,9 +54,43 @@ class Sessoes(base):
 
     sessao_id = Column("sessao_id", Integer, primary_key=True)
     user_id = Column("user_id", Integer, ForeignKey("usuarios.id"))
-    charger_id = Column("charger_id", Integer, ForeignKey("chargers.id"))
-    inicio = Column("inicio", String)
-    fim = Column("fim", String)
+    charger_id = Column("charger_id", Integer, ForeignKey("chargers.id_charger"))
+    inicio = Column("inicio", DateTime)
+    fim = Column("fim", DateTime)
     energia_kwh = Column("energia_kwh", Float)  # corresponde ao "eChargeToday" da api
-    duracao = Column("duracao", Float)  # calculo de inicio - fim
+    duracao_min = Column("duracao_min", Float)  # calculo de inicio - fim
     status = Column("status", String)  # usando, concluida, interrompida
+
+
+base.metadata.create_all(bind=db)
+
+
+# calcular de duracao toal de recarga
+def calcular_duracao_min(
+    inicio: datetime, fim: datetime
+) -> float:  # a funcao deve retornar um vclor em formato float
+    return (fim - inicio).total_seconds() / 60
+
+
+# salvar toda sessao de carregamento alterando status para concluida
+def salvar_sessao(
+    user_id,
+    charger_id,
+    inicio: datetime,
+    fim: datetime,
+    energia_kwh,
+    status="concluida",
+):
+    with Session(db) as s:
+        s.add(
+            Sessoes(
+                user_id=user_id,
+                charger_id=charger_id,
+                inicio=inicio,
+                fim=fim,
+                energia_kwh=energia_kwh,
+                duracao_min=calcular_duracao_min(inicio, fim),
+                status=status,
+            )
+        )
+        s.commit()
