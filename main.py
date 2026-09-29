@@ -8,6 +8,7 @@ from routes.usuarios import router as usuarios_router
 from routes.goodwe import router as goodwe_router
 from routes.dashboard import router as dashboard_router
 from routes.ia import router as ia_router
+from routes.assistente_ia import router as assistente_ia_router
 
 app = FastAPI(
     title="EV ChargeOps API",
@@ -30,6 +31,7 @@ app.include_router(usuarios_router)
 app.include_router(goodwe_router)
 app.include_router(dashboard_router)
 app.include_router(ia_router)
+app.include_router(assistente_ia_router)
 
 
 @app.get("/")

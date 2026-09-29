@@ -1,9 +1,7 @@
 from datetime import datetime
 
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
 from sqlalchemy.orm import Session
-from sklearn.ensemble import IsolationForest
 
 from database.models import Sessao
 
@@ -11,7 +9,6 @@ from database.models import Sessao
 from datetime import datetime, timedelta
 
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
 from sqlalchemy.orm import Session
 
 from database.models import Sessao
@@ -21,6 +18,9 @@ def prever_consumo(
     db: Session,
     dias_previsao: int = 7
 ):
+    # import aqui para o servidor subir mesmo se o scikit-learn estiver bloqueado/ausente
+    from sklearn.ensemble import RandomForestRegressor
+
     sessoes = (
         db.query(Sessao)
         .filter(
@@ -179,6 +179,9 @@ def prever_consumo(
 
 
 def detectar_anomalias(db: Session):
+    # import aqui para o servidor subir mesmo se o scikit-learn estiver bloqueado/ausente
+    from sklearn.ensemble import IsolationForest
+
     sessoes = (
         db.query(Sessao)
         .filter(
