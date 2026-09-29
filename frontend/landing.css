@@ -1,0 +1,1164 @@
+/* =========================================================
+   EV CHARGEOPS
+   LANDING PAGE
+========================================================= */
+
+:root {
+    --bg: #071013;
+    --bg-dark: #050b0d;
+    --panel: #0b1316;
+
+    --text: #ffffff;
+    --muted: #aeb7bb;
+
+    --accent: #ff174f;
+    --accent-2: #ef005f;
+
+    --green: #00d7a5;
+
+    --light: #f5f5f4;
+
+    --border: rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inter", Arial, sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
+
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+
+    min-height: 660px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 70% 40%,
+            rgba(0, 215, 165, 0.06),
+            transparent 30%
+        ),
+        #071013;
+}
+
+
+/* IMAGEM PRINCIPAL */
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        url("assets/hero-ev-chargeops.png");
+
+    background-size: cover;
+    background-position: center right;
+
+    z-index: 0;
+}
+
+
+/* DEGRADÊ SOBRE A IMAGEM */
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(4, 10, 12, 0.97) 0%,
+            rgba(4, 10, 12, 0.91) 25%,
+            rgba(4, 10, 12, 0.62) 47%,
+            rgba(4, 10, 12, 0.16) 72%,
+            rgba(4, 10, 12, 0.04) 100%
+        );
+}
+
+
+/* =========================================================
+   HEADER TRANSPARENTE
+========================================================= */
+
+.header {
+    position: relative;
+
+    z-index: 10;
+
+    min-height: 95px;
+
+    padding: 0 7%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 28px;
+
+    background: rgba(4, 10, 12, 0.10);
+
+    backdrop-filter: blur(2px);
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.12);
+}
+
+
+/* LOGO */
+
+.logo {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 155px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    line-height: 0.75;
+
+    letter-spacing: -2px;
+}
+
+.logo-ev {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.logo-charge {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.logo-charge span {
+    color: var(--accent);
+}
+
+
+/* PARTNERS */
+
+.partners {
+    display: flex;
+    align-items: center;
+
+    gap: 22px;
+}
+
+.divider {
+    width: 1px;
+    height: 32px;
+
+    background:
+        rgba(255, 255, 255, 0.25);
+}
+
+.fiap {
+    color: var(--accent);
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 23px;
+    font-weight: 400;
+
+    letter-spacing: 3px;
+}
+
+.goodwe {
+    color: var(--accent);
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 19px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO
+========================================================= */
+
+.nav {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 35px;
+}
+
+.nav a {
+    position: relative;
+
+    color:
+        rgba(255, 255, 255, 0.78);
+
+    font-size: 13px;
+
+    transition:
+        color 0.2s ease;
+}
+
+.nav a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -10px;
+
+    width: 0;
+    height: 1px;
+
+    background: var(--accent);
+
+    transition:
+        width 0.25s ease;
+}
+
+.nav a:hover {
+    color: #ffffff;
+}
+
+.nav a:hover::after {
+    width: 100%;
+}
+
+
+/* =========================================================
+   BOTÃO DO HEADER
+========================================================= */
+
+.btn-header {
+    min-height: 46px;
+
+    padding: 0 22px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    border:
+        1px solid var(--accent);
+
+    border-radius: 100px;
+
+    font-size: 12px;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.btn-header span {
+    color: var(--accent);
+
+    font-size: 19px;
+}
+
+.btn-header:hover {
+    background:
+        rgba(255, 23, 79, 0.12);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   MENU MOBILE
+========================================================= */
+
+.menu-mobile {
+    display: none;
+
+    width: 42px;
+    height: 42px;
+
+    border: 0;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+.menu-mobile span {
+    display: block;
+
+    width: 22px;
+    height: 1px;
+
+    margin: 5px auto;
+
+    background: white;
+}
+
+
+/* =========================================================
+   CONTEÚDO DO HERO
+========================================================= */
+
+.hero-content {
+    position: relative;
+
+    z-index: 4;
+
+    min-height: 565px;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+        45px
+        7%
+        70px;
+}
+
+.hero-copy {
+    max-width: 600px;
+}
+
+.eyebrow {
+    display: block;
+
+    margin-bottom: 22px;
+
+    color: #a5b0b4;
+
+    font-size: 10px;
+
+    letter-spacing: 4.5px;
+}
+
+
+/* LOGO PRINCIPAL */
+
+.main-logo {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 28px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    line-height: 0.76;
+
+    letter-spacing: -5px;
+}
+
+.main-logo-ev {
+    font-size:
+        clamp(65px, 6vw, 95px);
+
+    font-weight: 800;
+}
+
+.main-logo-charge {
+    font-size:
+        clamp(52px, 5vw, 80px);
+
+    font-weight: 700;
+}
+
+.main-logo-charge span {
+    color: var(--accent);
+}
+
+
+/* HEADLINE */
+
+.hero-copy h1 {
+    margin-bottom: 15px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size:
+        clamp(31px, 3vw, 44px);
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+
+    font-weight: 500;
+}
+
+.hero-copy > p {
+    max-width: 500px;
+
+    color: #bdc5c8;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    font-weight: 300;
+}
+
+
+/* =========================================================
+   BOTÕES DO HERO
+========================================================= */
+
+.hero-buttons {
+    margin-top: 30px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+}
+
+.btn-primary,
+.btn-outline {
+    min-height: 52px;
+
+    padding: 0 26px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    border-radius: 100px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 12px;
+}
+
+.btn-primary {
+    background:
+        linear-gradient(
+            135deg,
+            #ff303f,
+            #ef005f
+        );
+
+    font-weight: 600;
+
+    box-shadow:
+        0 10px 35px
+        rgba(255, 23, 79, 0.16);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 15px 40px
+        rgba(255, 23, 79, 0.26);
+}
+
+.btn-primary > span {
+    font-size: 18px;
+}
+
+.btn-outline {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.5);
+
+    transition:
+        background 0.25s ease,
+        border 0.25s ease;
+}
+
+.btn-outline:hover {
+    background:
+        rgba(255, 255, 255, 0.05);
+
+    border-color: white;
+}
+
+.play {
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid var(--accent);
+
+    border-radius: 50%;
+
+    color: var(--accent);
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   FAIXA PRETA - FUNCIONALIDADES
+========================================================= */
+
+.features {
+    position: relative;
+
+    z-index: 5;
+
+    min-height: 125px;
+
+    padding: 0 7%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    background:
+        rgba(5, 13, 16, 0.96);
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+.feature {
+    position: relative;
+
+    padding: 25px 28px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 19px;
+}
+
+.feature:not(:last-child)::after {
+    content: "";
+
+    position: absolute;
+
+    top: 28%;
+    right: 0;
+
+    width: 1px;
+    height: 44%;
+
+    background:
+        rgba(255, 255, 255, 0.13);
+}
+
+
+/* =========================================================
+   ÍCONES DA FAIXA PRETA
+========================================================= */
+
+.feature-icon {
+    min-width: 65px;
+    height: 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon svg {
+    width: 55px;
+    height: 55px;
+
+    fill: none;
+
+    /* TODOS OS 4 ÍCONES FICAM ROSA */
+    stroke: var(--accent);
+
+    stroke-width: 2;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.feature h3 {
+    margin-bottom: 8px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.feature p {
+    color: #a1abad;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   ECOSSISTEMA - PARTE BRANCA
+========================================================= */
+
+.ecosystem {
+    min-height: 300px;
+
+    padding:
+        43px
+        7%;
+
+    display: grid;
+
+    grid-template-columns:
+        30%
+        70%;
+
+    background: #f6f6f5;
+
+    color: #101213;
+}
+
+.ecosystem-heading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ecosystem-heading > span {
+    margin-bottom: 18px;
+
+    color: #62686a;
+
+    font-size: 9px;
+
+    letter-spacing: 4px;
+}
+
+.ecosystem-heading h2 {
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size:
+        clamp(29px, 2.5vw, 40px);
+
+    line-height: 1.07;
+
+    letter-spacing: -1.7px;
+
+    font-weight: 600;
+}
+
+.accent-line {
+    width: 42px;
+    height: 3px;
+
+    margin-top: 25px;
+
+    background: var(--accent);
+}
+
+
+/* =========================================================
+   FLUXO DO ECOSSISTEMA
+========================================================= */
+
+.ecosystem-flow {
+    display: grid;
+
+    grid-template-columns:
+        1fr auto
+        1fr auto
+        1fr auto
+        1fr;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+.flow-item {
+    text-align: center;
+}
+
+.flow-icon {
+    width: 92px;
+    height: 78px;
+
+    margin:
+        0 auto
+        15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: #e9ebeb;
+
+    transition:
+        transform 0.25s ease;
+}
+
+.flow-item:hover .flow-icon {
+    transform: translateY(-4px);
+}
+
+.flow-icon svg {
+    width: 51px;
+    height: 51px;
+
+    fill: none;
+
+    stroke: #171a1b;
+
+    stroke-width: 2;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* SOMENTE O CARREGADOR DA PARTE BRANCA EM ROSA */
+
+.flow-item:first-child .flow-icon svg path {
+    stroke: var(--accent);
+}
+
+.flow-item h3 {
+    margin-bottom: 6px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.flow-item p {
+    color: #707577;
+
+    font-size: 12px;
+
+    line-height: 1.45;
+}
+
+.flow-arrow {
+    color: var(--accent);
+
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   TECNOLOGIA
+========================================================= */
+
+.technology {
+    padding:
+        90px 8%;
+
+    display: grid;
+
+    grid-template-columns:
+        40%
+        60%;
+
+    gap: 70px;
+
+    background:
+        #081013;
+}
+
+.section-label {
+    display: block;
+
+    margin-bottom: 20px;
+
+    color: var(--accent);
+
+    font-size: 10px;
+
+    letter-spacing: 4px;
+}
+
+.technology > div:first-child h2 {
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size:
+        clamp(32px, 3vw, 47px);
+
+    line-height: 1.08;
+
+    letter-spacing: -2px;
+
+    font-weight: 500;
+}
+
+.technology-cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+.technology-cards article {
+    padding: 30px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.1);
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.025);
+}
+
+.technology-cards article > span {
+    display: block;
+
+    margin-bottom: 40px;
+
+    color: var(--accent);
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 11px;
+}
+
+.technology-cards h3 {
+    margin-bottom: 12px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 17px;
+}
+
+.technology-cards p {
+    color: #929da1;
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   CTA FINAL
+========================================================= */
+
+.final-cta {
+    padding:
+        100px 7%;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #11191b,
+            #060b0d
+        );
+}
+
+.final-cta > span {
+    display: block;
+
+    margin-bottom: 20px;
+
+    color: var(--accent);
+
+    font-size: 10px;
+
+    letter-spacing: 5px;
+}
+
+.final-cta h2 {
+    margin-bottom: 20px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size:
+        clamp(38px, 4vw, 60px);
+
+    line-height: 1.05;
+
+    letter-spacing: -3px;
+}
+
+.final-cta p {
+    margin:
+        0 auto
+        30px;
+
+    max-width: 480px;
+
+    color: #9ba5a9;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+    min-height: 100px;
+
+    padding: 25px 7%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 40px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    background: #050a0c;
+
+    color: #7e898d;
+
+    font-size: 11px;
+}
+
+.footer-logo {
+    margin-right: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    color: white;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    line-height: 0.85;
+}
+
+.footer-logo strong {
+    font-size: 20px;
+}
+
+.footer-logo > span {
+    font-size: 12px;
+}
+
+.footer-logo > span span {
+    color: var(--accent);
+}
+
+
+/* =========================================================
+   RESPONSIVO - TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .nav {
+        display: none;
+    }
+
+    .features {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .feature:nth-child(2)::after {
+        display: none;
+    }
+
+    .ecosystem {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+    }
+
+    .technology {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVO - CELULAR
+========================================================= */
+
+@media (max-width: 760px) {
+
+    .hero {
+        min-height: auto;
+    }
+
+    .hero-background {
+        background-position:
+            65% center;
+    }
+
+    .hero-overlay {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(4,10,12,0.96),
+                rgba(4,10,12,0.72)
+            );
+    }
+
+    .header {
+        min-height: 80px;
+
+        padding: 0 6%;
+    }
+
+    .partners,
+    .nav,
+    .btn-header {
+        display: none;
+    }
+
+    .menu-mobile {
+        display: block;
+
+        margin-left: auto;
+    }
+
+    .hero-content {
+        min-height: 580px;
+
+        padding:
+            65px
+            7%;
+    }
+
+    .main-logo {
+        letter-spacing: -3px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        max-width: 330px;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .feature {
+        padding:
+            25px 5px;
+    }
+
+    .feature::after {
+        display: none;
+    }
+
+    .feature:not(:last-child) {
+        border-bottom:
+            1px solid
+            rgba(255,255,255,0.07);
+    }
+
+    .ecosystem {
+        padding:
+            55px 7%;
+    }
+
+    .ecosystem-flow {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+    .flow-arrow {
+        transform: rotate(90deg);
+    }
+
+    .technology {
+        padding:
+            70px 7%;
+
+        gap: 40px;
+    }
+
+    .technology-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .footer {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+}
