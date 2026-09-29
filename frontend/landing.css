@@ -82,15 +82,13 @@ button {
     position: absolute;
     inset: 0;
 
-    background-image:
-        url("assets/hero-ev-chargeops.png");
+    background-image: url("assets/hero-ev-chargeops.png");
 
     background-size: cover;
     background-position: center right;
 
     z-index: 0;
 }
-
 
 /* DEGRADÊ SOBRE A IMAGEM */
 
