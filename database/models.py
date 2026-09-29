@@ -12,6 +12,7 @@ class Usuario(Base):
     email = Column(String, nullable=False, unique=True)
     senha = Column(String)
     telefone = Column(String)
+    perfil = Column(String, nullable=False, default="USER")
 
 
 class Carregador(Base):

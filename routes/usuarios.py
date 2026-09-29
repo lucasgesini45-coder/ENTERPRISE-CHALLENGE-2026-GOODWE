@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 
 from database.database import get_db
 from database.models import Usuario
-from schemas.usuario import UsuarioCreate
-
+from schemas.usuario import UsuarioCreate, UsuarioResponse
+from services.auth_service import gerar_hash_senha, obter_usuario_admin
 
 router = APIRouter(
     prefix="/usuarios",
@@ -13,9 +13,10 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", response_model=dict[str, list[UsuarioResponse]])
 def listar_usuarios(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario_admin: Usuario = Depends(obter_usuario_admin)
 ):
     usuarios = db.query(Usuario).all()
 
@@ -24,7 +25,7 @@ def listar_usuarios(
     }
 
 
-@router.post("/")
+@router.post("/", response_model=UsuarioResponse)
 def criar_usuario(
     usuario: UsuarioCreate,
     db: Session = Depends(get_db)
@@ -32,8 +33,9 @@ def criar_usuario(
     novo_usuario = Usuario(
         nome=usuario.nome,
         email=usuario.email,
-        telefone=usuario.telefone
-    )
+        telefone=usuario.telefone,
+        senha=gerar_hash_senha(usuario.senha)
+)
 
     try:
 
