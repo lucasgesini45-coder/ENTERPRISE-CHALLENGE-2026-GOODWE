@@ -1,0 +1,818 @@
+:root {
+    --bg: #05090b;
+    --panel: #0a0f12;
+
+    --text: #ffffff;
+    --muted: #939da1;
+
+    --accent: #ff174f;
+    --accent-2: #d90046;
+
+    --border:
+        rgba(255, 255, 255, 0.12);
+
+    --border-strong:
+        rgba(255, 255, 255, 0.22);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    font-family:
+        "Inter",
+        Arial,
+        sans-serif;
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+
+    text-decoration: none;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+
+/* =========================================================
+   PÁGINA
+========================================================= */
+
+.login-page {
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns:
+        58% 42%;
+
+    background: #05090b;
+}
+
+
+/* =========================================================
+   ÁREA VISUAL
+========================================================= */
+
+.login-visual {
+    position: relative;
+
+    min-height: 100vh;
+
+    overflow: hidden;
+
+    background:
+        url("assets/casa_moderna_com_energia_solar_noturna.png")
+        center center /
+        cover
+        no-repeat;
+}
+
+
+/* DEGRADÊ SOBRE A IMAGEM */
+
+.login-visual::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(3, 6, 8, 0.90) 0%,
+            rgba(3, 6, 8, 0.50) 18%,
+            rgba(3, 6, 8, 0.10) 40%,
+            rgba(3, 6, 8, 0.10) 60%,
+            rgba(3, 6, 8, 0.55) 82%,
+            rgba(3, 6, 8, 0.92) 100%
+        );
+}
+
+
+.login-visual::after {
+    content: none;
+}
+
+
+.visual-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+        radial-gradient(
+            circle at 70% 30%,
+            rgba(255, 23, 79, 0.08),
+            transparent 30%
+        );
+}
+
+
+.visual-content {
+    position: relative;
+
+    z-index: 2;
+
+    min-height: 100vh;
+
+    padding:
+        52px
+        8%;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   MARCA
+========================================================= */
+
+.brand {
+    width: fit-content;
+
+    display: flex;
+
+    flex-direction: column;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    line-height: 0.78;
+
+    letter-spacing: -2px;
+}
+
+.brand-ev {
+    font-size: 37px;
+
+    font-weight: 800;
+}
+
+.brand-charge {
+    font-size: 21px;
+
+    font-weight: 700;
+}
+
+.brand-charge span {
+    color: var(--accent);
+}
+
+
+/* =========================================================
+   TEXTO DA IMAGEM
+========================================================= */
+
+.visual-copy {
+    margin-top: auto;
+
+    margin-bottom: auto;
+
+    max-width: 620px;
+}
+
+.eyebrow {
+    display: block;
+
+    margin-bottom: 20px;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    letter-spacing: 5px;
+
+    text-transform: uppercase;
+
+    text-shadow:
+        0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+.visual-copy h1 {
+    max-width: 590px;
+
+    margin-bottom: 22px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size:
+        clamp(
+            44px,
+            4.7vw,
+            72px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -3px;
+
+    font-weight: 600;
+}
+
+.visual-copy p {
+    max-width: 520px;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 16px;
+
+    line-height: 1.75;
+
+    font-weight: 300;
+
+    text-shadow:
+        0 1px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================================
+   PARCEIROS
+========================================================= */
+
+.partners {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    color: var(--accent);
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 1px 8px rgba(0, 0, 0, 0.25);
+}
+
+.partners .divider {
+    width: 1px;
+
+    height: 19px;
+
+    background:
+        rgba(255, 255, 255, 0.24);
+}
+
+
+/* =========================================================
+   PAINEL DIREITO
+========================================================= */
+
+.login-panel {
+    position: relative;
+
+    min-height: 100vh;
+
+    padding:
+        60px
+        11%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            180deg,
+            #080d10 0%,
+            #05090b 100%
+        );
+}
+
+
+/* LINHA DE SEPARAÇÃO */
+
+.login-panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 1px;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent,
+            rgba(255, 255, 255, 0.08),
+            transparent
+        );
+}
+
+
+.login-box {
+    width: 100%;
+
+    max-width: 430px;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.login-heading {
+    margin-bottom: 42px;
+}
+
+.section-label {
+    display: block;
+
+    margin-bottom: 15px;
+
+    color: var(--accent);
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 4px;
+}
+
+.login-heading h2 {
+    margin-bottom: 16px;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size:
+        clamp(
+            30px,
+            3vw,
+            41px
+        );
+
+    line-height: 1.05;
+
+    letter-spacing: -1.8px;
+
+    font-weight: 600;
+}
+
+.login-heading p {
+    max-width: 350px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+.login-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.form-group label {
+    color:
+        rgba(255, 255, 255, 0.78);
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.2px;
+}
+
+
+/* CAMPOS MAIS SÓBRIOS */
+
+.form-group input {
+    width: 100%;
+
+    height: 56px;
+
+    padding:
+        0
+        16px;
+
+    border: 0;
+
+    border-bottom:
+        1px solid
+        var(--border-strong);
+
+    border-radius: 0;
+
+    outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.018);
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.form-group input::placeholder {
+    color:
+        rgba(255, 255, 255, 0.30);
+}
+
+
+.form-group input:focus {
+    border-bottom-color: var(--accent);
+
+    background:
+        rgba(255, 255, 255, 0.03);
+}
+
+
+/* =========================================================
+   SENHA
+========================================================= */
+
+.password-label {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.password-label a {
+    color:
+        rgba(255, 255, 255, 0.52);
+
+    font-size: 10px;
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.password-label a:hover {
+    color: var(--accent);
+}
+
+
+.password-field {
+    position: relative;
+}
+
+
+.password-field input {
+    padding-right: 48px;
+}
+
+
+.toggle-password {
+    position: absolute;
+
+    top: 50%;
+    right: 4px;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transform:
+        translateY(-50%);
+
+    border: 0;
+
+    background: transparent;
+
+    color:
+        rgba(255, 255, 255, 0.45);
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.toggle-password:hover {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   MENSAGEM
+========================================================= */
+
+.login-message {
+    min-height: 18px;
+
+    margin-top: -5px;
+
+    color: var(--accent);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+
+.login-button {
+    width: 100%;
+
+    min-height: 54px;
+
+    margin-top: 2px;
+
+    padding:
+        0
+        20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border:
+        1px solid
+        var(--accent);
+
+    border-radius: 3px;
+
+    background: var(--accent);
+
+    color: #ffffff;
+
+    font-family:
+        "Montserrat",
+        sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.login-button:hover {
+    background: var(--accent-2);
+
+    border-color: var(--accent-2);
+
+    transform:
+        translateY(-1px);
+}
+
+
+.login-button:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+.login-button .arrow {
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   RODAPÉ
+========================================================= */
+
+.login-footer {
+    margin-top: 38px;
+
+    padding-top: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    color:
+        rgba(255, 255, 255, 0.34);
+
+    font-size: 9px;
+}
+
+
+.login-footer a {
+    color:
+        rgba(255, 255, 255, 0.58);
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.login-footer a:hover {
+    color: var(--accent);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .login-page {
+        grid-template-columns:
+            50% 50%;
+    }
+
+    .visual-copy h1 {
+        font-size: 43px;
+    }
+
+    .login-panel {
+        padding:
+            50px
+            8%;
+    }
+
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 760px) {
+
+    .login-page {
+        display: block;
+    }
+
+
+    .login-visual {
+        min-height: 390px;
+
+        background-position:
+            center center;
+    }
+
+
+    .login-visual::before {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(3, 6, 8, 0.18),
+                rgba(3, 6, 8, 0.80)
+            );
+    }
+
+
+    .visual-content {
+        min-height: 390px;
+
+        padding:
+            34px
+            7%;
+    }
+
+
+    .visual-copy {
+        margin-top: auto;
+
+        margin-bottom: 25px;
+    }
+
+
+    .visual-copy h1 {
+        max-width: 430px;
+
+        font-size: 35px;
+
+        letter-spacing: -2px;
+    }
+
+
+    .visual-copy p {
+        display: none;
+    }
+
+
+    .partners {
+        font-size: 11px;
+    }
+
+
+    .login-panel {
+        min-height: auto;
+
+        padding:
+            58px
+            7%
+            65px;
+    }
+
+
+    .login-panel::before {
+        display: none;
+    }
+
+
+    .login-box {
+        max-width: none;
+    }
+
+
+    .login-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
