@@ -53,3 +53,36 @@ class Sessao(Base):
     valor_total = Column(Float, default=0.0)
 
     status = Column(String)
+
+class CartaoRFID(Base):
+    __tablename__ = "cartoes_rfid"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    uid = Column(
+        String,
+        nullable=False,
+        unique=True,
+        index=True
+    )
+
+    usuario_id = Column(
+        Integer,
+        ForeignKey("usuarios.id"),
+        nullable=False
+    )
+
+    status = Column(
+        String,
+        nullable=False,
+        default="ATIVO"
+    )
+
+    data_cadastro = Column(
+        DateTime,
+        nullable=False
+    )

@@ -15,6 +15,7 @@ class UsuarioCreate(UsuarioBase):
 
 class UsuarioResponse(UsuarioBase):
     id: int
+    perfil: str
 
     class Config:
         from_attributes = True

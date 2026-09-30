@@ -233,6 +233,30 @@ button {
     flex: 1;
 }
 
+.menu-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-top: 18px;
+}
+
+.menu-group-title {
+    padding:
+        0
+        13px;
+
+    margin-bottom: 5px;
+
+    color: var(--text-light);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.6px;
+}
 
 .menu-item {
     width: 100%;
@@ -3475,6 +3499,1026 @@ body.dark .session-status.authorized {
     .ai-anomaly-metrics {
         grid-template-columns:
             1fr;
+    }
+
+}
+
+/* =========================================
+   RFID - RESUMO
+========================================= */
+
+.rfid-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+}
+
+
+/* =========================================
+   RFID - SEÇÃO PRINCIPAL
+========================================= */
+
+.rfid-section {
+    overflow: hidden;
+}
+
+
+.rfid-demo-badge {
+    padding:
+        7px
+        10px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 999px;
+
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.9px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   RFID - GRID
+========================================= */
+
+.rfid-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 24px;
+}
+
+
+/* =========================================
+   RFID - ITEM
+========================================= */
+
+.rfid-item {
+    min-width: 0;
+}
+
+
+/* =========================================
+   RFID - CARTÃO VIRTUAL
+========================================= */
+
+.rfid-virtual-card {
+    position: relative;
+
+    min-height: 245px;
+
+    padding:
+        25px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #11131a 0%,
+            #1b1e27 48%,
+            #111219 100%
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 24px 48px
+        rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.rfid-virtual-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 230px;
+    height: 230px;
+
+    top: -100px;
+    right: -70px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 42, 150, 0.28),
+            transparent 68%
+        );
+}
+
+
+.rfid-virtual-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    left: -80px;
+    bottom: -110px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(81, 213, 146, 0.10),
+            transparent 68%
+        );
+}
+
+
+.rfid-item:hover
+.rfid-virtual-card {
+    transform:
+        translateY(-4px);
+
+    border-color:
+        rgba(255, 42, 150, 0.28);
+
+    box-shadow:
+        0 30px 60px
+        rgba(0, 0, 0, 0.24);
+}
+
+
+/* =========================================
+   RFID - TOPO DO CARTÃO
+========================================= */
+
+.rfid-card-top {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.rfid-card-brand {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 4px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.4px;
+}
+
+
+.rfid-card-brand > span {
+    color:
+        var(--primary);
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+
+.rfid-card-brand strong {
+    color:
+        var(--primary);
+}
+
+
+.rfid-card-type {
+    color:
+        rgba(255, 255, 255, 0.50);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.4px;
+}
+
+
+/* =========================================
+   RFID - CHIP
+========================================= */
+
+.rfid-chip {
+    position: relative;
+
+    z-index: 2;
+
+    width: 48px;
+    height: 36px;
+
+    margin-top: 34px;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e0c98c,
+            #aa8d4d
+        );
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 3px;
+
+    padding: 6px;
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(0, 0, 0, 0.15);
+}
+
+
+.rfid-chip span {
+    border:
+        1px solid
+        rgba(58, 45, 12, 0.35);
+
+    border-radius: 2px;
+}
+
+
+/* =========================================
+   RFID - NÚMERO
+========================================= */
+
+.rfid-number {
+    position: relative;
+
+    z-index: 2;
+
+    margin-top: 27px;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size:
+        clamp(
+            18px,
+            2vw,
+            24px
+        );
+
+    font-weight: 600;
+
+    letter-spacing: 3px;
+}
+
+
+/* =========================================
+   RFID - RODAPÉ DO CARTÃO
+========================================= */
+
+.rfid-card-bottom {
+    position: relative;
+
+    z-index: 2;
+
+    margin-top: 29px;
+
+    display: grid;
+
+    grid-template-columns:
+        1.4fr
+        0.8fr
+        auto;
+
+    align-items: end;
+
+    gap: 20px;
+}
+
+
+.rfid-card-bottom > div {
+    min-width: 0;
+}
+
+
+.rfid-small-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        rgba(255, 255, 255, 0.38);
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+}
+
+
+.rfid-card-bottom strong {
+    display: block;
+
+    overflow: hidden;
+
+    color:
+        rgba(255, 255, 255, 0.92);
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================
+   RFID - STATUS
+========================================= */
+
+.rfid-card-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+}
+
+
+.rfid-card-status span {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+}
+
+
+.rfid-card-status.active {
+    background:
+        rgba(81, 213, 146, 0.12);
+
+    color:
+        #73e7aa;
+}
+
+
+.rfid-card-status.active span {
+    background:
+        #51d592;
+}
+
+
+.rfid-card-status.blocked {
+    background:
+        rgba(255, 102, 133, 0.13);
+
+    color:
+        #ff829c;
+}
+
+
+.rfid-card-status.blocked span {
+    background:
+        #ff6685;
+}
+
+
+/* =========================================
+   RFID - INFORMAÇÕES ABAIXO
+========================================= */
+
+.rfid-card-info {
+    margin-top: 13px;
+
+    padding:
+        15px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 16px;
+
+    background:
+        var(--card);
+}
+
+
+.rfid-user {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.rfid-user-avatar {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        var(--primary-soft);
+
+    color:
+        var(--primary);
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.rfid-user > div:last-child {
+    min-width: 0;
+}
+
+
+.rfid-user strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    overflow: hidden;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.rfid-user span {
+    display: block;
+
+    overflow: hidden;
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.rfid-uid {
+    grid-column:
+        1 / -1;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-top: 11px;
+
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+.rfid-uid span {
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+.rfid-uid strong {
+    color:
+        var(--text);
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 10px;
+}
+
+
+.rfid-details-button {
+    justify-self: end;
+}
+
+
+/* =========================================
+   RFID - MODAL
+========================================= */
+
+.rfid-detail-modal {
+    max-width: 680px;
+}
+
+
+.rfid-detail-preview {
+    margin-bottom: 22px;
+
+    padding:
+        18px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 15px;
+
+    background:
+        var(--card-soft);
+}
+
+
+.rfid-detail-avatar {
+    width: 50px;
+    height: 50px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.rfid-detail-preview span,
+.rfid-detail-preview small {
+    display: block;
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+}
+
+
+.rfid-detail-preview strong {
+    display: block;
+
+    margin:
+        3px 0;
+
+    font-size: 14px;
+}
+
+
+.rfid-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+
+.rfid-detail-grid > div {
+    padding:
+        15px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 13px;
+
+    background:
+        var(--card);
+}
+
+
+.rfid-detail-grid span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+}
+
+
+.rfid-detail-grid strong {
+    font-size: 11px;
+}
+
+
+.rfid-detail-status {
+    color:
+        var(--success);
+}
+
+
+/* =========================================
+   RFID - AÇÕES DO MODAL
+========================================= */
+
+.rfid-detail-actions {
+    margin-top: 20px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+}
+
+
+.danger-action {
+    min-height: 40px;
+
+    padding:
+        0
+        16px;
+
+    border:
+        1px solid
+        rgba(217, 54, 94, 0.24);
+
+    border-radius: 10px;
+
+    background:
+        var(--danger-soft);
+
+    color:
+        var(--danger);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        background 0.18s ease;
+}
+
+
+.danger-action:hover {
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================
+   RFID - DARK MODE
+========================================= */
+
+body.dark
+.rfid-card-info {
+    background:
+        var(--card);
+}
+
+
+body.dark
+.rfid-demo-badge {
+    background:
+        var(--card-soft);
+}
+
+
+/* =========================================
+   RFID - RESPONSIVO
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .rfid-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 850px) {
+
+    .rfid-summary {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 620px) {
+
+    .rfid-virtual-card {
+        min-height: 220px;
+
+        padding:
+            20px;
+    }
+
+
+    .rfid-card-bottom {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .rfid-card-status {
+        grid-column:
+            1 / -1;
+
+        width: fit-content;
+    }
+
+
+    .rfid-number {
+        font-size: 16px;
+
+        letter-spacing: 2px;
+    }
+
+
+    .rfid-detail-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .rfid-detail-actions {
+        flex-direction: column;
+    }
+
+}
+
+/* =========================================
+   RFID - MODAL NOVO CARTÃO
+========================================= */
+
+#form-novo-rfid {
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+#form-novo-rfid .form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+#form-novo-rfid .form-full {
+    grid-column:
+        1 / -1;
+}
+
+
+#form-novo-rfid .form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+#form-novo-rfid .form-group label {
+    color: var(--text-soft);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.6px;
+
+    text-transform: uppercase;
+}
+
+
+#form-novo-rfid input,
+#form-novo-rfid select {
+    width: 100%;
+
+    min-height: 46px;
+
+    padding:
+        0
+        13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text);
+
+    font-size: 12px;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+#form-novo-rfid input::placeholder {
+    color:
+        var(--text-light);
+}
+
+
+#form-novo-rfid input:focus,
+#form-novo-rfid select:focus {
+    border-color:
+        var(--primary);
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(230, 0, 126, 0.08);
+}
+
+
+body.dark
+#form-novo-rfid input,
+body.dark
+#form-novo-rfid select {
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text);
+}
+
+
+#form-novo-rfid .modal-actions {
+    margin-top: 4px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+}
+
+
+#novo-rfid-message {
+    min-height: 18px;
+
+    font-size: 11px;
+}
+
+
+#novo-rfid-message.success {
+    color:
+        var(--success);
+}
+
+
+#novo-rfid-message.error {
+    color:
+        var(--danger);
+}
+
+
+@media (max-width: 620px) {
+
+    #form-novo-rfid .form-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    #form-novo-rfid .form-full {
+        grid-column:
+            auto;
+    }
+
+    #form-novo-rfid .modal-actions {
+        flex-direction: column;
     }
 
 }
