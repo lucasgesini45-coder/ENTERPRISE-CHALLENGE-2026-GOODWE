@@ -360,114 +360,117 @@
     <main class="main">
 
 
-        <!-- ==========================================
-             TOPBAR
-        =========================================== -->
+<header class="topbar">
 
-        <header class="topbar">
+    <div class="topbar-title">
+
+        <span class="page-eyebrow">
+            Dashboard
+        </span>
+
+        <h1>
+            Visão Geral
+        </h1>
+
+        <p>
+            Gestão inteligente da recarga em ambientes compartilhados.
+        </p>
+
+    </div>
 
 
-            <div class="topbar-title">
+    <div class="topbar-actions">
 
-                <span class="page-eyebrow">
-                    Dashboard
-                </span>
+        <div class="account-menu">
 
-                <h1>
-                    Visão Geral
-                </h1>
+    <div class="account-menu-top">
 
-                <p>
-                    Gestão inteligente da recarga em ambientes compartilhados.
-                </p>
+        <!-- FOTO DE PERFIL -->
+
+        <div class="profile-photo-wrapper">
+
+            <button
+                id="profile-photo-button"
+                class="profile-avatar"
+                type="button"
+                aria-label="Opções da foto de perfil"
+            >
+                LG
+            </button>
+
+            <input
+                id="profile-photo-input"
+                type="file"
+                accept="image/*"
+                hidden
+            >
+
+            <div
+                id="profile-photo-menu"
+                class="profile-photo-menu"
+            >
+
+                <button
+                    id="btn-profile-photo-change"
+                    type="button"
+                >
+                    Trocar foto
+                </button>
+
+                <button
+                    id="btn-profile-photo-remove"
+                    type="button"
+                >
+                    Remover foto
+                </button>
 
             </div>
 
-
-            <div class="topbar-actions">
-
-
-                <div class="period-badge">
-
-                    <span>
-                        Período
-                    </span>
-
-                    <strong>
-                        Setembro 2026
-                    </strong>
-
-                </div>
+        </div>
 
 
-                <div
-                    id="api-status"
-                    class="api-status online"
-                >
+        <!-- BOTÃO PRINCIPAL DA CONTA -->
 
-                    <span class="status-dot"></span>
+        <button
+            id="account-menu-toggle"
+            class="account-menu-toggle"
+            type="button"
+            aria-expanded="false"
+        >
 
-                    <span>
-                        Online
-                    </span>
+            <div class="account-menu-user">
 
-                </div>
+                <strong>
+                    Administrador
+                </strong>
 
+                <span>
+                    EV ChargeOps
+                </span>
 
-                <!-- MODO ESCURO -->
+            </div>
 
-                <button
-                    id="theme-toggle"
-                    class="theme-toggle"
-                    type="button"
-                    aria-label="Alternar modo claro e escuro"
-                    title="Alternar tema"
-                >
+            <span class="account-menu-arrow">
+                ▾
+            </span>
 
-                    <span class="theme-icon moon">
+        </button>
 
-                        <svg viewBox="0 0 24 24">
-
-                            <path
-                                d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5
-                                9 3.3 9.1 2.7 8.7 2.5
-                                A10 10 0 1 0 21.5 15.3
-                                c-.2-.4-.7-.3-1-.1z"
-                            />
-
-                        </svg>
-
-                    </span>
+    </div>
 
 
-                    <span class="theme-icon sun">
+            <div
+                id="account-dropdown"
+                class="account-dropdown"
+            >
 
-                        <svg viewBox="0 0 24 24">
-
-                            <path
-                                d="M12 7a5 5 0 1 0 0 10
-                                5 5 0 0 0 0-10zm0-5h1v3h-2V2h1zm0 17h1v3h-2v-3h1z
-                                M2 11h3v2H2v-2zm17 0h3v2h-3v-2z
-                                M4.9 4.9l2.1 2.1-1.4 1.4-2.1-2.1 1.4-1.4zm12.5 12.5
-                                2.1 2.1-1.4 1.4-2.1-2.1 1.4-1.4zm0-10.4
-                                2.1-2.1 1.4 1.4-2.1 2.1-1.4-1.4z
-                                M4.9 19.1 7 17l1.4 1.4-2.1 2.1-1.4-1.4z"
-                            />
-
-                        </svg>
-
-                    </span>
-
-                </button>
-
-
-                <div class="profile">
+                <div class="account-dropdown-header">
 
                     <div class="profile-avatar">
                         LG
                     </div>
 
-                    <div class="profile-info">
+                    <div>
 
                         <strong>
                             Administrador
@@ -482,9 +485,93 @@
                 </div>
 
 
+                <div class="account-dropdown-divider"></div>
+
+
+                <div class="account-info-row">
+
+                    <div>
+
+                        <span class="account-info-label">
+                            Status da API
+                        </span>
+
+                        <strong class="account-status-online">
+
+                            <span class="account-status-dot"></span>
+
+                            Online
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="account-info-row">
+
+                    <div>
+
+                        <span class="account-info-label">
+                            Período
+                        </span>
+
+                        <strong> id="account-period-label">
+                            Setembro 2026
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="account-dropdown-divider"></div>
+
+
+                <button
+                    id="btn-configuracoes"
+                    class="account-menu-item"
+                    type="button"
+                >
+
+                    <span class="account-menu-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Configurações
+                    </span>
+
+                </button>
+
+
+                <div class="account-dropdown-divider"></div>
+
+
+                <button
+                    id="btn-logout"
+                    class="account-menu-item account-menu-logout"
+                    type="button"
+                >
+
+                    <span class="account-menu-icon">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
             </div>
 
-        </header>
+        </div>
+
+    </div>
+
+</header>
 
 
 
@@ -1064,6 +1151,508 @@
 
 </div>
 
+<!-- =========================================
+     MODAL DE CONFIGURAÇÕES
+========================================= -->
+
+<div
+    id="config-modal"
+    class="config-modal"
+    aria-hidden="true"
+>
+
+    <div class="config-modal-backdrop"></div>
+
+    <div
+        class="config-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="config-modal-title"
+    >
+
+        <div class="config-modal-header">
+
+            <div>
+                <span class="section-label">
+                    Conta
+                </span>
+
+                <h2 id="config-modal-title">
+                    Configurações
+                </h2>
+
+                <p>
+                    Gerencie suas preferências e segurança.
+                </p>
+            </div>
+
+            <button
+                id="config-modal-close"
+                class="config-modal-close"
+                type="button"
+                aria-label="Fechar configurações"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="config-modal-body">
+
+            <!-- PERFIL -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Perfil
+                        </span>
+
+                        <h3>
+                            Dados da conta
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <div class="config-grid">
+
+                    <div class="config-field">
+
+                        <span>
+                            Nome
+                        </span>
+
+                        <strong id="config-user-name">
+                            Administrador
+                        </strong>
+
+                    </div>
+
+
+                    <div class="config-field">
+
+                        <span>
+                            E-mail
+                        </span>
+
+                        <strong id="config-user-email">
+                            lucas@teste.com
+                        </strong>
+
+                    </div>
+
+
+                    <div class="config-field">
+
+                        <span>
+                            Perfil
+                        </span>
+
+                        <strong id="config-user-role">
+                            ADMIN
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- APARÊNCIA -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Aparência
+                        </span>
+
+                        <h3>
+                            Tema do sistema
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="config-theme-toggle"
+                    class="config-action-button"
+                    type="button"
+                >
+                    Alternar entre tema claro e escuro
+                </button>
+
+            </section>
+
+
+            <!-- SEGURANÇA -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Segurança
+                        </span>
+
+                        <h3>
+                            Senha da conta
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="config-change-password"
+                    class="config-action-button"
+                    type="button"
+                >
+                    Alterar senha
+                </button>
+
+            </section>
+
+
+            <!-- PREFERÊNCIAS -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Preferências
+                        </span>
+
+                        <h3>
+                            Dashboard
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <label class="config-select-label">
+
+                    <span>
+                        Período padrão
+                    </span>
+
+                    <select id="config-period">
+
+                        <option value="setembro-2026">
+                            Setembro 2026
+                        </option>
+
+                        <option value="ultimos-30-dias">
+                            Últimos 30 dias
+                        </option>
+
+                        <option value="mes-atual">
+                            Mês atual
+                        </option>
+
+                    </select>
+
+                </label>
+
+            </section>
+
+        </div>
+
+
+        <div class="config-modal-footer">
+
+            <button
+                id="config-modal-cancel"
+                class="secondary-action"
+                type="button"
+            >
+                Fechar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- =========================================
+     MODAL ALTERAR SENHA
+========================================= -->
+
+<div
+    id="password-modal"
+    class="config-modal"
+    aria-hidden="true"
+>
+
+    <div class="password-modal-backdrop config-modal-backdrop"></div>
+
+    <div
+        class="config-modal-dialog password-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+    >
+
+        <div class="config-modal-header">
+
+            <div>
+
+                <span class="section-label">
+                    Segurança
+                </span>
+
+                <h2>
+                    Alterar senha
+                </h2>
+
+                <p>
+                    Defina uma nova senha para sua conta.
+                </p>
+
+            </div>
+
+            <button
+                id="password-modal-close"
+                class="config-modal-close"
+                type="button"
+                aria-label="Fechar"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="change-password-form"
+            class="password-form"
+        >
+
+            <label class="password-field">
+
+                <span>
+                    Senha atual
+                </span>
+
+                <input
+                    id="current-password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </label>
+
+
+            <label class="password-field">
+
+                <span>
+                    Nova senha
+                </span>
+
+                <input
+                    id="new-password"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required
+                >
+
+            </label>
+
+
+            <label class="password-field">
+
+                <span>
+                    Confirmar nova senha
+                </span>
+
+                <input
+                    id="confirm-password"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+
+            </label>
+
+
+            <div
+                id="password-message"
+                class="password-message"
+            ></div>
+
+
+            <div class="config-modal-footer password-modal-footer">
+
+                <button
+                    id="password-modal-cancel"
+                    class="secondary-action"
+                    type="button"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    class="primary-action"
+                    type="submit"
+                >
+                    Salvar nova senha
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- =========================================
+     MODAL DETALHES DO CARREGADOR
+========================================= -->
+
+<div
+    id="charger-detail-modal"
+    class="config-modal"
+    aria-hidden="true"
+>
+
+    <div class="charger-detail-backdrop config-modal-backdrop"></div>
+
+    <div
+        class="config-modal-dialog charger-detail-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="charger-detail-title"
+    >
+
+        <div class="config-modal-header">
+
+            <div>
+
+                <span class="section-label">
+                    Infraestrutura
+                </span>
+
+                <h2 id="charger-detail-title">
+                    Detalhes do carregador
+                </h2>
+
+                <p>
+                    Informações do equipamento cadastrado.
+                </p>
+
+            </div>
+
+            <button
+                id="charger-detail-close"
+                class="config-modal-close"
+                type="button"
+                aria-label="Fechar detalhes"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="charger-detail-body">
+
+            <div class="charger-detail-hero">
+
+                <div class="charger-detail-image-wrapper">
+
+                    <img
+                        src="./assets/evcharge.png"
+                        alt="Carregador EV Charge"
+                        class="charger-detail-image"
+                    >
+
+                </div>
+
+                <div>
+
+                    <span class="section-label">
+                        Equipamento
+                    </span>
+
+                    <h3 id="charger-detail-name">
+                        --
+                    </h3>
+
+                    <span
+                        id="charger-detail-status"
+                        class="charger-status active"
+                    >
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="charger-detail-grid">
+
+                <div class="charger-detail-info">
+                    <span>Serial GoodWe</span>
+                    <strong id="charger-detail-serial">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>Modelo</span>
+                    <strong id="charger-detail-model">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>Potência máxima</span>
+                    <strong id="charger-detail-power">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>Localização</span>
+                    <strong id="charger-detail-location">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>ID do equipamento</span>
+                    <strong id="charger-detail-id">--</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="config-modal-footer">
+
+            <button
+                id="charger-detail-cancel"
+                class="secondary-action"
+                type="button"
+            >
+                Fechar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script src="app.js"></script>
 <script src="carregadores-ui.js"></script>

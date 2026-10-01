@@ -2,6 +2,13 @@ const API_URL = "http://127.0.0.1:8000";
 
 let graficoPrevisao = null;
 
+let carregadoresCache = [];
+
+const token = localStorage.getItem("ev_chargeops_token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
 
 /* =========================================
    UTILITÁRIOS
@@ -1039,6 +1046,9 @@ async function carregarCarregadores() {
 
         const carregadores =
             dados.carregadores ?? [];
+        
+            carregadoresCache =
+                carregadores;
 
         atualizarResumoCarregadores(
             carregadores
@@ -1408,16 +1418,23 @@ function configurarMenu() {
 
 function configurarEventos() {
 
-    document.getElementById(
-        "theme-toggle"
-    ).addEventListener(
-        "click",
-        alternarTema
-    );
+    const botaoTemaConfiguracoes =
+        document.getElementById(
+            "config-theme-toggle"
+        );
+
+    if (botaoTemaConfiguracoes) {
+
+        botaoTemaConfiguracoes.addEventListener(
+            "click",
+            alternarTema
+        );
+
+    }
 
     configurarMenu();
-}
 
+}
 
 /* =========================================
    START
@@ -1444,3 +1461,1220 @@ async function iniciarAplicacao() {
 
 
 iniciarAplicacao();
+
+const botaoLogout =
+    document.getElementById(
+        "btn-logout"
+    );
+
+
+if (botaoLogout) {
+
+    botaoLogout.addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "ev_chargeops_token"
+            );
+
+
+            localStorage.removeItem(
+                "ev_chargeops_usuario"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+}
+
+const accountMenuToggle =
+    document.getElementById(
+        "account-menu-toggle"
+    );
+
+const accountDropdown =
+    document.getElementById(
+        "account-dropdown"
+    );
+
+const accountMenu =
+    document.querySelector(
+        ".account-menu"
+    );
+
+
+if (
+    accountMenuToggle &&
+    accountDropdown &&
+    accountMenu
+) {
+
+    accountMenuToggle.addEventListener(
+        "click",
+        evento => {
+
+            evento.stopPropagation();
+
+            const aberto =
+                accountDropdown.classList.toggle(
+                    "show"
+                );
+
+            accountMenu.classList.toggle(
+                "open",
+                aberto
+            );
+
+            accountMenuToggle.setAttribute(
+                "aria-expanded",
+                String(aberto)
+            );
+
+        }
+    );
+
+
+    document.addEventListener(
+        "click",
+        evento => {
+
+            if (
+                !accountMenu.contains(
+                    evento.target
+                )
+            ) {
+
+                accountDropdown.classList.remove(
+                    "show"
+                );
+
+                accountMenu.classList.remove(
+                    "open"
+                );
+
+                accountMenuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+const profilePhotoButton =
+    document.getElementById(
+        "profile-photo-button"
+    );
+
+const profilePhotoMenu =
+    document.getElementById(
+        "profile-photo-menu"
+    );
+
+
+if (
+    profilePhotoButton &&
+    profilePhotoMenu
+) {
+
+    profilePhotoButton.addEventListener(
+        "click",
+        evento => {
+
+            evento.stopPropagation();
+
+            profilePhotoMenu.classList.toggle(
+                "show"
+            );
+
+        }
+    );
+
+
+    document.addEventListener(
+        "click",
+        evento => {
+
+            if (
+                !profilePhotoMenu.contains(
+                    evento.target
+                )
+            ) {
+
+                profilePhotoMenu.classList.remove(
+                    "show"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+const profilePhotoInput =
+    document.getElementById(
+        "profile-photo-input"
+    );
+
+const profilePhotoChange =
+    document.getElementById(
+        "btn-profile-photo-change"
+    );
+
+const profilePhotoRemove =
+    document.getElementById(
+        "btn-profile-photo-remove"
+    );
+
+
+function aplicarFotoPerfil(imagemBase64) {
+
+    if (!profilePhotoButton) {
+        return;
+    }
+
+    if (imagemBase64) {
+
+        profilePhotoButton.innerHTML = `
+            <img
+                src="${imagemBase64}"
+                alt="Foto de perfil"
+                class="profile-photo-image"
+            >
+        `;
+
+    } else {
+
+        profilePhotoButton.textContent = "LG";
+
+    }
+}
+
+
+const fotoSalva =
+    localStorage.getItem(
+        "ev_chargeops_profile_photo"
+    );
+
+if (fotoSalva) {
+    aplicarFotoPerfil(fotoSalva);
+}
+
+
+if (
+    profilePhotoChange &&
+    profilePhotoInput
+) {
+
+    profilePhotoChange.addEventListener(
+        "click",
+        () => {
+
+            profilePhotoInput.click();
+
+        }
+    );
+
+}
+
+
+if (profilePhotoInput) {
+
+    profilePhotoInput.addEventListener(
+        "change",
+        evento => {
+
+            const arquivo =
+                evento.target.files[0];
+
+            if (!arquivo) {
+                return;
+            }
+
+            if (
+                !arquivo.type.startsWith(
+                    "image/"
+                )
+            ) {
+                alert(
+                    "Selecione uma imagem válida."
+                );
+
+                return;
+            }
+
+            const leitor =
+                new FileReader();
+
+            leitor.onload =
+                () => {
+
+                    const imagemBase64 =
+                        leitor.result;
+
+                    localStorage.setItem(
+                        "ev_chargeops_profile_photo",
+                        imagemBase64
+                    );
+
+                    aplicarFotoPerfil(
+                        imagemBase64
+                    );
+
+                    profilePhotoInput.value = "";
+
+                };
+
+            leitor.readAsDataURL(
+                arquivo
+            );
+
+        }
+    );
+
+}
+
+
+if (profilePhotoRemove) {
+
+    profilePhotoRemove.addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "ev_chargeops_profile_photo"
+            );
+
+            aplicarFotoPerfil(null);
+
+        }
+    );
+
+}
+
+const configButton =
+    document.getElementById(
+        "btn-configuracoes"
+    );
+
+const configModal =
+    document.getElementById(
+        "config-modal"
+    );
+
+const configModalClose =
+    document.getElementById(
+        "config-modal-close"
+    );
+
+const configModalCancel =
+    document.getElementById(
+        "config-modal-cancel"
+    );
+
+const configModalBackdrop =
+    document.querySelector(
+        ".config-modal-backdrop"
+    );
+
+
+function abrirConfiguracoes() {
+
+    if (!configModal) {
+        return;
+    }
+
+    configModal.classList.add(
+        "show"
+    );
+
+    configModal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+
+function fecharConfiguracoes() {
+
+    if (!configModal) {
+        return;
+    }
+
+    configModal.classList.remove(
+        "show"
+    );
+
+    configModal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
+
+if (
+    configButton &&
+    configModal
+) {
+
+    configButton.addEventListener(
+        "click",
+        () => {
+
+            abrirConfiguracoes();
+
+            if (accountDropdown) {
+
+                accountDropdown.classList.remove(
+                    "show"
+                );
+
+            }
+
+            if (accountMenu) {
+
+                accountMenu.classList.remove(
+                    "open"
+                );
+
+            }
+
+            if (accountMenuToggle) {
+
+                accountMenuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+if (configModalClose) {
+
+    configModalClose.addEventListener(
+        "click",
+        fecharConfiguracoes
+    );
+
+}
+
+
+if (configModalCancel) {
+
+    configModalCancel.addEventListener(
+        "click",
+        fecharConfiguracoes
+    );
+
+}
+
+
+if (configModalBackdrop) {
+
+    configModalBackdrop.addEventListener(
+        "click",
+        fecharConfiguracoes
+    );
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    evento => {
+
+        if (
+            evento.key === "Escape" &&
+            configModal?.classList.contains(
+                "show"
+            )
+        ) {
+
+            fecharConfiguracoes();
+
+        }
+
+    }
+);
+
+const configUserName =
+    document.getElementById(
+        "config-user-name"
+    );
+
+const configUserEmail =
+    document.getElementById(
+        "config-user-email"
+    );
+
+const configUserRole =
+    document.getElementById(
+        "config-user-role"
+    );
+
+
+function carregarDadosConfiguracoes() {
+
+    const usuarioSalvo =
+        localStorage.getItem(
+            "ev_chargeops_usuario"
+        );
+
+    if (!usuarioSalvo) {
+        return;
+    }
+
+    try {
+
+        const usuario =
+            JSON.parse(
+                usuarioSalvo
+            );
+
+        if (configUserName) {
+            configUserName.textContent =
+                usuario.nome ??
+                "Usuário";
+        }
+
+        if (configUserEmail) {
+            configUserEmail.textContent =
+                usuario.email ??
+                "Não informado";
+        }
+
+        if (configUserRole) {
+            configUserRole.textContent =
+                usuario.perfil ??
+                "USER";
+        }
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar dados do usuário:",
+            erro
+        );
+
+    }
+
+}
+
+
+carregarDadosConfiguracoes();
+
+const changePasswordButton =
+    document.getElementById(
+        "config-change-password"
+    );
+
+const passwordModal =
+    document.getElementById(
+        "password-modal"
+    );
+
+const passwordModalClose =
+    document.getElementById(
+        "password-modal-close"
+    );
+
+const passwordModalCancel =
+    document.getElementById(
+        "password-modal-cancel"
+    );
+
+const passwordModalBackdrop =
+    document.querySelector(
+        ".password-modal-backdrop"
+    );
+
+
+function abrirModalSenha() {
+
+    if (!passwordModal) {
+        return;
+    }
+
+    fecharConfiguracoes();
+
+    passwordModal.classList.add(
+        "show"
+    );
+
+    passwordModal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+
+function fecharModalSenha() {
+
+    if (!passwordModal) {
+        return;
+    }
+
+    passwordModal.classList.remove(
+        "show"
+    );
+
+    passwordModal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
+
+if (changePasswordButton) {
+
+    changePasswordButton.addEventListener(
+        "click",
+        abrirModalSenha
+    );
+
+}
+
+
+if (passwordModalClose) {
+
+    passwordModalClose.addEventListener(
+        "click",
+        fecharModalSenha
+    );
+
+}
+
+
+if (passwordModalCancel) {
+
+    passwordModalCancel.addEventListener(
+        "click",
+        fecharModalSenha
+    );
+
+}
+
+
+if (passwordModalBackdrop) {
+
+    passwordModalBackdrop.addEventListener(
+        "click",
+        fecharModalSenha
+    );
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    evento => {
+
+        if (
+            evento.key === "Escape" &&
+            passwordModal?.classList.contains(
+                "show"
+            )
+        ) {
+
+            fecharModalSenha();
+
+        }
+
+    }
+);
+
+const changePasswordForm =
+    document.getElementById(
+        "change-password-form"
+    );
+
+const currentPasswordInput =
+    document.getElementById(
+        "current-password"
+    );
+
+const newPasswordInput =
+    document.getElementById(
+        "new-password"
+    );
+
+const confirmPasswordInput =
+    document.getElementById(
+        "confirm-password"
+    );
+
+const passwordMessage =
+    document.getElementById(
+        "password-message"
+    );
+
+
+if (
+    changePasswordForm &&
+    currentPasswordInput &&
+    newPasswordInput &&
+    confirmPasswordInput &&
+    passwordMessage
+) {
+
+    changePasswordForm.addEventListener(
+        "submit",
+        async evento => {
+
+            evento.preventDefault();
+
+            passwordMessage.className =
+                "password-message";
+
+            passwordMessage.textContent =
+                "";
+
+
+            const senhaAtual =
+                currentPasswordInput.value.trim();
+
+            const novaSenha =
+                newPasswordInput.value.trim();
+
+            const confirmarSenha =
+                confirmPasswordInput.value.trim();
+
+
+            if (novaSenha.length < 8) {
+
+                passwordMessage.classList.add(
+                    "error"
+                );
+
+                passwordMessage.textContent =
+                    "A nova senha deve possuir pelo menos 8 caracteres.";
+
+                return;
+
+            }
+
+
+            if (
+                novaSenha !==
+                confirmarSenha
+            ) {
+
+                passwordMessage.classList.add(
+                    "error"
+                );
+
+                passwordMessage.textContent =
+                    "A confirmação da nova senha não confere.";
+
+                return;
+
+            }
+
+
+            if (
+                senhaAtual ===
+                novaSenha
+            ) {
+
+                passwordMessage.classList.add(
+                    "error"
+                );
+
+                passwordMessage.textContent =
+                    "A nova senha deve ser diferente da senha atual.";
+
+                return;
+
+            }
+
+
+            try {
+
+                const resposta =
+                    await fetch(
+                        `${API_URL}/auth/alterar-senha`,
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${token}`
+                            },
+
+                            body: JSON.stringify({
+                                senha_atual:
+                                    senhaAtual,
+
+                                nova_senha:
+                                    novaSenha
+                            })
+                        }
+                    );
+
+
+                const dados =
+                    await resposta.json();
+
+
+                if (!resposta.ok) {
+
+                    throw new Error(
+                        dados.detail ??
+                        "Não foi possível alterar a senha."
+                    );
+
+                }
+
+
+                passwordMessage.classList.add(
+                    "success"
+                );
+
+                passwordMessage.textContent =
+                    dados.mensagem ??
+                    "Senha alterada com sucesso.";
+
+
+                currentPasswordInput.value =
+                    "";
+
+                newPasswordInput.value =
+                    "";
+
+                confirmPasswordInput.value =
+                    "";
+
+
+                setTimeout(
+                    () => {
+
+                        fecharModalSenha();
+
+                    },
+                    1200
+                );
+
+
+            } catch (erro) {
+
+                passwordMessage.classList.add(
+                    "error"
+                );
+
+                passwordMessage.textContent =
+                    erro.message;
+
+            }
+
+        }
+    );
+
+}
+
+const configPeriod =
+    document.getElementById(
+        "config-period"
+    );
+
+const accountPeriodLabel =
+    document.getElementById(
+        "account-period-label"
+    );
+
+
+const periodosDisponiveis = {
+    "setembro-2026":
+        "Setembro 2026",
+
+    "ultimos-30-dias":
+        "Últimos 30 dias",
+
+    "mes-atual":
+        "Mês atual"
+};
+
+
+function aplicarPeriodo(
+    periodo
+) {
+
+    const texto =
+        periodosDisponiveis[
+            periodo
+        ] ??
+        "Setembro 2026";
+
+
+    if (accountPeriodLabel) {
+
+        accountPeriodLabel.textContent =
+            texto;
+
+    }
+
+
+    if (configPeriod) {
+
+        configPeriod.value =
+            periodo;
+
+    }
+
+}
+
+
+const periodoSalvo =
+    localStorage.getItem(
+        "ev_chargeops_periodo"
+    ) ??
+    "setembro-2026";
+
+
+aplicarPeriodo(
+    periodoSalvo
+);
+
+
+if (configPeriod) {
+
+    configPeriod.addEventListener(
+        "change",
+        () => {
+
+            const periodo =
+                configPeriod.value;
+
+
+            localStorage.setItem(
+                "ev_chargeops_periodo",
+                periodo
+            );
+
+
+            aplicarPeriodo(
+                periodo
+            );
+
+        }
+    );
+
+}
+
+/* =========================================
+   DETALHES DO CARREGADOR
+========================================= */
+
+const chargerDetailModal =
+    document.getElementById(
+        "charger-detail-modal"
+    );
+
+const chargerDetailClose =
+    document.getElementById(
+        "charger-detail-close"
+    );
+
+const chargerDetailCancel =
+    document.getElementById(
+        "charger-detail-cancel"
+    );
+
+const chargerDetailBackdrop =
+    document.querySelector(
+        ".charger-detail-backdrop"
+    );
+
+
+function abrirDetalhesCarregador(
+    carregador
+) {
+
+    if (
+        !chargerDetailModal ||
+        !carregador
+    ) {
+        return;
+    }
+
+
+    const nome =
+        document.getElementById(
+            "charger-detail-name"
+        );
+
+    const status =
+        document.getElementById(
+            "charger-detail-status"
+        );
+
+    const serial =
+        document.getElementById(
+            "charger-detail-serial"
+        );
+
+    const modelo =
+        document.getElementById(
+            "charger-detail-model"
+        );
+
+    const potencia =
+        document.getElementById(
+            "charger-detail-power"
+        );
+
+    const localizacao =
+        document.getElementById(
+            "charger-detail-location"
+        );
+
+    const id =
+        document.getElementById(
+            "charger-detail-id"
+        );
+
+
+    if (nome) {
+        nome.textContent =
+            carregador.nome ??
+            "Carregador";
+    }
+
+
+    if (serial) {
+        serial.textContent =
+            carregador.serial_number ??
+            "Não informado";
+    }
+
+
+    if (modelo) {
+        modelo.textContent =
+            carregador.modelo ??
+            "Não informado";
+    }
+
+
+    if (potencia) {
+
+        potencia.textContent =
+            carregador.potencia_maxima
+                ? `${carregador.potencia_maxima} kW`
+                : "Não informada";
+
+    }
+
+
+    if (localizacao) {
+        localizacao.textContent =
+            carregador.localizacao ??
+            "Não informada";
+    }
+
+
+    if (id) {
+        id.textContent =
+            `#${carregador.id}`;
+    }
+
+
+    if (status) {
+
+        const statusTexto =
+            (
+                carregador.status ??
+                "DESCONHECIDO"
+            ).toUpperCase();
+
+
+        let statusClasse =
+            "unknown";
+
+
+        if (
+            statusTexto ===
+            "ATIVO"
+        ) {
+            statusClasse =
+                "active";
+        }
+
+
+        if (
+            statusTexto ===
+            "EM_RECARGA"
+        ) {
+            statusClasse =
+                "charging";
+        }
+
+
+        if (
+            statusTexto ===
+            "OFFLINE"
+        ) {
+            statusClasse =
+                "offline";
+        }
+
+
+        status.className =
+            `charger-status ${statusClasse}`;
+
+
+        status.textContent =
+            statusTexto.replaceAll(
+                "_",
+                " "
+            );
+
+    }
+
+
+    chargerDetailModal.classList.add(
+        "show"
+    );
+
+    chargerDetailModal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+
+function fecharDetalhesCarregador() {
+
+    if (!chargerDetailModal) {
+        return;
+    }
+
+
+    chargerDetailModal.classList.remove(
+        "show"
+    );
+
+    chargerDetailModal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
+
+document.addEventListener(
+    "click",
+    evento => {
+
+        const botao =
+            evento.target.closest(
+                ".charger-detail-button"
+            );
+
+
+        if (!botao) {
+            return;
+        }
+
+
+        const carregadorId =
+            Number(
+                botao.dataset.chargerId
+            );
+
+
+        const carregador =
+            carregadoresCache.find(
+                item =>
+                    Number(item.id) ===
+                    carregadorId
+            );
+
+
+        if (!carregador) {
+
+            console.error(
+                "Carregador não encontrado:",
+                carregadorId
+            );
+
+            return;
+
+        }
+
+
+        abrirDetalhesCarregador(
+            carregador
+        );
+
+    }
+);
+
+
+if (chargerDetailClose) {
+
+    chargerDetailClose.addEventListener(
+        "click",
+        fecharDetalhesCarregador
+    );
+
+}
+
+
+if (chargerDetailCancel) {
+
+    chargerDetailCancel.addEventListener(
+        "click",
+        fecharDetalhesCarregador
+    );
+
+}
+
+
+if (chargerDetailBackdrop) {
+
+    chargerDetailBackdrop.addEventListener(
+        "click",
+        fecharDetalhesCarregador
+    );
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    evento => {
+
+        if (
+            evento.key === "Escape" &&
+            chargerDetailModal?.classList.contains(
+                "show"
+            )
+        ) {
+
+            fecharDetalhesCarregador();
+
+        }
+
+    }
+);

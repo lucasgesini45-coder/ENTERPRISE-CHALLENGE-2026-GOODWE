@@ -1786,288 +1786,197 @@ const iniciarRfidUI = () => {
             }
 
 
-            let htmlSessoes =
-                "";
+            let htmlSessoes = "";
 
+                sessoes.forEach(
+                    sessao => {
 
-            sessoes.forEach(
-                sessao => {
+                        const inicio =
+                            sessao.inicio
+                                ? new Date(
+                                    sessao.inicio
+                                ).toLocaleString("pt-BR")
+                                : "-";
 
-                    const inicio =
-                        sessao.inicio
-                            ? new Date(
-                                sessao.inicio
+                        const fim =
+                            sessao.fim
+                                ? new Date(
+                                    sessao.fim
+                                ).toLocaleString("pt-BR")
+                                : "-";
+
+                        const consumo =
+                            Number(
+                                sessao.consumo_kwh || 0
+                            ).toFixed(2);
+
+                        const valor =
+                            Number(
+                                sessao.valor_total || 0
                             ).toLocaleString(
-                                "pt-BR"
-                            )
-                            : "-";
+                                "pt-BR",
+                                {
+                                    style: "currency",
+                                    currency: "BRL"
+                                }
+                            );
 
+                        const statusSessao =
+                            (sessao.status || "-")
+                                .toUpperCase();
 
-                    const fim =
-                        sessao.fim
-                            ? new Date(
-                                sessao.fim
-                            ).toLocaleString(
-                                "pt-BR"
-                            )
-                            : "-";
+                        const statusClass =
+                            statusSessao === "CONCLUIDA"
+                                ? "success"
+                                : "neutral";
 
+                        htmlSessoes += `
 
-                    const consumo =
-                        Number(
-                            sessao.consumo_kwh || 0
-                        ).toFixed(
-                            2
-                        );
+                            <article class="rfid-history-card">
 
+                                <div class="rfid-history-card-header">
 
-                    const valor =
-                        Number(
-                            sessao.valor_total || 0
-                        ).toLocaleString(
-                            "pt-BR",
-                            {
-                                style:
-                                    "currency",
+                                    <div>
+                                        <span class="rfid-history-label">
+                                            Sessão
+                                        </span>
 
-                                currency:
-                                    "BRL"
-                            }
-                        );
+                                        <h3>
+                                            #${sessao.id}
+                                        </h3>
+                                    </div>
 
-
-                    htmlSessoes += `
-
-                        <article class="rfid-history-item">
-
-                            <div class="rfid-history-item-top">
-
-                                <strong>
-                                    Sessão #${sessao.id}
-                                </strong>
-
-
-                                <span>
-                                    ${escapeHtml(
-                                        sessao.status || "-"
-                                    )}
-                                </span>
-
-                            </div>
-
-
-                            <div class="rfid-history-grid">
-
-                                <div>
-
-                                    <span>
-                                        Início
+                                    <span class="rfid-history-badge ${statusClass}">
+                                        ${statusSessao}
                                     </span>
-
-                                    <strong>
-                                        ${inicio}
-                                    </strong>
 
                                 </div>
 
+                                <div class="rfid-history-card-grid">
 
-                                <div>
+                                    <div class="rfid-history-info">
+                                        <span>Início</span>
+                                        <strong>${inicio}</strong>
+                                    </div>
 
-                                    <span>
-                                        Fim
-                                    </span>
+                                    <div class="rfid-history-info">
+                                        <span>Fim</span>
+                                        <strong>${fim}</strong>
+                                    </div>
 
-                                    <strong>
-                                        ${fim}
-                                    </strong>
+                                    <div class="rfid-history-info">
+                                        <span>Consumo</span>
+                                        <strong>${consumo} kWh</strong>
+                                    </div>
 
-                                </div>
+                                    <div class="rfid-history-info">
+                                        <span>Valor</span>
+                                        <strong>${valor}</strong>
+                                    </div>
 
-
-                                <div>
-
-                                    <span>
-                                        Consumo
-                                    </span>
-
-                                    <strong>
-                                        ${consumo} kWh
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        Valor
-                                    </span>
-
-                                    <strong>
-                                        ${valor}
-                                    </strong>
+                                    <div class="rfid-history-info">
+                                        <span>Carregador</span>
+                                        <strong>#${sessao.carregador_id}</strong>
+                                    </div>
 
                                 </div>
 
+                            </article>
 
-                                <div>
+                        `;
 
-                                    <span>
-                                        Carregador
-                                    </span>
-
-                                    <strong>
-                                        #${sessao.carregador_id}
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-                        </article>
-
-                    `;
-
-                }
-            );
-
-
-            const consumoTotal =
-                Number(
-                    dados.consumo_total_kwh || 0
-                ).toFixed(
-                    2
-                );
-
-
-            const valorTotal =
-                Number(
-                    dados.valor_total || 0
-                ).toLocaleString(
-                    "pt-BR",
-                    {
-                        style:
-                            "currency",
-
-                        currency:
-                            "BRL"
                     }
                 );
 
+                const consumoTotal =
+                    Number(
+                        dados.consumo_total_kwh || 0
+                    ).toFixed(2);
 
-            conteudo.innerHTML = `
-
-                <div class="rfid-detail-preview">
-
-                    <div class="rfid-detail-avatar">
-
-                        ${iniciais(
-                            cartao.usuario
-                        )}
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Histórico RFID
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(
-                                cartao.usuario
-                            )}
-                        </strong>
-
-                        <small>
-                            ${escapeHtml(
-                                cartao.uid
-                            )}
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="rfid-history-summary">
-
-                    <div>
-
-                        <span>
-                            Sessões
-                        </span>
-
-                        <strong>
-                            ${dados.total_sessoes || 0}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Consumo
-                        </span>
-
-                        <strong>
-                            ${consumoTotal} kWh
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Valor
-                        </span>
-
-                        <strong>
-                            ${valorTotal}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="rfid-history-list">
-
-                    ${htmlSessoes}
-
-                </div>
-
-
-                <div class="rfid-detail-actions">
-
-                    <button
-                        id="btn-voltar-rfid"
-                        class="secondary-action"
-                        type="button"
-                    >
-                        Voltar aos dados do cartão
-                    </button>
-
-                </div>
-
-            `;
-
-
-            document.getElementById(
-                "btn-voltar-rfid"
-            ).addEventListener(
-                "click",
-                () => {
-
-                    abrirDetalhes(
-                        cartao
+                const valorTotal =
+                    Number(
+                        dados.valor_total || 0
+                    ).toLocaleString(
+                        "pt-BR",
+                        {
+                            style: "currency",
+                            currency: "BRL"
+                        }
                     );
 
-                }
-            );
+                conteudo.innerHTML = `
+
+                    <div class="rfid-history-page">
+
+                        <div class="rfid-history-hero">
+
+                            <div class="rfid-detail-preview">
+
+                                <div class="rfid-detail-avatar">
+                                    ${iniciais(cartao.usuario)}
+                                </div>
+
+                                <div>
+                                    <span>Histórico RFID</span>
+
+                                    <strong>
+                                        ${escapeHtml(cartao.usuario)}
+                                    </strong>
+
+                                    <small>
+                                        Cartão ${escapeHtml(cartao.uid)}
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="rfid-history-summary-grid">
+
+                            <article class="rfid-history-summary-card">
+                                <span>Total de sessões</span>
+                                <strong>${dados.total_sessoes || 0}</strong>
+                            </article>
+
+                            <article class="rfid-history-summary-card">
+                                <span>Consumo total</span>
+                                <strong>${consumoTotal} kWh</strong>
+                            </article>
+
+                            <article class="rfid-history-summary-card">
+                                <span>Valor acumulado</span>
+                                <strong>${valorTotal}</strong>
+                            </article>
+
+                        </div>
+
+                        <div class="rfid-history-list">
+                            ${htmlSessoes}
+                        </div>
+
+                        <div class="rfid-detail-actions">
+                            <button
+                                id="btn-voltar-rfid"
+                                class="secondary-action"
+                                type="button"
+                            >
+                                Voltar aos dados do cartão
+                            </button>
+                        </div>
+
+                    </div>
+
+                `;
+
+                document.getElementById(
+                    "btn-voltar-rfid"
+                ).addEventListener(
+                    "click",
+                    () => {
+                        abrirDetalhes(cartao);
+                    }
+                );
 
         }
 
