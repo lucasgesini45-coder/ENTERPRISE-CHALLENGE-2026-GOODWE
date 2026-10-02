@@ -726,6 +726,16 @@ const iniciarFaturasUI = () => {
                 criarQueryPeriodo();
 
 
+            const token =
+                localStorage.getItem(
+                    "ev_chargeops_token"
+                );
+
+            const headersAutenticados = {
+                "Authorization":
+                    `Bearer ${token}`
+            };
+
             const [
                 respostaRateio,
                 respostaUsuarios
@@ -733,11 +743,21 @@ const iniciarFaturasUI = () => {
                 await Promise.all([
 
                     fetch(
-                        `${API_URL}/consumo/rateio-mensal?${query}`
+                        `${API_URL}/consumo/rateio-mensal?${query}`,
+                        {
+                            method: "GET",
+                            headers:
+                                headersAutenticados
+                        }
                     ),
 
                     fetch(
-                        `${API_URL}/usuarios/`
+                        `${API_URL}/usuarios/`,
+                        {
+                            method: "GET",
+                            headers:
+                                headersAutenticados
+                        }
                     )
 
                 ]);
@@ -1156,9 +1176,22 @@ const iniciarFaturasUI = () => {
                 criarQueryPeriodo();
 
 
+            const token =
+                localStorage.getItem(
+                    "ev_chargeops_token"
+                );
+
             const resposta =
                 await fetch(
-                    `${API_URL}/consumo/fatura-usuario/${usuarioId}?${query}`
+                    `${API_URL}/consumo/fatura-usuario/${usuarioId}?${query}`,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${token}`
+                        }
+                    }
                 );
 
 
@@ -1457,23 +1490,72 @@ const iniciarFaturasUI = () => {
        PDF
     ========================================= */
 
-    function abrirPdf(
+    async function abrirPdf(
         usuarioId
     ) {
 
         const query =
             criarQueryPeriodo();
 
+        const token =
+            localStorage.getItem(
+                "ev_chargeops_token"
+            );
 
-        const url =
-            `${API_URL}/consumo/fatura-usuario/${usuarioId}/pdf?${query}`;
+        try {
 
+            const resposta =
+                await fetch(
+                    `${API_URL}/consumo/fatura-usuario/${usuarioId}/pdf?${query}`,
+                    {
+                        method: "GET",
 
-        window.open(
-            url,
-            "_blank"
-        );
+                        headers: {
+                            "Authorization":
+                                `Bearer ${token}`
+                        }
+                    }
+                );
 
+            if (!resposta.ok) {
+                throw new Error(
+                    "Não foi possível gerar o PDF."
+                );
+            }
+
+            const blob =
+                await resposta.blob();
+
+            const urlTemporaria =
+                URL.createObjectURL(
+                    blob
+                );
+
+            window.open(
+                urlTemporaria,
+                "_blank"
+            );
+
+            setTimeout(
+                () => {
+                    URL.revokeObjectURL(
+                        urlTemporaria
+                    );
+                },
+                60000
+            );
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao gerar PDF:",
+                erro
+            );
+
+            alert(
+                erro.message
+            );
+        }
     }
 
 

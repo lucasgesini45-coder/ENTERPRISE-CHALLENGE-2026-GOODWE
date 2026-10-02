@@ -3,6 +3,8 @@ const iniciarUsuariosUI = () => {
     const main =
         document.querySelector(".main");
 
+    let usuariosCache = [];
+
     if (!main) {
         return;
     }
@@ -300,6 +302,168 @@ const iniciarUsuariosUI = () => {
 
     document.body.appendChild(
         modal
+    );
+
+        /* =========================================
+       MODAL - DETALHES DO USUÁRIO
+    ========================================= */
+
+    const modalDetalhesUsuario =
+        document.createElement(
+            "div"
+        );
+
+    modalDetalhesUsuario.className =
+        "modal-overlay";
+
+    modalDetalhesUsuario.id =
+        "user-detail-modal";
+
+    modalDetalhesUsuario.innerHTML = `
+
+        <div class="modal-card user-detail-modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="section-label">
+                        Gestão
+                    </span>
+
+                    <h2>
+                        Detalhes do Usuário
+                    </h2>
+
+                    <p>
+                        Informações do usuário cadastrado.
+                    </p>
+
+                </div>
+
+                <button
+                    id="fechar-detalhes-usuario"
+                    class="modal-close"
+                    type="button"
+                    aria-label="Fechar"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="user-detail-profile">
+
+                <div
+                    id="detail-user-avatar"
+                    class="user-detail-avatar"
+                >
+                    EV
+                </div>
+
+                <div>
+
+                    <strong
+                        id="detail-user-name"
+                    >
+                        --
+                    </strong>
+
+                    <span
+                        id="detail-user-email"
+                    >
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="user-detail-grid">
+
+                <div>
+
+                    <span>
+                        ID
+                    </span>
+
+                    <strong
+                        id="detail-user-id"
+                    >
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Perfil
+                    </span>
+
+                    <strong
+                        id="detail-user-role"
+                    >
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Telefone
+                    </span>
+
+                    <strong
+                        id="detail-user-phone"
+                    >
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Status
+                    </span>
+
+                    <strong
+                        id="detail-user-status"
+                        class="user-detail-status"
+                    >
+                        Cadastrado
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    id="fechar-detalhes-usuario-footer"
+                    class="primary-action"
+                    type="button"
+                >
+                    Fechar
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(
+        modalDetalhesUsuario
     );
 
 
@@ -601,7 +765,12 @@ const iniciarUsuariosUI = () => {
                             headers: {
 
                                 "Content-Type":
-                                    "application/json"
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${localStorage.getItem(
+                                        "ev_chargeops_token"
+                                    )}`
 
                             },
 
@@ -715,9 +884,22 @@ const iniciarUsuariosUI = () => {
 
         try {
 
+            const token =
+                localStorage.getItem(
+                    "ev_chargeops_token"
+                );
+
             const resposta =
                 await fetch(
-                    `${API_URL}/usuarios/`
+                    `${API_URL}/usuarios/`,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${token}`
+                        }
+                    }
                 );
 
 
@@ -736,6 +918,7 @@ const iniciarUsuariosUI = () => {
 
             const usuarios =
                 dados.usuarios ?? [];
+                usuariosCache = usuarios;
 
 
             document.getElementById(
@@ -923,6 +1106,135 @@ const iniciarUsuariosUI = () => {
         }
 
     }
+
+    /* =========================================
+       DETALHES DO USUÁRIO
+    ========================================= */
+
+    function abrirDetalhesUsuario(usuario) {
+
+        if (!usuario) {
+            return;
+        }
+
+        const iniciais =
+            usuario.nome
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map(
+                    nome =>
+                        nome[0]
+                )
+                .join("")
+                .toUpperCase();
+
+        document.getElementById(
+            "detail-user-avatar"
+        ).textContent =
+            iniciais;
+
+        document.getElementById(
+            "detail-user-name"
+        ).textContent =
+            usuario.nome ?? "--";
+
+        document.getElementById(
+            "detail-user-email"
+        ).textContent =
+            usuario.email ?? "--";
+
+        document.getElementById(
+            "detail-user-id"
+        ).textContent =
+            `#${usuario.id}`;
+
+        document.getElementById(
+            "detail-user-role"
+        ).textContent =
+            usuario.perfil ?? "USER";
+
+        document.getElementById(
+            "detail-user-phone"
+        ).textContent =
+            usuario.telefone ??
+            "Não informado";
+
+        modalDetalhesUsuario.classList.add(
+            "show"
+        );
+    }
+
+
+    function fecharDetalhesUsuario() {
+
+        modalDetalhesUsuario.classList.remove(
+            "show"
+        );
+    }
+
+
+    document.addEventListener(
+        "click",
+        evento => {
+
+            const botao =
+                evento.target.closest(
+                    ".user-detail-button"
+                );
+
+            if (!botao) {
+                return;
+            }
+
+            const usuarioId =
+                Number(
+                    botao.dataset.userId
+                );
+
+            const usuario =
+                usuariosCache.find(
+                    item =>
+                        Number(item.id) ===
+                        usuarioId
+                );
+
+            abrirDetalhesUsuario(
+                usuario
+            );
+        }
+    );
+
+
+    document.getElementById(
+        "fechar-detalhes-usuario"
+    ).addEventListener(
+        "click",
+        fecharDetalhesUsuario
+    );
+
+
+    document.getElementById(
+        "fechar-detalhes-usuario-footer"
+    ).addEventListener(
+        "click",
+        fecharDetalhesUsuario
+    );
+
+
+    modalDetalhesUsuario.addEventListener(
+        "click",
+        evento => {
+
+            if (
+                evento.target ===
+                modalDetalhesUsuario
+            ) {
+
+                fecharDetalhesUsuario();
+            }
+        }
+    );    
 
 };
 

@@ -1126,16 +1126,11 @@ async function carregarCarregadores() {
 
                         <div class="charger-symbol">
 
-                            <svg viewBox="0 0 24 24">
-
-                                <path
-                                    d="M7 2h10v10h2a2 2 0 0 1 2 2v4
-                                    a4 4 0 0 1-8 0v-1h2v1
-                                    a2 2 0 1 0 4 0v-4h-2v3H7V2
-                                    zm2 2v11h6V4H9z"
-                                />
-
-                            </svg>
+                            <img
+                                src="./assets/evcharger.png"
+                                alt="Carregador EV Charge"
+                                class="charger-card-image"
+                            >
 
                         </div>
 

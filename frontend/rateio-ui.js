@@ -415,6 +415,10 @@ const iniciarRateioUI = () => {
                                 Valor
                             </th>
 
+                            <th>
+                                Ações
+                            </th>
+
                         </tr>
 
                     </thead>
@@ -424,7 +428,7 @@ const iniciarRateioUI = () => {
 
                         <tr>
 
-                            <td colspan="5">
+                            <td colspan="6">
                                 Carregando...
                             </td>
 
@@ -449,6 +453,118 @@ const iniciarRateioUI = () => {
 
     main.appendChild(
         paginaRateio
+    );
+
+    /* =========================================
+   MODAL - DETALHES DO RATEIO
+========================================= */
+
+    const modalDetalhesRateio =
+        document.createElement(
+            "div"
+        );
+
+    modalDetalhesRateio.className =
+        "modal-overlay";
+
+    modalDetalhesRateio.id =
+        "rateio-detail-modal";
+
+    modalDetalhesRateio.innerHTML = `
+
+        <div class="modal-card rateio-detail-modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <span class="section-label">
+                        Financeiro
+                    </span>
+
+                    <h2>
+                        Detalhes do Rateio
+                    </h2>
+
+                    <p>
+                        Composição do consumo e do valor do usuário.
+                    </p>
+                </div>
+
+                <button
+                    id="fechar-detalhes-rateio"
+                    class="modal-close"
+                    type="button"
+                    aria-label="Fechar"
+                >
+                    ×
+                </button>
+
+            </div>
+
+            <div class="rateio-detail-profile">
+
+                <div>
+                    <strong id="detail-rateio-user">
+                        --
+                    </strong>
+
+                    <span id="detail-rateio-period">
+                        --
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="rateio-detail-grid">
+
+                <div>
+                    <span>Sessões</span>
+                    <strong id="detail-rateio-sessions">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Consumo</span>
+                    <strong id="detail-rateio-consumption">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Participação</span>
+                    <strong id="detail-rateio-share">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Valor</span>
+                    <strong id="detail-rateio-value">
+                        --
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="fechar-detalhes-rateio-footer"
+                    class="primary-action"
+                    type="button"
+                >
+                    Fechar
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(
+        modalDetalhesRateio
     );
 
 
@@ -662,9 +778,22 @@ const iniciarRateioUI = () => {
                 criarQueryPeriodo();
 
 
+            const token =
+                localStorage.getItem(
+                    "ev_chargeops_token"
+                );
+
             const resposta =
                 await fetch(
-                    `${API_URL}/consumo/rateio-mensal?${query}`
+                    `${API_URL}/consumo/rateio-mensal?${query}`,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${token}`
+                        }
+                    }
                 );
 
 
@@ -1070,6 +1199,18 @@ const iniciarRateioUI = () => {
 
                     </td>
 
+                    <td>
+
+                        <button
+                            class="rateio-detail-button"
+                            type="button"
+                            data-user-id="${usuario.usuario_id}"
+                        >
+                            Ver detalhes
+                        </button>
+
+                    </td>
+
                 `;
 
 
@@ -1311,7 +1452,152 @@ const iniciarRateioUI = () => {
 
     }
 
+        /* =========================================
+    DETALHES DO RATEIO
+    ========================================= */
 
+    function abrirDetalhesRateio(usuario) {
+
+        if (!usuario) {
+            return;
+        }
+
+        const consumoTotal =
+            Number(
+                rateioCache?.consumo_total_kwh ??
+                0
+            );
+
+        const consumoUsuario =
+            Number(
+                usuario.consumo_kwh ??
+                0
+            );
+
+        const percentual =
+            consumoTotal > 0
+                ? (
+                    consumoUsuario /
+                    consumoTotal
+                ) * 100
+                : 0;
+
+        const inicio =
+            document.getElementById(
+                "rateio-start"
+            ).value;
+
+        const fim =
+            document.getElementById(
+                "rateio-end"
+            ).value;
+
+        document.getElementById(
+            "detail-rateio-user"
+        ).textContent =
+            usuario.nome ??
+            "Usuário";
+
+        document.getElementById(
+            "detail-rateio-period"
+        ).textContent =
+            `${inicio || "--"} até ${fim || "--"}`;
+
+        document.getElementById(
+            "detail-rateio-sessions"
+        ).textContent =
+            usuario.total_sessoes ??
+            0;
+
+        document.getElementById(
+            "detail-rateio-consumption"
+        ).textContent =
+            `${consumoUsuario.toFixed(2)} kWh`;
+
+        document.getElementById(
+            "detail-rateio-share"
+        ).textContent =
+            `${percentual.toFixed(1)}%`;
+
+        document.getElementById(
+            "detail-rateio-value"
+        ).textContent =
+            `R$ ${Number(
+                usuario.valor_total ??
+                0
+            ).toFixed(2)}`;
+
+        modalDetalhesRateio.classList.add(
+            "show"
+        );
+    }
+
+    function fecharDetalhesRateio() {
+
+        modalDetalhesRateio.classList.remove(
+            "show"
+        );
+    }
+
+    document.addEventListener(
+        "click",
+        evento => {
+
+            const botao =
+                evento.target.closest(
+                    ".rateio-detail-button"
+                );
+
+            if (!botao) {
+                return;
+            }
+
+            const usuarioId =
+                Number(
+                    botao.dataset.userId
+                );
+
+            const usuario =
+                rateioCache?.usuarios?.find(
+                    item =>
+                        Number(
+                            item.usuario_id
+                        ) === usuarioId
+                );
+
+            abrirDetalhesRateio(
+                usuario
+            );
+        }
+    );
+
+    document.getElementById(
+        "fechar-detalhes-rateio"
+    ).addEventListener(
+        "click",
+        fecharDetalhesRateio
+    );
+
+    document.getElementById(
+        "fechar-detalhes-rateio-footer"
+    ).addEventListener(
+        "click",
+        fecharDetalhesRateio
+    );
+
+    modalDetalhesRateio.addEventListener(
+        "click",
+        evento => {
+
+            if (
+                evento.target ===
+                modalDetalhesRateio
+            ) {
+                fecharDetalhesRateio();
+            }
+        }
+    );
+    
     /* =========================================
        EVENTOS
     ========================================= */

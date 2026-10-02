@@ -403,7 +403,147 @@ const iniciarSessoesUI = () => {
     main.appendChild(
         paginaSessoes
     );
+        /* =========================================
+       MODAL - DETALHES DA SESSÃO
+    ========================================= */
 
+    const modalDetalhesSessao =
+        document.createElement(
+            "div"
+        );
+
+    modalDetalhesSessao.className =
+        "modal-overlay";
+
+    modalDetalhesSessao.id =
+        "session-detail-modal";
+
+    modalDetalhesSessao.innerHTML = `
+
+        <div class="modal-card session-detail-modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="section-label">
+                        Operação
+                    </span>
+
+                    <h2>
+                        Detalhes da Sessão
+                    </h2>
+
+                    <p>
+                        Informações da recarga registrada.
+                    </p>
+
+                </div>
+
+                <button
+                    id="fechar-detalhes-sessao"
+                    class="modal-close"
+                    type="button"
+                    aria-label="Fechar"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="session-detail-hero">
+
+                <div class="session-detail-icon">
+                    ⚡
+                </div>
+
+                <div>
+
+                    <strong
+                        id="detail-session-title"
+                    >
+                        Sessão #--
+                    </strong>
+
+                    <span
+                        id="detail-session-status"
+                        class="session-detail-status"
+                    >
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="session-detail-grid">
+
+                <div>
+                    <span>Usuário</span>
+                    <strong id="detail-session-user">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Carregador</span>
+                    <strong id="detail-session-charger">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Início</span>
+                    <strong id="detail-session-start">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Duração</span>
+                    <strong id="detail-session-duration">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Consumo</span>
+                    <strong id="detail-session-consumption">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Valor</span>
+                    <strong id="detail-session-value">
+                        --
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    id="fechar-detalhes-sessao-footer"
+                    class="primary-action"
+                    type="button"
+                >
+                    Fechar
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(
+        modalDetalhesSessao
+    );
 
     /* =========================================
        MENU
@@ -1147,6 +1287,16 @@ const iniciarSessoesUI = () => {
 
         try {
 
+            const token =
+                localStorage.getItem(
+                    "ev_chargeops_token"
+                );
+
+            const headersAutenticados = {
+                "Authorization":
+                    `Bearer ${token}`
+            };
+
             const [
                 respostaSessoes,
                 respostaUsuarios,
@@ -1155,15 +1305,30 @@ const iniciarSessoesUI = () => {
                 await Promise.all([
 
                     fetch(
-                        `${API_URL}/sessoes/`
+                        `${API_URL}/sessoes/`,
+                        {
+                            method: "GET",
+                            headers:
+                                headersAutenticados
+                        }
                     ),
 
                     fetch(
-                        `${API_URL}/usuarios/`
+                        `${API_URL}/usuarios/`,
+                        {
+                            method: "GET",
+                            headers:
+                                headersAutenticados
+                        }
                     ),
 
                     fetch(
-                        `${API_URL}/carregadores/`
+                        `${API_URL}/carregadores/`,
+                        {
+                            method: "GET",
+                            headers:
+                                headersAutenticados
+                        }
                     )
 
                 ]);
@@ -1320,6 +1485,156 @@ const iniciarSessoesUI = () => {
                 sessoesCache
             );
 
+        }
+    );
+
+        /* =========================================
+       DETALHES DA SESSÃO
+    ========================================= */
+
+    function abrirDetalhesSessao(sessao) {
+
+        if (!sessao) {
+            return;
+        }
+
+        const usuario =
+            obterUsuario(
+                sessao.usuario_id
+            );
+
+        const carregador =
+            obterCarregador(
+                sessao.carregador_id
+            );
+
+        document.getElementById(
+            "detail-session-title"
+        ).textContent =
+            `Sessão #${sessao.id}`;
+
+        document.getElementById(
+            "detail-session-status"
+        ).textContent =
+            formatarStatus(
+                sessao.status
+            );
+
+        document.getElementById(
+            "detail-session-user"
+        ).textContent =
+            usuario
+                ? usuario.nome
+                : "Não associado";
+
+        document.getElementById(
+            "detail-session-charger"
+        ).textContent =
+            carregador
+                ? carregador.nome
+                : `Carregador #${sessao.carregador_id}`;
+
+        document.getElementById(
+            "detail-session-start"
+        ).textContent =
+            formatarData(
+                sessao.inicio
+            );
+
+        document.getElementById(
+            "detail-session-duration"
+        ).textContent =
+            calcularDuracao(
+                sessao
+            );
+
+        document.getElementById(
+            "detail-session-consumption"
+        ).textContent =
+            `${Number(
+                sessao.consumo_kwh ?? 0
+            ).toFixed(2)} kWh`;
+
+        document.getElementById(
+            "detail-session-value"
+        ).textContent =
+            `R$ ${Number(
+                sessao.valor_total ?? 0
+            ).toFixed(2)}`;
+
+        modalDetalhesSessao.classList.add(
+            "show"
+        );
+    }
+
+
+    function fecharDetalhesSessao() {
+
+        modalDetalhesSessao.classList.remove(
+            "show"
+        );
+    }
+
+
+    document.addEventListener(
+        "click",
+        evento => {
+
+            const botao =
+                evento.target.closest(
+                    ".session-detail-button"
+                );
+
+            if (!botao) {
+                return;
+            }
+
+            const sessaoId =
+                Number(
+                    botao.dataset.sessionId
+                );
+
+            const sessao =
+                sessoesCache.find(
+                    item =>
+                        Number(item.id) ===
+                        sessaoId
+                );
+
+            abrirDetalhesSessao(
+                sessao
+            );
+        }
+    );
+
+
+    document.getElementById(
+        "fechar-detalhes-sessao"
+    ).addEventListener(
+        "click",
+        fecharDetalhesSessao
+    );
+
+
+    document.getElementById(
+        "fechar-detalhes-sessao-footer"
+    ).addEventListener(
+        "click",
+        fecharDetalhesSessao
+    );
+
+
+    modalDetalhesSessao.addEventListener(
+        "click",
+        evento => {
+
+            if (
+                evento.target ===
+                modalDetalhesSessao
+            ) {
+
+                fecharDetalhesSessao();
+            }
         }
     );
 
