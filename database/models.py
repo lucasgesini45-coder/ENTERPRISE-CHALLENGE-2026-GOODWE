@@ -25,6 +25,10 @@ class Carregador(Base):
     potencia_maxima = Column(Float)
     status = Column(String)
     modelo = Column(String)
+
+    latitude = Column(Float)
+    longitude = Column(Float)
+
     atualizado_em = Column(DateTime)
 
 

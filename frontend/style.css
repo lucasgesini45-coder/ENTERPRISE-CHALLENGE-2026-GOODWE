@@ -6170,3 +6170,343 @@ body.dark .config-modal-backdrop {
 
     background: var(--card-soft);
 }
+
+/* =========================================
+   LOCALIZAR CARREGADORES - LAYOUT
+========================================= */
+
+.locator-shell {
+    position: relative;
+
+    min-height: 640px;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    background: var(--card);
+
+    box-shadow: var(--shadow);
+}
+
+.locator-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 16px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: var(--card);
+}
+
+.locator-search {
+    flex: 1;
+
+    max-width: 520px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 44px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: var(--card-soft);
+}
+
+.locator-search span {
+    color: var(--text-light);
+
+    font-size: 18px;
+}
+
+.locator-search input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+    color: var(--text);
+
+    font-size: 11px;
+}
+
+.locator-search input::placeholder {
+    color: var(--text-light);
+}
+
+.locator-filters {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+.locator-filter {
+    min-height: 38px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    background: var(--card-soft);
+    color: var(--text-soft);
+
+    font-size: 9px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.locator-filter.active {
+    border-color: var(--primary);
+
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.locator-map-wrapper {
+    position: relative;
+
+    min-height: 560px;
+}
+
+.locator-map-wrapper .chargers-map {
+    width: 100%;
+    height: 560px;
+
+    border: none;
+    border-radius: 0;
+
+    background: var(--card-soft);
+}
+
+.locator-panel {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    z-index: 500;
+
+    width: min(320px, calc(100% - 36px));
+
+    padding: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+
+    background: rgba(20, 22, 28, 0.58);
+
+    box-shadow:
+        0 14px 32px
+        rgba(0, 0, 0, 0.22);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.locator-panel h2 {
+    margin-bottom: 7px;
+
+    color: var(--text);
+
+    font-size: 17px;
+}
+
+.locator-panel > p {
+    margin-bottom: 18px;
+
+    color: var(--text-soft);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.locator-panel-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+}
+
+.locator-panel-info > div {
+    padding: 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    background: var(--card-soft);
+}
+
+.locator-panel-info span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-light);
+
+    font-size: 7px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+.locator-panel-info strong {
+    color: var(--text);
+
+    font-size: 9px;
+}
+
+.locator-route-button {
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+
+    .locator-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .locator-search {
+        max-width: none;
+    }
+
+    .locator-panel {
+        position: absolute;
+
+        left: 18px;
+        right: 18px;
+        top: auto;
+        bottom: 18px;
+
+        width: auto;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .locator-panel-info {
+        grid-template-columns: 1fr;
+    }
+
+    .locator-map-wrapper .chargers-map {
+        height: 620px;
+    }
+}
+
+/* =========================================
+   BOTÃO - MINHA LOCALIZAÇÃO
+========================================= */
+
+.locator-location-button {
+    position: absolute;
+
+    left: 18px;
+    bottom: 18px;
+
+    z-index: 500;
+
+    width: 46px;
+    height: 46px;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    background: var(--card);
+    color: var(--primary);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.14);
+
+    cursor: pointer;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.locator-location-button:hover {
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   MARCADORES DOS CARREGADORES
+========================================= */
+
+.charger-map-marker-wrapper {
+    background: transparent;
+    border: none;
+}
+
+.charger-map-marker {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 3px solid #ffffff;
+    border-radius: 12px;
+
+    background:
+        var(--marker-color);
+
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.28);
+
+    transform: rotate(45deg);
+}
+
+.charger-map-marker span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    transform: rotate(-45deg);
+}
+
+/* =========================================
+   CLIQUE NOS MARCADORES DO MAPA
+========================================= */
+
+.charger-map-marker-wrapper {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.charger-map-marker {
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+.charger-map-marker span {
+    pointer-events: none;
+}

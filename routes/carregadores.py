@@ -34,7 +34,9 @@ def criar_carregador(
         localizacao=carregador.localizacao,
         status=carregador.status,
         modelo=carregador.modelo,
-        potencia_maxima=carregador.potencia_maxima
+        potencia_maxima=carregador.potencia_maxima,
+        latitude=carregador.latitude,
+        longitude=carregador.longitude
     )
 
     db.add(novo_carregador)

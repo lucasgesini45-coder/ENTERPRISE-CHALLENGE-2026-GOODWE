@@ -1,5 +1,4 @@
 from typing import Optional
-
 from pydantic import BaseModel
 
 
@@ -11,6 +10,9 @@ class CarregadorBase(BaseModel):
 
     modelo: Optional[str] = None
     potencia_maxima: Optional[float] = None
+
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class CarregadorCreate(CarregadorBase):
