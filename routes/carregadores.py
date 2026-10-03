@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from database.database import get_db
@@ -41,8 +41,23 @@ def criar_carregador(
 
     db.add(novo_carregador)
 
-    db.commit()
+    try:
 
-    db.refresh(novo_carregador)
+        db.commit()
+        db.refresh(novo_carregador)
 
-    return novo_carregador
+        return novo_carregador
+
+    except Exception as erro:
+
+        db.rollback()
+
+        print(
+            "ERRO AO CRIAR CARREGADOR:",
+            repr(erro)
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(erro)
+        )

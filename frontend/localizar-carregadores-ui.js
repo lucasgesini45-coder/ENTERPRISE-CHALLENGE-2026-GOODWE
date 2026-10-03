@@ -269,8 +269,10 @@ const iniciarLocalizarCarregadoresUI = () => {
 ========================================= */
 
         const marcadoresCarregadores = [];
-
+        const dadosMarcadores = [];
         let carregadorSelecionado = null;
+
+        let carregadoresMapa = [];
 
         async function carregarCarregadoresNoMapa() {
 
@@ -307,7 +309,10 @@ const iniciarLocalizarCarregadoresUI = () => {
 
                 const carregadores =
                     dados.carregadores ?? [];
-
+                
+                carregadoresMapa =
+                    carregadores;
+                        
                 marcadoresCarregadores.forEach(
                     marcador => {
                         mapa.removeLayer(
@@ -430,7 +435,7 @@ const iniciarLocalizarCarregadoresUI = () => {
                                 mapa
                             );
 
-                        marcador.bindTooltip(
+                                                marcador.bindTooltip(
                             carregador.nome ??
                             "Carregador",
                             {
@@ -438,12 +443,6 @@ const iniciarLocalizarCarregadoresUI = () => {
                                     "top"
                             }
                         );
-                                                marcadoresCarregadores.push(
-                            marcador
-                        );
-
-                    }
-                );
 
                         marcador.on(
                             "click",
@@ -460,6 +459,16 @@ const iniciarLocalizarCarregadoresUI = () => {
                                     longitude
                                 };
 
+                                if (botaoRota) {
+
+                                    botaoRota.textContent =
+                                        "Traçar rota";
+
+                                    botaoRota.disabled =
+                                        false;
+
+                                }
+
                                 const painel =
                                     document.querySelector(
                                         ".locator-panel"
@@ -473,8 +482,7 @@ const iniciarLocalizarCarregadoresUI = () => {
                                     (
                                         carregador.status ??
                                         "DESCONHECIDO"
-                                    )
-                                    .replace(
+                                    ).replace(
                                         "_",
                                         " "
                                     );
@@ -544,6 +552,17 @@ const iniciarLocalizarCarregadoresUI = () => {
                             }
                         );
 
+                        marcadoresCarregadores.push(
+                            marcador
+                        );
+                        dadosMarcadores.push({
+                            marcador,
+                            carregador
+                        });
+
+                    }
+                );
+
                 console.log(
                     `${marcadoresCarregadores.length} carregadores adicionados ao mapa.`
                 );
@@ -558,8 +577,109 @@ const iniciarLocalizarCarregadoresUI = () => {
             }
 
         }
+        let controleRota = null;
 
         carregarCarregadoresNoMapa();
+
+        const botoesFiltro =
+    document.querySelectorAll(
+        ".locator-filter"
+    );
+
+botoesFiltro.forEach(
+    botao => {
+
+        botao.addEventListener(
+            "click",
+            () => {
+
+                botoesFiltro.forEach(
+                    item =>
+                        item.classList.remove(
+                            "active"
+                        )
+                );
+
+                botao.classList.add(
+                    "active"
+                );
+
+                const filtro =
+                    botao.textContent
+                        .trim();
+
+                dadosMarcadores.forEach(
+                    item => {
+
+                        const status =
+                            (
+                                item.carregador
+                                    .status ??
+                                ""
+                            ).toUpperCase();
+
+                        const potencia =
+                            Number(
+                                item.carregador
+                                    .potencia_maxima
+                            );
+
+                        let mostrar =
+                            true;
+
+                        if (
+                            filtro ===
+                            "Disponíveis"
+                        ) {
+                            mostrar =
+                                status ===
+                                "ATIVO";
+                        }
+
+                        if (
+                            filtro ===
+                            "Alta potência"
+                        ) {
+                            mostrar =
+                                potencia >=
+                                11;
+                        }
+
+                        if (mostrar) {
+
+                            if (
+                                !mapa.hasLayer(
+                                    item.marcador
+                                )
+                            ) {
+                                item.marcador
+                                    .addTo(
+                                        mapa
+                                    );
+                            }
+
+                        } else {
+
+                            if (
+                                mapa.hasLayer(
+                                    item.marcador
+                                )
+                            ) {
+                                mapa.removeLayer(
+                                    item.marcador
+                                );
+                            }
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
 
         const botaoRota =
             document.querySelector(
@@ -581,20 +701,66 @@ const iniciarLocalizarCarregadoresUI = () => {
                         return;
                     }
 
+                    if (!posicaoUsuario) {
+
+                        alert(
+                            "Ative sua localização primeiro."
+                        );
+
+                        return;
+
+                    }
+
                     const destinoLatitude =
                         carregadorSelecionado.latitude;
 
                     const destinoLongitude =
                         carregadorSelecionado.longitude;
 
-                    const url =
-                        `https://www.google.com/maps/dir/?api=1&destination=${destinoLatitude},${destinoLongitude}`;
+                    if (controleRota) {
 
-                    window.open(
-                        url,
-                        "_blank"
-                    );
+                        mapa.removeControl(
+                            controleRota
+                        );
 
+                    }
+
+                    controleRota =
+                        L.Routing.control({
+
+                            waypoints: [
+
+                                L.latLng(
+                                    posicaoUsuario.latitude,
+                                    posicaoUsuario.longitude
+                                ),
+
+                                L.latLng(
+                                    destinoLatitude,
+                                    destinoLongitude
+                                )
+
+                            ],
+
+                            routeWhileDragging: false,
+
+                            addWaypoints: false,
+
+                            draggableWaypoints: false,
+
+                            fitSelectedRoutes: true,
+
+                            show: false,
+
+                            createMarker: () => null
+
+                        }).addTo(mapa);
+                        
+                    botaoRota.textContent =
+                        "Rota traçada";
+
+                    botaoRota.disabled =
+                        true;
                 }
             );
 
@@ -623,7 +789,7 @@ const iniciarLocalizarCarregadoresUI = () => {
 
             navigator.geolocation.getCurrentPosition(
 
-                posicao => {
+                async posicao => {
 
                     const latitude =
                         posicao.coords.latitude;
@@ -635,6 +801,148 @@ const iniciarLocalizarCarregadoresUI = () => {
                         latitude,
                         longitude
                     };
+                    if (
+                        carregadoresMapa.length === 0
+                    ) {
+
+                        await carregarCarregadoresNoMapa();
+
+                    }
+
+                    if (
+                        carregadoresMapa.length > 0
+                    ) {
+
+        let maisProximo = null;
+        let menorDistancia = Infinity;
+
+        carregadoresMapa.forEach(
+            carregador => {
+
+                const latCarregador =
+                    Number(
+                        carregador.latitude
+                    );
+
+                const lngCarregador =
+                    Number(
+                        carregador.longitude
+                    );
+
+                if (
+                    !Number.isFinite(
+                        latCarregador
+                    ) ||
+                    !Number.isFinite(
+                        lngCarregador
+                    )
+                ) {
+                    return;
+                }
+
+                const distancia =
+                    mapa.distance(
+                        [
+                            latitude,
+                            longitude
+                        ],
+                        [
+                            latCarregador,
+                            lngCarregador
+                        ]
+                    );
+
+                if (
+                    distancia <
+                    menorDistancia
+                ) {
+
+                    menorDistancia =
+                        distancia;
+
+                    maisProximo = {
+                        ...carregador,
+                        latitude:
+                            latCarregador,
+                        longitude:
+                            lngCarregador
+                    };
+
+                }
+
+            }
+        );
+
+    if (maisProximo) {
+
+        carregadorSelecionado =
+            maisProximo;
+
+        const painel =
+            document.querySelector(
+                ".locator-panel"
+            );
+
+        if (painel) {
+
+            painel.querySelector(
+                "h2"
+            ).textContent =
+                maisProximo.nome ??
+                "Carregador";
+
+            painel.querySelector(
+                "p"
+            ).textContent =
+                maisProximo.localizacao ??
+                "Localização não informada";
+
+            const infos =
+                painel.querySelectorAll(
+                    ".locator-panel-info strong"
+                );
+
+            const distanciaTexto =
+                menorDistancia < 1000
+                    ? `${Math.round(
+                        menorDistancia
+                    )} m`
+                    : `${(
+                        menorDistancia /
+                        1000
+                    ).toFixed(1)} km`;
+
+            if (infos[0]) {
+                infos[0].textContent =
+                    (
+                        maisProximo.status ??
+                        "DESCONHECIDO"
+                    ).replace(
+                        "_",
+                        " "
+                    );
+            }
+
+            if (infos[1]) {
+                infos[1].textContent =
+                    distanciaTexto;
+            }
+
+            if (infos[2]) {
+                infos[2].textContent =
+                    maisProximo.potencia_maxima
+                        ? `${Number(
+                            maisProximo
+                                .potencia_maxima
+                        ).toFixed(1)} kW`
+                        : "--";
+            }
+
+        }
+
+    }
+
+}
 
                     if (marcadorUsuario) {
 

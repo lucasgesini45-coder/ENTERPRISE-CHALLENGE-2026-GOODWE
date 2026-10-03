@@ -6510,3 +6510,12 @@ body.dark .config-modal-backdrop {
 .charger-map-marker span {
     pointer-events: none;
 }
+
+.leaflet-routing-container {
+    display: none !important;
+}
+
+.locator-route-button:disabled {
+    opacity: 0.75;
+    cursor: default;
+}
