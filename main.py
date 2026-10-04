@@ -10,6 +10,8 @@ from routes.dashboard import router as dashboard_router
 from routes.ia import router as ia_router
 from routes.auth import router as auth_router
 from routes.rfid import router as rfid_router
+from routes import assistente_ia
+
 from database.database import engine
 from database.models import Base
 
@@ -39,6 +41,7 @@ app.include_router(dashboard_router)
 app.include_router(ia_router)
 app.include_router(auth_router)
 app.include_router(rfid_router)
+app.include_router(assistente_ia.router)
 
 @app.get("/")
 def home():
