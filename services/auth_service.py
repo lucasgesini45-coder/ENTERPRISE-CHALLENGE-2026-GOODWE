@@ -96,16 +96,28 @@ def decodificar_access_token(token: str):
             algorithms=[ALGORITHM]
         )
 
+        print(
+            "[JWT] Token decodificado:",
+            dados
+        )
+
         if dados.get("tipo") != "access":
+            print(
+                "[JWT] Tipo de token inválido:",
+                dados.get("tipo")
+            )
             return None
 
         return dados
 
-    except JWTError:
+    except JWTError as erro:
+        print(
+            "[JWT] ERRO AO DECODIFICAR:",
+            repr(erro)
+        )
         return None
     
 security = HTTPBearer()
-
 
 def obter_usuario_atual(
     credenciais: HTTPAuthorizationCredentials = Depends(security),

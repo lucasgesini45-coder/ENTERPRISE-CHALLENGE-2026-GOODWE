@@ -207,7 +207,40 @@ const iniciarLocalizarCarregadoresUI = () => {
         </aside>
 
     </div>
+    <section class="dashboard-card locator-available-section">
 
+    <div class="card-heading">
+
+        <div>
+
+            <span class="section-label">
+                Próximos pontos
+            </span>
+
+            <h2>
+                Carregadores disponíveis
+            </h2>
+
+            <p>
+                Pontos de recarga disponíveis para utilização.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        id="locator-charger-list"
+        class="charger-grid"
+    >
+
+        <div class="charger-loading">
+            Carregando carregadores...
+        </div>
+
+    </div>
+
+</section>
 </section>
 
         <footer class="footer">
@@ -272,7 +305,251 @@ const iniciarLocalizarCarregadoresUI = () => {
         const dadosMarcadores = [];
         let carregadorSelecionado = null;
 
+        let marcadorSelecionadoMapa = null;
+
+function destacarMarcador(marcador) {
+
+    if (marcadorSelecionadoMapa) {
+
+        const elementoAnterior =
+            marcadorSelecionadoMapa
+                .getElement();
+
+        if (elementoAnterior) {
+
+            const pinAnterior =
+                elementoAnterior.querySelector(
+                    ".charger-map-marker"
+                );
+
+            if (pinAnterior) {
+                pinAnterior.classList.remove(
+                    "selected"
+                );
+            }
+
+        }
+
+    }
+
+    marcadorSelecionadoMapa =
+        marcador;
+
+    const elementoAtual =
+        marcador.getElement();
+
+    if (elementoAtual) {
+
+        const pinAtual =
+            elementoAtual.querySelector(
+                ".charger-map-marker"
+            );
+
+        if (pinAtual) {
+            pinAtual.classList.add(
+                "selected"
+            );
+        }
+
+    }
+
+}
+
         let carregadoresMapa = [];
+        
+        function renderizarCarregadoresDisponiveis() {
+
+            const lista =
+                document.getElementById(
+                    "locator-charger-list"
+                );
+
+            if (!lista) {
+                return;
+            }
+
+            const disponiveis =
+                carregadoresMapa.filter(
+                    carregador =>
+                        (
+                            carregador.status ??
+                            ""
+                        ).toUpperCase() ===
+                        "ATIVO"
+                );
+
+            if (
+                disponiveis.length === 0
+            ) {
+
+                lista.innerHTML = `
+                    <div class="empty-state">
+                        <strong>
+                            Nenhum carregador disponível
+                        </strong>
+
+                        <p>
+                            Não existem pontos disponíveis
+                            neste momento.
+                        </p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            lista.innerHTML = "";
+
+            disponiveis.forEach(
+                carregador => {
+
+                    const latitude =
+                        Number(
+                            carregador.latitude
+                        );
+
+                    const longitude =
+                        Number(
+                            carregador.longitude
+                        );
+
+                    const card =
+                        document.createElement(
+                            "article"
+                        );
+
+                    card.className =
+                        "charger-card";
+
+                    card.innerHTML = `
+
+                        <div class="charger-card-header">
+
+                            <div class="charger-symbol">
+
+                                <img
+                                    src="./assets/evcharger.png"
+                                    alt="Carregador EV Charge"
+                                    class="charger-card-image"
+                                >
+
+                            </div>
+
+                            <span
+                                class="charger-status active"
+                            >
+                                ATIVO
+                            </span>
+
+                        </div>
+
+                        <div class="charger-content">
+
+                            <h3>
+                                ${escapeHtml(
+                                    carregador.nome
+                                )}
+                            </h3>
+
+                            <p>
+                                ${escapeHtml(
+                                    carregador.localizacao ??
+                                    "Localização não informada"
+                                )}
+                            </p>
+
+                        </div>
+
+                        <div class="charger-info">
+
+                            <div>
+
+                                <span>
+                                    Modelo
+                                </span>
+
+                                <strong>
+                                    ${escapeHtml(
+                                        carregador.modelo ??
+                                        "Não informado"
+                                    )}
+                                </strong>
+
+                            </div>
+
+                            <div>
+
+                                <span>
+                                    Potência
+                                </span>
+
+                                <strong>
+                                    ${
+                                        carregador.potencia_maxima
+                                            ? `${carregador.potencia_maxima} kW`
+                                            : "Não informada"
+                                    }
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                        <div class="charger-footer">
+
+                            <span>
+                                ID #${carregador.id}
+                            </span>
+
+                            <button
+                                class="charger-detail-button locator-maps-button"
+                                type="button"
+                                data-latitude="${latitude}"
+                                data-longitude="${longitude}"
+                            >
+                                Abrir no Maps
+                            </button>
+
+                        </div>
+                    `;
+
+                    lista.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+            document.querySelectorAll(
+                ".locator-maps-button"
+            ).forEach(
+                botao => {
+
+                    botao.addEventListener(
+                        "click",
+                        () => {
+
+                            const latitude =
+                                botao.dataset.latitude;
+
+                            const longitude =
+                                botao.dataset.longitude;
+
+                            const url =
+                                `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+
+                            window.open(
+                                url,
+                                "_blank"
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        }
 
         async function carregarCarregadoresNoMapa() {
 
@@ -312,6 +589,8 @@ const iniciarLocalizarCarregadoresUI = () => {
                 
                 carregadoresMapa =
                     carregadores;
+                    
+                renderizarCarregadoresDisponiveis();
                         
                 marcadoresCarregadores.forEach(
                     marcador => {
@@ -458,6 +737,10 @@ const iniciarLocalizarCarregadoresUI = () => {
                                     latitude,
                                     longitude
                                 };
+
+                                destacarMarcador(
+                                    marcador
+                                );
 
                                 if (botaoRota) {
 
@@ -680,7 +963,109 @@ botoesFiltro.forEach(
 
     }
 );
+        const campoBusca =
+    document.querySelector(
+        ".locator-search input"
+    );
 
+if (campoBusca) {
+
+    campoBusca.addEventListener(
+        "keydown",
+        evento => {
+
+            if (
+                evento.key !==
+                "Enter"
+            ) {
+                return;
+            }
+
+            const termo =
+                campoBusca.value
+                    .trim()
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(
+                        /[\u0300-\u036f]/g,
+                        ""
+                    );
+
+            if (!termo) {
+                return;
+            }
+
+            const resultado =
+                dadosMarcadores.find(
+                    item => {
+
+                        const nome =
+                            (
+                                item.carregador
+                                    .nome ??
+                                ""
+                            )
+                                .toLowerCase()
+                                .normalize("NFD")
+                                .replace(
+                                    /[\u0300-\u036f]/g,
+                                    ""
+                                );
+
+                        const localizacao =
+                            (
+                                item.carregador
+                                    .localizacao ??
+                                ""
+                            )
+                                .toLowerCase()
+                                .normalize("NFD")
+                                .replace(
+                                    /[\u0300-\u036f]/g,
+                                    ""
+                                );
+
+                        return (
+                            nome.includes(
+                                termo
+                            ) ||
+                            localizacao.includes(
+                                termo
+                            )
+                        );
+
+                    }
+                );
+
+            if (!resultado) {
+
+                alert(
+                    "Nenhum carregador encontrado."
+                );
+
+                return;
+            }
+
+            const coordenadas =
+                resultado.marcador
+                    .getLatLng();
+
+            mapa.flyTo(
+                coordenadas,
+                16,
+                {
+                    duration: 1.2
+                }
+            );
+
+            resultado.marcador.fire(
+                "click"
+            );
+
+        }
+    );
+
+}
         const botaoRota =
             document.querySelector(
                 ".locator-route-button"
@@ -877,6 +1262,21 @@ botoesFiltro.forEach(
 
         carregadorSelecionado =
             maisProximo;
+
+        const itemMaisProximo =
+            dadosMarcadores.find(
+                item =>
+                    item.carregador.id ===
+                    maisProximo.id
+            );
+
+        if (itemMaisProximo) {
+
+            destacarMarcador(
+                itemMaisProximo.marcador
+            );
+
+        }
 
         const painel =
             document.querySelector(
