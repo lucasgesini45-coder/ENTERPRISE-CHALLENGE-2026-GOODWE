@@ -874,6 +874,70 @@ Entre os principais próximos passos estão:
 * **Ampliação dos relatórios gerenciais**;
 * **Evolução do controle de acesso por RFID**.
 
+# 31 Implementação do Protocolo OCPP
+
+O **EV ChargeOps** possui uma implementação do protocolo **OCPP (Open Charge Point Protocol)** para estruturar a comunicação entre o sistema de gerenciamento e os carregadores de veículos elétricos.
+
+O protocolo foi incorporado à arquitetura da solução com o objetivo de permitir o recebimento e processamento de informações relacionadas às operações de recarga, como status dos carregadores, sessões e dados de consumo.
+
+### Comunicação no protótipo
+
+```text
+┌──────────────────────┐
+│   Carregador EV      │
+│     Charge Point     │
+└──────────┬───────────┘
+           │
+           │ OCPP
+           ▼
+┌──────────────────────┐
+│     EV ChargeOps     │
+│   OCPP / Backend     │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│       FastAPI        │
+│       Backend        │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│      PostgreSQL      │
+│        Dados         │
+└──────────────────────┘
+```
+
+### Dados utilizados no protótipo
+
+Durante o desenvolvimento acadêmico, a implementação do OCPP foi realizada utilizando **dados fictícios e simulados** para representar o comportamento dos carregadores e das sessões de recarga.
+
+Essa abordagem foi adotada porque a equipe **não possui acesso à API oficial da GoodWe nem aos equipamentos físicos necessários para realizar uma comunicação em ambiente real**.
+
+Portanto, a implementação atual demonstra a **estrutura e o funcionamento do protocolo dentro da arquitetura do EV ChargeOps**, mas não representa uma integração oficial ou uma comunicação direta com a infraestrutura GoodWe.
+
+### Funcionamento
+
+Os dados simulados são utilizados para reproduzir cenários de operação dos carregadores e alimentar os componentes do sistema, permitindo testar funcionalidades como:
+
+* Identificação dos carregadores;
+* Status de operação;
+* Início e término de sessões;
+* Dados de consumo;
+* Monitoramento das sessões;
+* Processamento dos dados pelo backend;
+* Armazenamento das informações no banco de dados;
+* Visualização dos dados no dashboard.
+
+A utilização de dados simulados permite validar a arquitetura e o fluxo de processamento enquanto o acesso à infraestrutura oficial não está disponível.
+
+### Evolução futura
+
+Com acesso à **API oficial da GoodWe e/ou a carregadores compatíveis em ambiente real**, a camada de comunicação poderá ser adaptada para substituir os dados simulados por dados reais, mantendo a arquitetura desenvolvida no protótipo.
+
+Dessa forma, o OCPP representa uma camada preparada para a evolução da solução, enquanto os dados fictícios utilizados atualmente permitem demonstrar e validar o funcionamento do sistema dentro do contexto acadêmico do **Enterprise Challenge 2026**.
+
+
 # 31. Organização do Desenvolvimento
 
 O desenvolvimento do **EV ChargeOps** foi realizado utilizando **Git e GitHub** para controle de versão e colaboração entre os integrantes da equipe.
