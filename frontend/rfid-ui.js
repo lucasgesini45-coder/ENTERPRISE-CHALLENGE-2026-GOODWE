@@ -16,7 +16,7 @@ const iniciarRfidUI = () => {
     ========================================= */
 
     const RFID_API_URL =
-        "http://127.0.0.1:8000";
+        "https://enterprise-challenge-2026-goodwe.onrender.com";
 
 
     const cartoesDemo = [];

@@ -1,5 +1,5 @@
 const ASSISTENTE_IA_API =
-    "http://127.0.0.1:8000";
+    "https://enterprise-challenge-2026-goodwe.onrender.com";
 
 
 /* =========================================================
