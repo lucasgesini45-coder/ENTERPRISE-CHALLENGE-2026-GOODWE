@@ -658,6 +658,86 @@ input {
     font-size: 17px;
 }
 
+.register-area {
+    margin-top: 24px;
+    padding-top: 22px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+.register-area > span {
+    color: #7f8796;
+
+    font-size: 13px;
+}
+
+.register-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        10px
+        14px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(79, 124, 255, 0.28);
+
+    background:
+        rgba(79, 124, 255, 0.08);
+
+    color: #8ea8ff;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    transition:
+        0.2s ease;
+}
+
+.register-link:hover {
+    color: white;
+
+    border-color:
+        rgba(79, 124, 255, 0.55);
+
+    background:
+        rgba(79, 124, 255, 0.15);
+
+    transform:
+        translateY(-1px);
+}
+
+.register-link span {
+    font-size: 16px;
+}
+
+@media (max-width: 520px) {
+
+    .register-area {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .register-link {
+        width: 100%;
+        justify-content: center;
+    }
+}
 
 /* =========================================================
    RODAPÉ

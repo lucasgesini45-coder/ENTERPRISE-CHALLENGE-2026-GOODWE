@@ -166,21 +166,8 @@ function redirecionarUsuario(usuario) {
 
     if (perfil === "USER") {
 
-        /*
-         * O painel USER será criado
-         * no próximo passo.
-         *
-         * Por enquanto mantemos o usuário
-         * autenticado sem redirecionar
-         * para uma página inexistente.
-         */
-
-        mostrarMensagem(
-            `Login realizado com sucesso. Bem-vindo, ${usuario.nome}.`,
-            "sucesso"
-        );
-
-        definirCarregando(false);
+        window.location.href =
+            "usuario.html";
 
         return;
 
