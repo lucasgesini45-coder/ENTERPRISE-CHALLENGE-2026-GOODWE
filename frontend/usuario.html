@@ -28,6 +28,11 @@
 
     <link
         rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <link
+        rel="stylesheet"
         href="usuario.css"
     >
 </head>
@@ -70,6 +75,10 @@
                             />
                         </svg>
                     </span>
+
+                    <span>
+                        Visão geral
+                    </span>
                 </button>
 
                 <button
@@ -83,6 +92,10 @@
                                 d="M13 2L5 13h6l-1 9 9-13h-6V2z"
                             />
                         </svg>
+                    </span>
+
+                    <span>
+                        Minhas sessões
                     </span>
                 </button>
 
@@ -132,6 +145,10 @@
                                 d="M8 9h4M8 13h8"
                             />
                         </svg>
+                    </span>
+
+                    <span>
+                        Meu RFID
                     </span>
                 </button>
 
@@ -407,12 +424,10 @@
                         </div>
 
                         <div
-                            class="recent-sessions"
-                            id="recent-sessions"
+                            id="recent-sessions-list"
+                            class="recent-sessions-list"
                         >
-                            <div class="empty-state">
-                                Carregando suas sessões...
-                            </div>
+                            Carregando suas sessões...
                         </div>
 
                     </section>
@@ -523,15 +538,63 @@
                     </p>
                 </div>
 
-                <div class="page-placeholder">
-                    <span>⚡</span>
+                <div class="sessions-summary">
 
-                    <h2>Minhas sessões</h2>
+                    <div class="sessions-summary-card">
+                        <span>Total de sessões</span>
+                        <strong id="sessions-summary-total">0</strong>
+                    </div>
 
-                    <p>
-                        Seu histórico de recargas
-                        aparecerá aqui.
-                    </p>
+                    <div class="sessions-summary-card">
+                        <span>Consumo total</span>
+                        <strong id="sessions-summary-consumo">0,0 kWh</strong>
+                    </div>
+
+                    <div class="sessions-summary-card">
+                        <span>Total gasto</span>
+                        <strong id="sessions-summary-valor">R$ 0,00</strong>
+                    </div>
+
+                </div>
+
+                <div class="sessions-toolbar">
+
+                    <div class="sessions-filter-group">
+
+                        <button
+                            type="button"
+                            class="sessions-filter active"
+                            data-session-filter="todas"
+                        >
+                            Todas
+                        </button>
+
+                        <button
+                            type="button"
+                            class="sessions-filter"
+                            data-session-filter="finalizadas"
+                        >
+                            Finalizadas
+                        </button>
+
+                        <button
+                            type="button"
+                            class="sessions-filter"
+                            data-session-filter="andamento"
+                        >
+                            Em andamento
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="sessions-history-list"
+                    class="sessions-history-list"
+                >
+                    Carregando histórico...
                 </div>
             </section>
 
@@ -540,7 +603,9 @@
                 class="user-page"
                 id="page-carregadores"
             >
+
                 <div class="page-header">
+
                     <span class="section-label">
                         LOCALIZAÇÃO
                     </span>
@@ -550,9 +615,172 @@
                     </h2>
 
                     <p>
-                        Encontre pontos de recarga próximos a você.
+                        Encontre carregadores disponíveis
+                        e identifique o ponto mais próximo.
                     </p>
+
                 </div>
+
+
+                <div class="locator-toolbar">
+
+                    <div class="locator-search">
+
+                        <svg viewBox="0 0 24 24">
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="7"
+                            />
+                            <path d="M20 20l-4-4" />
+                        </svg>
+
+                        <input
+                            type="text"
+                            id="charger-search"
+                            placeholder="Buscar carregador..."
+                        >
+
+                    </div>
+
+
+                    <div class="locator-filters">
+
+                        <button
+                            class="locator-filter active"
+                            type="button"
+                            data-filter="todos"
+                        >
+                            Todos
+                        </button>
+
+                        <button
+                            class="locator-filter"
+                            type="button"
+                            data-filter="disponiveis"
+                        >
+                            Disponíveis
+                        </button>
+
+                        <button
+                            class="locator-filter"
+                            type="button"
+                            data-filter="potencia"
+                        >
+                            Alta potência
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="locator-map-wrapper">
+
+                    <div
+                        id="user-map"
+                        class="user-map-container"
+                    ></div>
+
+
+                    <button
+                        id="user-location-button"
+                        class="locator-location-button"
+                        type="button"
+                        aria-label="Usar minha localização"
+                        title="Usar minha localização"
+                    >
+
+                        <svg viewBox="0 0 24 24">
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="4"
+                            />
+                            <path d="M12 2v3" />
+                            <path d="M12 19v3" />
+                            <path d="M2 12h3" />
+                            <path d="M19 12h3" />
+                        </svg>
+
+                    </button>
+
+
+                    <aside class="locator-panel">
+
+                        <span class="section-label">
+                            CARREGADOR
+                        </span>
+
+                        <h2 id="selected-charger-name">
+                            Selecione um carregador
+                        </h2>
+
+                        <p id="selected-charger-location">
+                            Clique em um ponto do mapa
+                            para visualizar os detalhes.
+                        </p>
+
+
+                        <div class="locator-panel-info">
+
+                            <div>
+                                <span>
+                                    Status
+                                </span>
+
+                                <strong id="selected-charger-status">
+                                    --
+                                </strong>
+                            </div>
+
+
+                            <div>
+                                <span>
+                                    Distância
+                                </span>
+
+                                <strong id="selected-charger-distance">
+                                    --
+                                </strong>
+                            </div>
+
+
+                            <div>
+                                <span>
+                                    Potência
+                                </span>
+
+                                <strong id="selected-charger-power">
+                                    --
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            id="charger-route-button"
+                            class="locator-route-button"
+                            type="button"
+                            disabled
+                        >
+                            Traçar rota
+                        </button>
+
+                    </aside>
+
+                </div>
+
+
+                <div
+                    id="map-status"
+                    class="map-status"
+                >
+                    Carregando carregadores...
+                </div>
+
+            </section>
 
                 <div class="page-placeholder">
                     <span>⌖</span>
@@ -585,16 +813,58 @@
                     </p>
                 </div>
                 
-                <div class="page-placeholder">
-                    <span>▣</span>
+                <div class="rfid-card-panel">
 
-                    <h2>Meu RFID</h2>
+                <div class="rfid-card-visual">
 
-                    <p>
-                        As informações do seu cartão
-                        aparecerão aqui.
-                    </p>
+                    <div class="rfid-card-chip"></div>
+
+                    <div class="rfid-card-content">
+
+                        <span class="rfid-card-label">
+                            CARTÃO RFID
+                        </span>
+
+                        <strong id="rfid-uid">
+                            --
+                        </strong>
+
+                        <span id="rfid-status-badge" class="rfid-status-badge">
+                            --
+                        </span>
+
+                    </div>
+
                 </div>
+
+
+                <div class="rfid-info-grid">
+
+                    <div class="rfid-info-item">
+                        <span>UID</span>
+                        <strong id="rfid-info-uid">--</strong>
+                    </div>
+
+                    <div class="rfid-info-item">
+                        <span>Status</span>
+                        <strong id="rfid-info-status">--</strong>
+                    </div>
+
+                    <div class="rfid-info-item">
+                        <span>Data de cadastro</span>
+                        <strong id="rfid-info-date">--</strong>
+                    </div>
+
+                    <div class="rfid-info-item">
+                        <span>Vínculo</span>
+                        <strong id="rfid-info-link">
+                            Vinculado à sua conta
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
             </section>
 
 
@@ -681,6 +951,10 @@
 
 </button>
     
+    <script
+        src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+
     <script src="usuario.js"></script>
 
 </body>

@@ -23,7 +23,8 @@ from schemas.rfid import (
 )
 
 from services.auth_service import (
-    obter_usuario_admin
+    obter_usuario_admin,
+    obter_usuario_atual
 )
 
 
@@ -82,6 +83,56 @@ def listar_cartoes(
         "cartoes": resultado
     }
 
+# =========================================
+# MEU CARTÃO RFID
+# =========================================
+
+@router.get("/meu")
+def meu_cartao(
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(
+        obter_usuario_atual
+    )
+):
+
+    cartao = (
+        db.query(CartaoRFID)
+        .filter(
+            CartaoRFID.usuario_id ==
+            usuario_atual.id
+        )
+        .order_by(
+            CartaoRFID.id.desc()
+        )
+        .first()
+    )
+
+
+    if cartao is None:
+
+        return {
+            "cartao": None
+        }
+
+
+    return {
+        "cartao": {
+            "id":
+                cartao.id,
+
+            "uid":
+                cartao.uid,
+
+            "usuario_id":
+                cartao.usuario_id,
+
+            "status":
+                cartao.status,
+
+            "data_cadastro":
+                cartao.data_cadastro
+        }
+    }
 
 # =========================================
 # CRIAR CARTÃO
