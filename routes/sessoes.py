@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from datetime import datetime
 from database.database import get_db
-from database.models import Sessao
+from database.models import Sessao, Usuario 
 from schemas.sessao import SessaoCreate
 from schemas.associacao import AssociacaoLote
 from services.sessao_service import (
@@ -15,6 +15,8 @@ from services.sessao_service import (
     listar_sessoes_por_usuario,
     listar_sessoes_por_carregador
 )
+from services.auth_service import obter_usuario_atual
+
 
 router = APIRouter(
     prefix="/sessoes",
@@ -109,6 +111,71 @@ def associar_lote(
         db,
         dados.associacoes
     )
+
+@router.get("/minhas")
+def minhas_sessoes(
+    inicio: datetime | None = None,
+    fim: datetime | None = None,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(
+        obter_usuario_atual
+    )
+):
+    sessoes = listar_sessoes_por_usuario(
+        db=db,
+        usuario_id=usuario_atual.id,
+        inicio=inicio,
+        fim=fim
+    )
+
+    consumo_total = round(
+        sum(
+            sessao.consumo_kwh or 0
+            for sessao in sessoes
+        ),
+        3
+    )
+
+    valor_total = round(
+        sum(
+            sessao.valor_total or 0
+            for sessao in sessoes
+        ),
+        2
+    )
+
+    media_consumo = round(
+        consumo_total / len(sessoes),
+        2
+    ) if sessoes else 0
+
+    return {
+        "usuario_id":
+            usuario_atual.id,
+
+        "usuario_nome":
+            usuario_atual.nome,
+
+        "periodo": {
+            "inicio": inicio,
+            "fim": fim
+        },
+
+        "total_sessoes":
+            len(sessoes),
+
+        "consumo_total_kwh":
+            consumo_total,
+
+        "valor_total":
+            valor_total,
+
+        "media_consumo_kwh":
+            media_consumo,
+
+        "sessoes":
+            sessoes
+    }
 
 @router.get("/usuario/{usuario_id}")
 def historico_usuario(
