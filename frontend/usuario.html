@@ -473,11 +473,15 @@
                         <button
                             type="button"
                             class="quick-action"
-                            data-open-page="assistente"
+                            id="open-ai-assistant"
                         >
-                            <span>✦</span>
+
+                            <span>
+                                ✦
+                            </span>
 
                             <div>
+
                                 <strong>
                                     Perguntar à IA
                                 </strong>
@@ -485,6 +489,7 @@
                                 <small>
                                     Consulte seus dados de recarga.
                                 </small>
+
                             </div>
 
                         </button>
@@ -859,98 +864,223 @@
                         <span>Vínculo</span>
                         <strong id="rfid-info-link">
                             Vinculado à sua conta
-                        </strong>
+                         </strong>
+
                     </div>
 
                 </div>
 
             </div>
-            </section>
 
+        </section>
 
-            <section
-                class="user-page"
-                id="page-assistente"
-            >
-                <div class="page-placeholder">
-                    <span>✦</span>
+    </main>
 
-                    <h2>Assistente IA</h2>
-
-                    <p>
-                        Pergunte sobre suas sessões,
-                        consumo e gastos.
-                    </p>
-                </div>
-            </section>
-
-        </main>
-
-    </div>
-
-<div
-    class="ai-welcome-message"
-    id="ai-welcome-message"
->
-    <strong>
-        Assistente EV
-    </strong>
-
-    <span>
-        Olá! Estou por aqui caso precise
-        de ajuda com suas recargas.
-    </span>
 </div>
 
 
-<button
-    type="button"
-    class="ai-floating-button"
-    id="ai-floating-button"
-    aria-label="Abrir assistente inteligente"
->
+    <!-- =========================================
+         MENSAGEM DE BOAS-VINDAS DA IA
+    ========================================== -->
 
-    <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
+    <div
+        class="ai-welcome-message"
+        id="ai-welcome-message"
     >
-        <rect
-            x="5"
-            y="7"
-            width="14"
-            height="11"
-            rx="3"
-        />
+        <strong>
+            Assistente EV
+        </strong>
 
-        <path d="M12 3v4" />
+        <span>
+            Olá! Estou por aqui caso precise
+            de ajuda com suas recargas.
+        </span>
+    </div>
 
-        <circle
-            cx="12"
-            cy="3"
-            r="1"
-        />
 
-        <circle
-            cx="9"
-            cy="12"
-            r="1"
-        />
+    <!-- =========================================
+         PAINEL LATERAL DA IA
+    ========================================== -->
 
-        <circle
-            cx="15"
-            cy="12"
-            r="1"
-        />
+    <div
+        class="user-ai-overlay"
+        id="user-ai-overlay"
+    ></div>
 
-        <path d="M9 15h6" />
 
-        <path d="M3 11v4" />
+    <aside
+        class="user-ai-panel"
+        id="user-ai-panel"
+    >
 
-        <path d="M21 11v4" />
-    </svg>
+        <div class="user-ai-header">
 
-</button>
-    
+            <div>
+
+                <span class="section-label">
+                    ASSISTENTE INTELIGENTE
+                </span>
+
+                <h2>
+                    Assistente EV
+                </h2>
+
+                <p>
+                    Consulte suas recargas,
+                    consumo e gastos.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="user-ai-close"
+                class="user-ai-close"
+                aria-label="Fechar assistente"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="user-ai-chat"
+            id="user-ai-chat"
+        >
+
+            <div class="user-ai-message assistant">
+
+                <div class="user-ai-avatar">
+                    ✦
+                </div>
+
+                <div class="user-ai-bubble">
+
+                    <strong>
+                        Assistente EV
+                    </strong>
+
+                    <p>
+                        Olá! Posso ajudar você
+                        com informações sobre
+                        suas recargas.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="user-ai-suggestions">
+
+            <button
+                type="button"
+                data-ai-question="Quanto eu já gastei?"
+            >
+                Quanto gastei?
+            </button>
+
+            <button
+                type="button"
+                data-ai-question="Quanto eu consumi?"
+            >
+                Quanto consumi?
+            </button>
+
+            <button
+                type="button"
+                data-ai-question="Quantas recargas eu fiz?"
+            >
+                Minhas recargas
+            </button>
+
+            <button
+                type="button"
+                data-ai-question="Qual foi minha última recarga?"
+            >
+                Última recarga
+            </button>
+
+        </div>
+
+
+        <form
+            class="user-ai-form"
+            id="user-ai-form"
+        >
+
+            <input
+                type="text"
+                id="user-ai-input"
+                placeholder="Pergunte sobre suas recargas..."
+                autocomplete="off"
+            >
+
+            <button type="submit">
+                Enviar
+            </button>
+
+        </form>
+
+    </aside>
+
+
+    <!-- =========================================
+         BOTÃO FLUTUANTE DA IA
+    ========================================== -->
+
+    <button
+        type="button"
+        class="ai-floating-button"
+        id="ai-floating-button"
+        aria-label="Abrir assistente inteligente"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+        >
+            <rect
+                x="5"
+                y="7"
+                width="14"
+                height="11"
+                rx="3"
+            />
+
+            <path d="M12 3v4" />
+
+            <circle
+                cx="12"
+                cy="3"
+                r="1"
+            />
+
+            <circle
+                cx="9"
+                cy="12"
+                r="1"
+            />
+
+            <circle
+                cx="15"
+                cy="12"
+                r="1"
+            />
+
+            <path d="M9 15h6" />
+            <path d="M3 11v4" />
+            <path d="M21 11v4" />
+
+        </svg>
+
+    </button>
+
+
     <script
         src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
     ></script>
@@ -958,4 +1088,5 @@
     <script src="usuario.js"></script>
 
 </body>
+
 </html>

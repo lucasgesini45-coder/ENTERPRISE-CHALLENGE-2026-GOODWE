@@ -219,13 +219,31 @@ async function carregarResumoUsuario() {
             );
 
 
-        if (!resposta.ok) {
+        if (resposta.status === 401) {
 
-            throw new Error(
-                "Não foi possível carregar os dados do usuário."
+            localStorage.removeItem(
+                "ev_chargeops_token"
             );
 
+            localStorage.removeItem(
+                "ev_chargeops_usuario"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+
         }
+
+
+if (!resposta.ok) {
+
+    throw new Error(
+        "Não foi possível carregar os dados do usuário."
+    );
+
+}
 
 
         const dados =
@@ -339,6 +357,24 @@ async function carregarRFIDUsuario() {
                     }
                 }
             );
+
+
+        if (resposta.status === 401) {
+
+            localStorage.removeItem(
+                "ev_chargeops_token"
+            );
+
+            localStorage.removeItem(
+                "ev_chargeops_usuario"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
 
 
         if (!resposta.ok) {
@@ -1081,7 +1117,10 @@ function abrirPagina(nomePagina) {
     }
 
     carregarResumoUsuario();
-    carregarRFIDUsuario();
+
+    if (nomePagina === "rfid") {
+        carregarRFIDUsuario();
+    }
 
     document
         .querySelectorAll(
@@ -1249,38 +1288,6 @@ setTimeout(
     },
     7000
 );
-
-
-if (aiButton) {
-
-    aiButton.addEventListener(
-        "click",
-        () => {
-
-            if (!aiWelcomeMessage) {
-                return;
-            }
-
-            const estaVisivel =
-                aiWelcomeMessage.classList
-                    .contains(
-                        "show"
-                    );
-
-            if (estaVisivel) {
-
-                esconderMensagemIA();
-
-                return;
-
-            }
-
-            mostrarMensagemIA();
-
-        }
-    );
-
-}
 
 
 /* =========================================
@@ -2133,4 +2140,643 @@ if (botaoRota) {
         }
     );
 
+}
+
+/* =========================================
+   ASSISTENTE EV
+========================================= */
+
+const assistantForm =
+    document.getElementById(
+        "user-ai-form"
+    );
+
+const assistantInput =
+    document.getElementById(
+        "user-ai-input"
+    );
+
+const assistantChat =
+    document.getElementById(
+        "user-ai-chat"
+    );
+
+function adicionarMensagemAssistente(
+    texto,
+    tipo = "assistant"
+) {
+
+    if (!assistantChat) {
+        return;
+    }
+
+
+    const mensagem =
+        document.createElement("div");
+
+
+    mensagem.className =
+        `user-ai-message ${tipo}`;
+
+
+    if (tipo === "user") {
+
+        mensagem.innerHTML = `
+            <div class="user-ai-bubble">
+                <p>${texto}</p>
+            </div>
+        `;
+
+    } else {
+
+        mensagem.innerHTML = `
+            <div class="user-ai-avatar">
+                ✦
+            </div>
+
+            <div class="user-ai-bubble">
+
+                <strong>
+                    Assistente EV
+                </strong>
+
+                <p>${texto}</p>
+
+            </div>
+        `;
+
+    }
+
+
+    assistantChat.appendChild(
+        mensagem
+    );
+
+
+    assistantChat.scrollTop =
+        assistantChat.scrollHeight;
+
+}
+
+
+
+function normalizarTexto(texto) {
+
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .toLowerCase();
+
+}
+
+
+
+function formatarDinheiro(valor) {
+
+    return Number(valor || 0)
+        .toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
+
+}
+
+
+
+function responderPerguntaUsuario(
+    pergunta
+) {
+
+    const texto =
+        normalizarTexto(pergunta);
+
+
+    const sessoes =
+        sessoesUsuario || [];
+
+
+    if (sessoes.length === 0) {
+
+        return (
+            "Você ainda não possui sessões de " +
+            "recarga registradas."
+        );
+
+    }
+
+
+    /*
+     * TOTAL GASTO
+     */
+    if (
+        texto.includes("gastei") ||
+        texto.includes("gasto") ||
+        texto.includes("valor") ||
+        texto.includes("paguei")
+    ) {
+
+        const total =
+            sessoes.reduce(
+                (soma, sessao) =>
+                    soma +
+                    Number(
+                        sessao.valor_total || 0
+                    ),
+                0
+            );
+
+
+        return (
+            `Até agora você gastou ` +
+            `${formatarDinheiro(total)} ` +
+            `em suas recargas.`
+        );
+
+    }
+
+
+    /*
+     * CONSUMO TOTAL
+     */
+    if (
+        texto.includes("consumi") ||
+        texto.includes("consumo") ||
+        texto.includes("kwh") ||
+        texto.includes("energia")
+    ) {
+
+        const consumo =
+            sessoes.reduce(
+                (soma, sessao) =>
+                    soma +
+                    Number(
+                        sessao.consumo_kwh || 0
+                    ),
+                0
+            );
+
+
+        return (
+            `Seu consumo total é de ` +
+            `${consumo.toFixed(1)} kWh.`
+        );
+
+    }
+
+
+    /*
+     * QUANTIDADE DE RECARGAS
+     */
+    if (
+        texto.includes("quantas") ||
+        texto.includes("quantidade") ||
+        texto.includes("sessoes") ||
+        texto.includes("recargas fiz")
+    ) {
+
+        return (
+            `Você possui ${sessoes.length} ` +
+            `sessão${sessoes.length === 1 ? "" : "ões"} ` +
+            `de recarga registrada${sessoes.length === 1 ? "" : "s"}.`
+        );
+
+    }
+
+
+    /*
+     * ÚLTIMA RECARGA
+     */
+    if (
+        texto.includes("ultima") ||
+        texto.includes("recente")
+    ) {
+
+        const ordenadas =
+            [...sessoes].sort(
+                (a, b) =>
+                    new Date(b.inicio) -
+                    new Date(a.inicio)
+            );
+
+
+        const ultima =
+            ordenadas[0];
+
+
+        const data =
+            ultima.inicio
+                ? new Date(
+                    ultima.inicio
+                ).toLocaleDateString(
+                    "pt-BR"
+                )
+                : "--";
+
+
+        const consumo =
+            Number(
+                ultima.consumo_kwh || 0
+            ).toFixed(1);
+
+
+        const valor =
+            formatarDinheiro(
+                ultima.valor_total
+            );
+
+
+        const carregador =
+            ultima.carregador?.nome ||
+            ultima.carregador_nome ||
+            `Carregador #${
+                ultima.carregador_id || "--"
+            }`;
+
+
+        return (
+            `Sua última recarga foi em ${data}, ` +
+            `no ${carregador}. ` +
+            `Você consumiu ${consumo} kWh ` +
+            `e o valor foi ${valor}.`
+        );
+
+    }
+
+
+    /*
+     * MÉDIA
+     */
+    if (
+        texto.includes("media")
+    ) {
+
+        const consumoTotal =
+            sessoes.reduce(
+                (soma, sessao) =>
+                    soma +
+                    Number(
+                        sessao.consumo_kwh || 0
+                    ),
+                0
+            );
+
+
+        const media =
+            consumoTotal /
+            sessoes.length;
+
+
+        return (
+            `Sua média de consumo é de ` +
+            `${media.toFixed(1)} kWh ` +
+            `por sessão.`
+        );
+
+    }
+
+
+    /*
+     * RESPOSTA PADRÃO
+     */
+    return (
+        "Posso consultar informações sobre " +
+        "seu consumo, gastos, quantidade de " +
+        "recargas, média de consumo e sua " +
+        "última sessão."
+    );
+
+}
+
+
+
+async function enviarPerguntaAssistente(
+    pergunta
+) {
+
+    pergunta =
+        String(
+            pergunta || ""
+        ).trim();
+
+
+    if (!pergunta) {
+        return;
+    }
+
+
+    /* =========================================
+       MOSTRA PERGUNTA DO USUÁRIO
+    ========================================= */
+
+    adicionarMensagemAssistente(
+        "user",
+        pergunta
+    );
+
+
+    /* =========================================
+       LIMPA INPUT
+    ========================================= */
+
+    if (assistantInput) {
+
+        assistantInput.value = "";
+
+    }
+
+
+    /* =========================================
+       CONSULTA BACKEND
+    ========================================= */
+
+    const dados =
+        await perguntarAssistenteBackend(
+            pergunta
+        );
+
+
+    if (!dados) {
+        return;
+    }
+
+
+    /* =========================================
+       MOSTRA RESPOSTA
+    ========================================= */
+
+    adicionarMensagemAssistente(
+        "assistant",
+        dados.resposta
+    );
+
+
+    /* =========================================
+       AVISO OPCIONAL
+    ========================================= */
+
+    if (dados.aviso) {
+
+        adicionarMensagemAssistente(
+            "assistant",
+            dados.aviso
+        );
+
+    }
+}
+
+
+
+if (assistantForm) {
+
+    assistantForm.addEventListener(
+        "submit",
+        evento => {
+
+            evento.preventDefault();
+
+
+            const pergunta =
+                assistantInput.value;
+
+
+            if (!pergunta.trim()) {
+                return;
+            }
+
+
+            assistantInput.value = "";
+
+
+            enviarPerguntaAssistente(
+                pergunta
+            );
+
+        }
+    );
+
+}
+
+
+
+document
+    .querySelectorAll(
+        "[data-ai-question]"
+    )
+    .forEach(botao => {
+
+        botao.addEventListener(
+            "click",
+            () => {
+
+                enviarPerguntaAssistente(
+                    botao.dataset.aiQuestion
+                );
+
+            }
+        );
+
+    });
+
+    const aiPanel =
+    document.getElementById(
+        "user-ai-panel"
+    );
+
+const aiOverlay =
+    document.getElementById(
+        "user-ai-overlay"
+    );
+
+const aiClose =
+    document.getElementById(
+        "user-ai-close"
+    );
+
+const openAiAssistant =
+    document.getElementById(
+        "open-ai-assistant"
+    );
+
+
+function abrirAssistenteIA() {
+
+    if (aiPanel) {
+        aiPanel.classList.add("show");
+    }
+
+    if (aiOverlay) {
+        aiOverlay.classList.add("show");
+    }
+
+    esconderMensagemIA();
+
+}
+
+
+function fecharAssistenteIA() {
+
+    if (aiPanel) {
+        aiPanel.classList.remove("show");
+    }
+
+    if (aiOverlay) {
+        aiOverlay.classList.remove("show");
+    }
+
+}
+
+
+if (aiButton) {
+
+    aiButton.addEventListener(
+        "click",
+        abrirAssistenteIA
+    );
+
+}
+
+
+if (openAiAssistant) {
+
+    openAiAssistant.addEventListener(
+        "click",
+        abrirAssistenteIA
+    );
+
+}
+
+
+if (aiClose) {
+
+    aiClose.addEventListener(
+        "click",
+        fecharAssistenteIA
+    );
+
+}
+
+
+if (aiOverlay) {
+
+    aiOverlay.addEventListener(
+        "click",
+        fecharAssistenteIA
+    );
+
+}
+
+async function perguntarAssistenteBackend(
+    pergunta
+) {
+
+    try {
+
+        const resposta =
+            await fetch(
+                `${API_URL}/assistente-ia/perguntar`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+                        pergunta: pergunta
+                    })
+                }
+            );
+
+
+        /* =========================================
+           TOKEN EXPIRADO
+        ========================================= */
+
+        if (resposta.status === 401) {
+
+            localStorage.removeItem(
+                "ev_chargeops_token"
+            );
+
+            localStorage.removeItem(
+                "ev_chargeops_usuario"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return null;
+        }
+
+
+        /* =========================================
+           ERRO DE PERMISSÃO
+        ========================================= */
+
+        if (resposta.status === 403) {
+
+            return {
+                resposta:
+                    "Você não tem permissão para consultar essa informação."
+            };
+        }
+
+
+        /* =========================================
+           OUTROS ERROS
+        ========================================= */
+
+        if (!resposta.ok) {
+
+            const erro =
+                await resposta
+                    .json()
+                    .catch(() => null);
+
+            console.error(
+                "Erro do assistente:",
+                erro
+            );
+
+            throw new Error(
+                "Não foi possível consultar o assistente."
+            );
+        }
+
+
+        /* =========================================
+           RESPOSTA
+        ========================================= */
+
+        const dados =
+            await resposta.json();
+
+
+        return dados;
+
+    }
+
+    catch (erro) {
+
+        console.error(
+            "Erro ao consultar Assistente EV:",
+            erro
+        );
+
+
+        return {
+            resposta:
+                "Não consegui consultar seus dados agora. Tente novamente em alguns instantes."
+        };
+    }
 }

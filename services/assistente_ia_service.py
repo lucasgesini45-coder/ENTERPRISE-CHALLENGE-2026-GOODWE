@@ -31,13 +31,61 @@ AVISO_ANOMALIA = (
 
 # A ordem importa: do mais específico ao mais genérico.
 INTENCOES = {
-    "sessoes_anormais": ["anorma", "anomalia", "suspeit", "estranh"],
-    "previsao": ["previsao", "prever", "previsto", "estimativa de consumo"],
-    "usuario_top": ["usuario mais", "quem mais consumiu", "maior consumidor"],
-    "carregador_top": ["carregador mais", "mais utilizado", "mais usado"],
-    "faturamento": ["fatur", "receita", "quanto gastei", "quanto paguei", "quanto devo"],
-    "ultima_recarga": ["ultima recarga", "ultima sessao", "recarga mais recente"],
-    "consumo_total": ["consum", "energia", "kwh"],
+    "sessoes_anormais": [
+        "anorma",
+        "anomalia",
+        "suspeit",
+        "estranh"
+    ],
+
+    "previsao": [
+        "previsao",
+        "prever",
+        "previsto",
+        "estimativa de consumo"
+    ],
+
+    "usuario_top": [
+        "usuario mais",
+        "quem mais consumiu",
+        "maior consumidor"
+    ],
+
+    "carregador_top": [
+        "carregador mais",
+        "mais utilizado",
+        "mais usado"
+    ],
+
+    "faturamento": [
+        "fatur",
+        "receita",
+        "quanto gastei",
+        "quanto eu gastei",
+        "quanto eu ja gastei",
+        "quanto paguei",
+        "quanto eu paguei",
+        "quanto devo",
+        "gasto total",
+        "gastos"
+    ],
+
+    "ultima_recarga": [
+        "ultima recarga",
+        "minha ultima recarga",
+        "ultima sessao",
+        "minha ultima sessao",
+        "recarga mais recente"
+    ],
+
+    "consumo_total": [
+        "consum",
+        "energia",
+        "kwh",
+        "quanto consumi",
+        "quanto eu consumi",
+        "consumo total"
+    ],
 }
 SOMENTE_ADMIN = {"usuario_top", "carregador_top", "sessoes_anormais", "previsao"}
 
