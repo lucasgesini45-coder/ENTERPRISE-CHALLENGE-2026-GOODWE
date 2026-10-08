@@ -1,12 +1,13 @@
-from pydantic import BaseModel
-from typing import Optional, Literal
+from typing import Literal
+from pydantic import BaseModel, Field, ConfigDict
 
 StatusCartao = Literal["ATIVO", "BLOQUEADO", "CANCELADO"]
 
 
 class CartaoBase(BaseModel):
-    uid: str
-    usuario_id: Optional[int] = None
+    model_config = ConfigDict(str_strip_whitespace=True)
+    uid: str = Field(min_length=1, max_length=128)
+    usuario_id: int | None = Field(default=None, gt=0)
     status: StatusCartao = "ATIVO"
 
 
@@ -15,7 +16,7 @@ class CartaoCreate(CartaoBase):
 
 
 class CartaoAssociar(BaseModel):
-    usuario_id: int
+    usuario_id: int = Field(gt=0)
 
 
 class CartaoStatus(BaseModel):
@@ -24,6 +25,3 @@ class CartaoStatus(BaseModel):
 
 class CartaoResponse(CartaoBase):
     id: int
-
-    class Config:
-        from_attributes = True

@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from database.database import get_db
 from fastapi.responses import HTMLResponse
 from schemas.cartao import CartaoCreate, CartaoAssociar, CartaoStatus
 from services.cartao_service import (
@@ -27,42 +29,43 @@ def caixa_manutencao():
 <section class="card"><h2>Cartões cadastrados</h2><div class="muted">Gerencie associação e status das credenciais.</div><div id="lista"></div></section>
 </div></div>
 <script>
+const escapeHTML=v=>String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll(String.fromCharCode(34),'&quot;').replaceAll(String.fromCharCode(39),'&#39;');
 const api='/cartoes'; const msg=t=>document.getElementById('msg').textContent=t;
-async function req(url,opt={}){const r=await fetch(url,{headers:{'Content-Type':'application/json'},...opt});const d=await r.json();if(!r.ok)throw Error(d.detail||'Erro na operação');return d}
+async function req(url,opt={}){const token=sessionStorage.getItem('ev_chargeops_token');const r=await fetch(url,{signal:AbortSignal.timeout(10000),headers:{'Content-Type':'application/json',...(token?{'Authorization':'Bearer '+token}:{})},...opt});const d=await r.json();if(!r.ok)throw Error(d.detail||'Erro na operação');return d}
 async function criar(){try{const uid=document.getElementById('uid').value.trim();if(!uid)return msg('Informe o UID.');const u=document.getElementById('usuario').value;await req(api+'/',{method:'POST',body:JSON.stringify({uid,usuario_id:u?Number(u):null,status:document.getElementById('status').value})});msg('Cartão cadastrado com sucesso.');document.getElementById('uid').value='';await carregar()}catch(e){msg(e.message)}}
 async function statusCartao(id,status){try{await req(`${api}/${id}/status`,{method:'PATCH',body:JSON.stringify({status})});await carregar()}catch(e){alert(e.message)}}
 async function associar(id){const u=prompt('ID do usuário a associar:');if(!u)return;try{await req(`${api}/${id}/associar`,{method:'PATCH',body:JSON.stringify({usuario_id:Number(u)})});await carregar()}catch(e){alert(e.message)}}
 async function desassociar(id){try{await req(`${api}/${id}/desassociar`,{method:'PATCH'});await carregar()}catch(e){alert(e.message)}}
-async function carregar(){try{const d=await req(api+'/');const el=document.getElementById('lista');el.innerHTML=d.cartoes.length?'':'<p class="muted">Nenhum cartão cadastrado.</p>';d.cartoes.forEach(c=>{el.innerHTML+=`<div class="item"><b>${c.uid}</b> <span class="badge">${c.status}</span><div class="muted">Cartão #${c.id} • Usuário: ${c.usuario_id??'não associado'}</div><div class="actions"><button class="secondary" onclick="associar(${c.id})">Associar</button><button class="secondary" onclick="desassociar(${c.id})">Desassociar</button><button class="${c.status==='BLOQUEADO'?'':'danger'}" onclick="statusCartao(${c.id},'${c.status==='BLOQUEADO'?'ATIVO':'BLOQUEADO'}')">${c.status==='BLOQUEADO'?'Ativar':'Bloquear'}</button></div></div>`})}catch(e){document.getElementById('lista').innerHTML='<p>Falha ao carregar.</p>'}}
+async function carregar(){try{const d=await req(api+'/');const el=document.getElementById('lista');el.innerHTML=d.cartoes.length?'':'<p class="muted">Nenhum cartão cadastrado.</p>';d.cartoes.forEach(c=>{el.innerHTML+=`<div class="item"><b>${escapeHTML(c.uid)}</b> <span class="badge">${c.status}</span><div class="muted">Cartão #${c.id} • Usuário: ${c.usuario_id??'não associado'}</div><div class="actions"><button class="secondary" onclick="associar(${c.id})">Associar</button><button class="secondary" onclick="desassociar(${c.id})">Desassociar</button><button class="${c.status==='BLOQUEADO'?'':'danger'}" onclick="statusCartao(${c.id},'${c.status==='BLOQUEADO'?'ATIVO':'BLOQUEADO'}')">${c.status==='BLOQUEADO'?'Ativar':'Bloquear'}</button></div></div>`})}catch(e){document.getElementById('lista').innerHTML='<p>Falha ao carregar.</p>'}}
 carregar();
 </script></body></html>""")
 
 
 @router.get("/")
-def listar_cartoes():
-    return {"cartoes": listar_todos_cartoes()}
+def listar_cartoes(db: Session = Depends(get_db)):
+    return {"cartoes": listar_todos_cartoes(db)}
 
 
 @router.post("/")
-def criar_cartao(cartao: CartaoCreate):
-    return criar_novo_cartao(cartao)
+def criar_cartao(cartao: CartaoCreate, db: Session = Depends(get_db)):
+    return criar_novo_cartao(db, cartao)
 
 
 @router.get("/{cartao_id}")
-def consultar_cartao(cartao_id: int):
-    return buscar_cartao_por_id(cartao_id)
+def consultar_cartao(cartao_id: int, db: Session = Depends(get_db)):
+    return buscar_cartao_por_id(db, cartao_id)
 
 
 @router.patch("/{cartao_id}/associar")
-def associar_usuario(cartao_id: int, dados: CartaoAssociar):
-    return associar_cartao_usuario(cartao_id, dados.usuario_id)
+def associar_usuario(cartao_id: int, dados: CartaoAssociar, db: Session = Depends(get_db)):
+    return associar_cartao_usuario(db, cartao_id, dados.usuario_id)
 
 
 @router.patch("/{cartao_id}/status")
-def atualizar_status(cartao_id: int, dados: CartaoStatus):
-    return alterar_status_cartao(cartao_id, dados.status)
+def atualizar_status(cartao_id: int, dados: CartaoStatus, db: Session = Depends(get_db)):
+    return alterar_status_cartao(db, cartao_id, dados.status)
 
 
 @router.patch("/{cartao_id}/desassociar")
-def desassociar_usuario(cartao_id: int):
-    return desassociar_cartao(cartao_id)
+def desassociar_usuario(cartao_id: int, db: Session = Depends(get_db)):
+    return desassociar_cartao(db, cartao_id)

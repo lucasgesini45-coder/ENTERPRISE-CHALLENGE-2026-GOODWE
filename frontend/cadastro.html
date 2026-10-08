@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Criar conta | EV ChargeOps
+    </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="cadastro.css"
+    >
+</head>
+
+<body>
+
+    <main class="cadastro-page">
+
+        <section class="cadastro-shell">
+
+            <!-- FORMULÁRIO -->
+
+            <div class="cadastro-form-area">
+
+                <a
+                    class="back-link"
+                    href="login.html"
+                >
+                    <span>←</span>
+                    Voltar
+                </a>
+
+                <div class="cadastro-card">
+
+                    <div class="brand">
+
+                        <div class="brand-icon">
+                            ⚡
+                        </div>
+
+                        <span>
+                            EV ChargeOps
+                        </span>
+
+                    </div>
+
+                    <div class="cadastro-heading">
+
+                        <span class="heading-label">
+                            CRIAR CONTA
+                        </span>
+
+                        <h1>
+                            Comece sua jornada
+                            elétrica.
+                        </h1>
+
+                        <p>
+                            Crie sua conta para acompanhar
+                            recargas, consumo, histórico e
+                            gastos em um único lugar.
+                        </p>
+
+                    </div>
+
+                    <form id="form-cadastro">
+
+                        <div class="form-group">
+
+                            <label for="nome">
+                                Nome completo
+                            </label>
+
+                            <input
+                                id="nome"
+                                type="text"
+                                autocomplete="name"
+                                placeholder="Digite seu nome"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                E-mail
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="voce@email.com"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="telefone">
+                                Telefone
+                            </label>
+
+                            <input
+                                id="telefone"
+                                type="tel"
+                                autocomplete="tel"
+                                placeholder="(11) 99999-9999"
+                            >
+
+                        </div>
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label for="senha">
+                                    Senha
+                                </label>
+
+                                <input
+                                    id="senha"
+                                    type="password"
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    placeholder="Mínimo 8 caracteres"
+                                    required
+                                >
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="confirmar-senha">
+                                    Confirmar senha
+                                </label>
+
+                                <input
+                                    id="confirmar-senha"
+                                    type="password"
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    placeholder="Repita a senha"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            id="cadastro-mensagem"
+                            class="form-message"
+                        ></div>
+
+                        <button
+                            id="btn-cadastrar"
+                            type="submit"
+                        >
+                            Criar minha conta
+                            <span>→</span>
+                        </button>
+
+                    </form>
+
+                    <p class="login-link">
+
+                        Já possui uma conta?
+
+                        <a href="login.html">
+                            Fazer login
+                        </a>
+
+                    </p>
+
+                </div>
+
+                <span class="footer-text">
+                    ChargeVision · FIAP 2026
+                </span>
+
+            </div>
+
+            <!-- IMAGEM -->
+
+            <div class="cadastro-visual">
+
+                <img
+                    src="assets/cadastro-ev.jpg"
+                    alt="Veículo elétrico conectado a uma estação de recarga"
+                >
+
+                <div class="visual-overlay"></div>
+
+                <div class="visual-content">
+
+                    <span class="visual-tag">
+                        SMART CHARGING
+                    </span>
+
+                    <h2>
+                        Energia conectada.
+                        <br>
+                        Operação inteligente.
+                    </h2>
+
+                    <p>
+                        Tecnologia para transformar
+                        cada recarga em informação.
+                    </p>
+
+                </div>
+
+                <div class="visual-status">
+
+                    <span class="status-dot"></span>
+
+                    EV ChargeOps
+                    <strong>Online</strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="api.js"></script><script src="cadastro.js"></script>
+
+</body>
+
+</html>
