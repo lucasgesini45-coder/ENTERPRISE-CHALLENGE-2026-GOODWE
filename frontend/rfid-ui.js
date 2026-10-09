@@ -782,6 +782,9 @@ const iniciarRfidUI = () => {
                         id:
                             cartao.id,
 
+                        codigo:
+                            cartao.codigo,
+
                         uid:
                             cartao.uid,
 
@@ -1163,7 +1166,22 @@ const iniciarRfidUI = () => {
                         <div class="rfid-uid">
 
                             <span>
-                                UID
+                                Cartão
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                                    cartao.codigo ||
+                                    `RFID-${String(cartao.id).padStart(4, "0")}`
+                                )}
+                            </strong>
+
+                        </div>
+
+                        <div class="rfid-uid">
+
+                            <span>
+                                UID físico
                             </span>
 
                             <strong>
@@ -1309,10 +1327,24 @@ const iniciarRfidUI = () => {
 
             <div class="rfid-detail-grid">
 
-                <div>
+                <div class="rfid-detail-grid">
 
+                <div>
                     <span>
-                        UID RFID
+                        Código do cartão
+                    </span>
+
+                    <strong>
+                        ${escapeHtml(
+                            cartao.codigo ||
+                            `RFID-${String(cartao.id).padStart(4, "0")}`
+                        )}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>
+                        UID físico
                     </span>
 
                     <strong>
@@ -1320,7 +1352,6 @@ const iniciarRfidUI = () => {
                             cartao.uid
                         )}
                     </strong>
-
                 </div>
 
 
@@ -2086,8 +2117,7 @@ const iniciarRfidUI = () => {
 
         document.getElementById(
             "cadastro-rfid-uid"
-        ).value =
-            calcularProximoUid();
+        ).value = "";
 
 
         document.getElementById(

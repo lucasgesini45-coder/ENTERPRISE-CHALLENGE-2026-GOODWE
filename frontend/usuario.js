@@ -478,12 +478,9 @@ async function carregarRFIDUsuario() {
                 : "--";
 
 
-        if (uidPrincipal) {
-
-            uidPrincipal.textContent =
-                cartao.uid || "--";
-
-        }
+        uidPrincipal.textContent =
+            cartao.codigo ||
+            `RFID-${String(cartao.id).padStart(4, "0")}`;
 
 
         if (statusBadge) {
@@ -646,13 +643,6 @@ function carregarUltimasSessoes(sessoes) {
 
                 }
 
-
-                const carregador =
-                    sessao.carregador?.nome ||
-                    sessao.carregador_nome ||
-                    `Carregador #${sessao.carregador_id || "--"}`;
-
-
                 return `
                     <div class="session-item">
 
@@ -688,11 +678,6 @@ function carregarUltimasSessoes(sessoes) {
                                 ${valor}
                             </span>
 
-                        </div>
-
-
-                        <div class="session-location">
-                            ${carregador}
                         </div>
 
                     </div>
@@ -878,22 +863,12 @@ function renderizarHistoricoSessoes(
                 }
 
 
-                const carregador =
-                    sessao.carregador?.nome ||
-                    sessao.carregador_nome ||
-                    `Carregador #${sessao.carregador_id || "--"}`;
-
-
                 return `
                     <div class="history-session-card">
 
                         <div class="history-session-top">
 
                             <div class="history-session-title">
-
-                                <strong>
-                                    ${carregador}
-                                </strong>
 
                                 <span>
                                     ${data}
@@ -1455,6 +1430,175 @@ function atualizarPainelCarregador(
 
 }
 
+function renderizarCardsCarregadores(carregadores) {
+
+    const container =
+        document.getElementById(
+            "user-chargers-list"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    if (
+        !carregadores ||
+        carregadores.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="user-chargers-loading">
+                Nenhum carregador disponível.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        carregadores.map(
+            carregador => {
+
+                const latitude =
+                    Number(
+                        carregador.latitude
+                    );
+
+                const longitude =
+                    Number(
+                        carregador.longitude
+                    );
+
+                const temLocalizacao =
+                    Number.isFinite(latitude) &&
+                    Number.isFinite(longitude);
+
+                const status =
+                    carregador.status ||
+                    "Não informado";
+
+                const potencia =
+                    carregador.potencia_maxima
+                        ? `${Number(
+                            carregador.potencia_maxima
+                        ).toFixed(1)} kW`
+                        : "--";
+
+                return `
+                    <article class="user-charger-card">
+
+                        <div class="user-charger-image">
+
+                            <img
+                                src="./assets/evcharger.png"
+                                alt="Carregador elétrico"
+                            >
+
+                        </div>
+
+                        <div class="user-charger-card-content">
+
+                            <div class="user-charger-card-top">
+
+                                <div>
+                                    <span class="section-label">
+                                        CARREGADOR
+                                    </span>
+
+                                    <h3>
+                                        ${carregador.nome || "Carregador"}
+                                    </h3>
+                                </div>
+
+                                <span class="user-charger-status">
+                                    ${status}
+                                </span>
+
+                            </div>
+
+                            <p class="user-charger-location">
+                                ${carregador.localizacao || "Localização não informada"}
+                            </p>
+
+                            <div class="user-charger-info">
+
+                                <div>
+                                    <span>Potência</span>
+                                    <strong>${potencia}</strong>
+                                </div>
+
+                                <div>
+                                    <span>Status</span>
+                                    <strong>${status}</strong>
+                                </div>
+
+                            </div>
+
+                            ${
+                                temLocalizacao
+                                    ? `
+                                        <button
+                                            type="button"
+                                            class="user-charger-maps-button"
+                                            data-lat="${latitude}"
+                                            data-lng="${longitude}"
+                                        >
+                                            Abrir no Google Maps
+                                        </button>
+                                    `
+                                    : `
+                                        <button
+                                            type="button"
+                                            class="user-charger-maps-button"
+                                            disabled
+                                        >
+                                            Localização indisponível
+                                        </button>
+                                    `
+                            }
+
+                        </div>
+
+                    </article>
+                `;
+
+            }
+        )
+        .join("");
+
+    container
+        .querySelectorAll(
+            ".user-charger-maps-button[data-lat]"
+        )
+        .forEach(
+            botao => {
+
+                botao.addEventListener(
+                    "click",
+                    () => {
+
+                        const latitude =
+                            botao.dataset.lat;
+
+                        const longitude =
+                            botao.dataset.lng;
+
+                        const url =
+                            `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+
+                        window.open(
+                            url,
+                            "_blank"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
 async function iniciarMapaCarregadores() {
 
     if (mapaCarregadores) {
@@ -1565,6 +1709,8 @@ async function iniciarMapaCarregadores() {
 
         const carregadores =
             dados.carregadores || [];
+        
+        renderizarCardsCarregadores(carregadores);
 
 
         const pontosValidos =
@@ -2453,6 +2599,80 @@ function responderPerguntaUsuario(
 
 }
 
+async function perguntarAssistenteBackend(
+    pergunta
+) {
+
+    try {
+
+        const resposta =
+            await fetch(
+                `${API_URL}/assistente-ia/perguntar`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+                        pergunta: pergunta
+                    })
+                }
+            );
+
+
+        if (resposta.status === 401) {
+
+            localStorage.removeItem(
+                "ev_chargeops_token"
+            );
+
+            localStorage.removeItem(
+                "ev_chargeops_usuario"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return null;
+        }
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                "Não foi possível consultar o assistente."
+            );
+        }
+
+
+        const dados =
+            await resposta.json();
+
+
+        return dados;
+
+    }
+
+    catch (erro) {
+
+        console.error(
+            "Erro ao consultar Assistente EV:",
+            erro
+        );
+
+
+        return {
+            resposta:
+                "Não consegui consultar seus dados agora."
+        };
+    }
+}
 
 
 async function enviarPerguntaAssistente(
@@ -2471,17 +2691,16 @@ async function enviarPerguntaAssistente(
 
 
     /* =========================================
-       MOSTRA PERGUNTA DO USUÁRIO
+       MOSTRA A MENSAGEM DO USUÁRIO
     ========================================= */
 
     adicionarMensagemAssistente(
-        "user",
-        pergunta
+        pergunta,
+        "user"
     );
 
-
     /* =========================================
-       LIMPA INPUT
+       LIMPA O CAMPO
     ========================================= */
 
     if (assistantInput) {
@@ -2492,7 +2711,7 @@ async function enviarPerguntaAssistente(
 
 
     /* =========================================
-       CONSULTA BACKEND
+       CONSULTA O BACKEND
     ========================================= */
 
     const dados =
@@ -2507,29 +2726,28 @@ async function enviarPerguntaAssistente(
 
 
     /* =========================================
-       MOSTRA RESPOSTA
+       MOSTRA A RESPOSTA DA IA
     ========================================= */
 
     adicionarMensagemAssistente(
-        "assistant",
-        dados.resposta
+        dados.resposta,
+        "assistant"
     );
 
 
     /* =========================================
-       AVISO OPCIONAL
+       AVISO, SE EXISTIR
     ========================================= */
 
     if (dados.aviso) {
 
-        adicionarMensagemAssistente(
-            "assistant",
-            dados.aviso
-        );
+    adicionarMensagemAssistente(
+        dados.aviso,
+        "assistant"
+    );
 
-    }
 }
-
+}
 
 
 if (assistantForm) {

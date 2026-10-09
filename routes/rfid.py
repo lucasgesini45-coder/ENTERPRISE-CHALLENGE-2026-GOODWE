@@ -69,6 +69,7 @@ def listar_cartoes(
 
         resultado.append({
             "id": cartao.id,
+            "codigo": cartao.codigo,
             "uid": cartao.uid,
             "usuario_id": usuario.id,
             "usuario": usuario.nome,
@@ -120,6 +121,9 @@ def meu_cartao(
             "id":
                 cartao.id,
 
+            "codigo":
+                cartao.codigo,
+
             "uid":
                 cartao.uid,
 
@@ -133,6 +137,7 @@ def meu_cartao(
                 cartao.data_cadastro
         }
     }
+
 
 # =========================================
 # CRIAR CARTÃO
@@ -211,6 +216,19 @@ def criar_cartao(
         db.add(
             novo_cartao
         )
+
+        db.commit()
+
+        db.refresh(
+            novo_cartao
+        )
+
+
+        # Gera código interno automático
+        novo_cartao.codigo = (
+            f"RFID-{novo_cartao.id:04d}"
+        )
+
 
         db.commit()
 
@@ -301,6 +319,9 @@ def alterar_status_cartao(
         "cartao": {
             "id":
                 cartao.id,
+
+            "codigo":
+                cartao.codigo,
 
             "uid":
                 cartao.uid,

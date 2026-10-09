@@ -15,6 +15,7 @@ class RFIDStatusUpdate(BaseModel):
 
 class RFIDResponse(BaseModel):
     id: int
+    codigo: str | None = None
     uid: str
     usuario_id: int
     status: str

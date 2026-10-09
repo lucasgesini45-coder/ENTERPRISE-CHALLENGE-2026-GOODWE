@@ -90,3 +90,8 @@ class CartaoRFID(Base):
         DateTime,
         nullable=False
     )
+    codigo = Column(
+        String,
+        unique=True,
+        nullable=True
+    )   
