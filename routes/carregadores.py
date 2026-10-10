@@ -1,6 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from database.database import get_db
+from database.models import Carregador
 from schemas.carregador import CarregadorCreate
-from services.carregador_service import listar_todos_carregadores, criar_novo_carregador
+
 
 router = APIRouter(
     prefix="/carregadores",
@@ -9,12 +13,51 @@ router = APIRouter(
 
 
 @router.get("/")
-def listar_carregadores():
+def listar_carregadores(
+    db: Session = Depends(get_db)
+):
+    carregadores = db.query(Carregador).all()
+
     return {
-        "carregadores": listar_todos_carregadores()
+        "carregadores": carregadores
     }
 
 
 @router.post("/")
-def criar_carregador(carregador: CarregadorCreate):
-    return criar_novo_carregador(carregador)
+def criar_carregador(
+    carregador: CarregadorCreate,
+    db: Session = Depends(get_db)
+):
+    novo_carregador = Carregador(
+        nome=carregador.nome,
+        serial_number=carregador.serial_number,
+        localizacao=carregador.localizacao,
+        status=carregador.status,
+        modelo=carregador.modelo,
+        potencia_maxima=carregador.potencia_maxima,
+        latitude=carregador.latitude,
+        longitude=carregador.longitude
+    )
+
+    db.add(novo_carregador)
+
+    try:
+
+        db.commit()
+        db.refresh(novo_carregador)
+
+        return novo_carregador
+
+    except Exception as erro:
+
+        db.rollback()
+
+        print(
+            "ERRO AO CRIAR CARREGADOR:",
+            repr(erro)
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(erro)
+        )

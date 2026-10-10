@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Minha conta | EV ChargeOps</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="usuario.css"
+    >
+</head>
+
+<body>
+
+    <div class="user-app">
+
+        <!-- =========================================
+             SIDEBAR
+        ========================================== -->
+
+        <aside class="user-sidebar">
+
+            <a
+                href="landing.html"
+                class="user-brand"
+            >
+                <span class="brand-ev">
+                    EV
+                </span>
+
+                <span class="brand-name">
+                    Charge<span>Ops</span>
+                </span>
+            </a>
+
+
+            <nav class="user-menu">
+
+                <button
+                    class="user-menu-item active"
+                    data-page="inicio"
+                    type="button"
+                >
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M3 11L12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9z"
+                            />
+                        </svg>
+                    </span>
+
+                    <span>
+                        Visão geral
+                    </span>
+                </button>
+
+                <button
+                    class="user-menu-item"
+                    data-page="sessoes"
+                    type="button"
+                >
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M13 2L5 13h6l-1 9 9-13h-6V2z"
+                            />
+                        </svg>
+                    </span>
+
+                    <span>
+                        Minhas sessões
+                    </span>
+                </button>
+
+                <button
+                    class="user-menu-item"
+                    data-page="carregadores"
+                    type="button"
+                >
+                    <span class="menu-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11z"
+                            />
+                            <circle
+                                cx="12"
+                                cy="10"
+                                r="2"
+                            />
+                        </svg>
+
+                    </span>
+
+                    <span>
+                        Mapa de carregadores
+                    </span>
+                </button>
+
+                <button
+                    class="user-menu-item"
+                    data-page="rfid"
+                    type="button"
+                >
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect
+                                x="4"
+                                y="5"
+                                width="16"
+                                height="14"
+                                rx="2"
+                            />
+                            <path
+                                d="M8 9h4M8 13h8"
+                            />
+                        </svg>
+                    </span>
+
+                    <span>
+                        Meu RFID
+                    </span>
+                </button>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="user-profile-row">
+
+                    <div class="user-profile-mini">
+
+                        <div
+                            class="user-avatar"
+                            id="user-avatar"
+                        >
+                            U
+                        </div>
+
+                        <div>
+                            <strong id="sidebar-user-name">
+                                Usuário
+                            </strong>
+
+                            <span>
+                                Conta pessoal
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="settings-button"
+                        id="settings-button"
+                        aria-label="Configurações da conta"
+                        title="Configurações"
+                    >
+
+                        <svg viewBox="0 0 24 24">
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="3"
+                            />
+
+                            <path
+                                d="
+                                    M19.4 15
+                                    a1.7 1.7 0 0 0 .3 1.9
+                                    l.1.1
+                                    -2.1 3.6
+                                    -.2-.1
+                                    a1.7 1.7 0 0 0-2-.1
+                                    1.7 1.7 0 0 0-.8 1.6
+                                    v.2
+                                    h-4.2V22
+                                    a1.7 1.7 0 0 0-.8-1.6
+                                    1.7 1.7 0 0 0-2 .1
+                                    l-.2.1
+                                    -2.1-3.6
+                                    .1-.1
+                                    a1.7 1.7 0 0 0 .3-1.9
+                                    1.7 1.7 0 0 0-1.5-1
+                                    H4
+                                    V10
+                                    h.3
+                                    a1.7 1.7 0 0 0 1.5-1
+                                    1.7 1.7 0 0 0-.3-1.9
+                                    l-.1-.1
+                                    2.1-3.6
+                                    .2.1
+                                    a1.7 1.7 0 0 0 2 .1
+                                    1.7 1.7 0 0 0 .8-1.6
+                                    V2
+                                    h4.2v.2
+                                    a1.7 1.7 0 0 0 .8 1.6
+                                    1.7 1.7 0 0 0 2-.1
+                                    l.2-.1
+                                    2.1 3.6
+                                    -.1.1
+                                    a1.7 1.7 0 0 0-.3 1.9
+                                    1.7 1.7 0 0 0 1.5 1
+                                    h.3V14
+                                    h-.3
+                                    a1.7 1.7 0 0 0-1.5 1z
+                                "
+                            />
+
+                        </svg>
+
+                    </button>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="logout-button"
+                    class="logout-button"
+                >
+                    Sair
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =========================================
+             CONTEÚDO
+        ========================================== -->
+
+        <main class="user-main">
+
+            <header class="user-header">
+
+                <div>
+                    <span class="header-label">
+                        MINHA CONTA
+                    </span>
+
+                    <h1 id="welcome-title">
+                        Olá, usuário.
+                    </h1>
+
+                    <p>
+                        Acompanhe sua energia,
+                        suas recargas e seus gastos.
+                    </p>
+                </div>
+
+                <div class="header-status">
+                    <span class="status-dot"></span>
+                    Conta ativa
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 VISÃO GERAL
+            ====================================== -->
+
+            <section
+                class="user-page active"
+                id="page-inicio"
+            >
+
+                <div class="metrics-grid">
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Consumo total
+                        </span>
+
+                        <div class="metric-number">
+
+                            <strong id="metric-consumo">
+                                --
+                            </strong>
+
+                            <span>kWh</span>
+
+                        </div>
+
+                        <p>
+                            Energia utilizada
+                            nas suas recargas.
+                        </p>
+
+                    </article>
+
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Minhas sessões
+                        </span>
+
+                        <div class="metric-number">
+
+                            <strong id="metric-sessoes">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <p>
+                            Total de sessões
+                            registradas.
+                        </p>
+
+                    </article>
+
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Total gasto
+                        </span>
+
+                        <div class="metric-number">
+
+                            <span>R$</span>
+
+                            <strong id="metric-valor">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <p>
+                            Valor acumulado
+                            das suas recargas.
+                        </p>
+
+                    </article>
+
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Média por sessão
+                        </span>
+
+                        <div class="metric-number">
+
+                            <strong id="metric-media">
+                                --
+                            </strong>
+
+                            <span>kWh</span>
+
+                        </div>
+
+                        <p>
+                            Consumo médio por
+                            carregamento.
+                        </p>
+
+                    </article>
+
+                </div>
+
+
+                <div class="dashboard-grid">
+
+                    <section class="dashboard-card">
+
+                        <div class="card-heading">
+
+                            <div>
+                                <span class="section-label">
+                                    ATIVIDADE
+                                </span>
+
+                                <h2>
+                                    Últimas recargas
+                                </h2>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="text-button"
+                                data-open-page="sessoes"
+                            >
+                                Ver todas
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="recent-sessions-list"
+                            class="recent-sessions-list"
+                        >
+                            Carregando suas sessões...
+                        </div>
+
+                    </section>
+
+
+                    <section class="dashboard-card quick-card">
+
+                        <div class="card-heading">
+
+                            <div>
+                                <span class="section-label">
+                                    ACESSO RÁPIDO
+                                </span>
+
+                                <h2>
+                                    O que você precisa?
+                                </h2>
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="quick-action"
+                            data-open-page="carregadores"
+                        >
+                            <span>⌖</span>
+
+                            <div>
+                                <strong>
+                                    Localizar carregadores
+                                </strong>
+
+                                <small>
+                                    Encontre pontos de recarga.
+                                </small>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="quick-action"
+                            id="open-ai-assistant"
+                        >
+
+                            <span>
+                                ✦
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Perguntar à IA
+                                </strong>
+
+                                <small>
+                                    Consulte seus dados de recarga.
+                                </small>
+
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="quick-action"
+                            data-open-page="rfid"
+                        >
+                            <span>▣</span>
+
+                            <div>
+                                <strong>
+                                    Meu cartão RFID
+                                </strong>
+
+                                <small>
+                                    Consulte seu cartão vinculado.
+                                </small>
+                            </div>
+
+                        </button>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 OUTRAS PÁGINAS
+            ====================================== -->
+
+            <section
+                class="user-page"
+                id="page-sessoes"
+            >
+                <div class="page-header">
+                    <span class="section-label">
+                        MINHA CONTA
+                    </span>
+
+                    <h2>
+                        Minhas sessões
+                    </h2>
+
+                    <p>
+                        Consulte seu histórico de recargas.
+                    </p>
+                </div>
+
+                <div class="sessions-summary">
+
+                    <div class="sessions-summary-card">
+                        <span>Total de sessões</span>
+                        <strong id="sessions-summary-total">0</strong>
+                    </div>
+
+                    <div class="sessions-summary-card">
+                        <span>Consumo total</span>
+                        <strong id="sessions-summary-consumo">0,0 kWh</strong>
+                    </div>
+
+                    <div class="sessions-summary-card">
+                        <span>Total gasto</span>
+                        <strong id="sessions-summary-valor">R$ 0,00</strong>
+                    </div>
+
+                </div>
+
+                <div class="sessions-toolbar">
+
+                    <div class="sessions-filter-group">
+
+                        <button
+                            type="button"
+                            class="sessions-filter active"
+                            data-session-filter="todas"
+                        >
+                            Todas
+                        </button>
+
+                        <button
+                            type="button"
+                            class="sessions-filter"
+                            data-session-filter="finalizadas"
+                        >
+                            Finalizadas
+                        </button>
+
+                        <button
+                            type="button"
+                            class="sessions-filter"
+                            data-session-filter="andamento"
+                        >
+                            Em andamento
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="sessions-history-list"
+                    class="sessions-history-list"
+                >
+                    Carregando histórico...
+                </div>
+            </section>
+
+
+            <section
+                class="user-page"
+                id="page-carregadores"
+            >
+
+                <div class="page-header">
+
+                    <span class="section-label">
+                        LOCALIZAÇÃO
+                    </span>
+
+                    <h2>
+                        Mapa de carregadores
+                    </h2>
+
+                    <p>
+                        Encontre carregadores disponíveis
+                        e identifique o ponto mais próximo.
+                    </p>
+
+                </div>
+
+
+                <div class="locator-toolbar">
+
+                    <div class="locator-search">
+
+                        <svg viewBox="0 0 24 24">
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="7"
+                            />
+                            <path d="M20 20l-4-4" />
+                        </svg>
+
+                        <input
+                            type="text"
+                            id="charger-search"
+                            placeholder="Buscar carregador..."
+                        >
+
+                    </div>
+
+
+                    <div class="locator-filters">
+
+                        <button
+                            class="locator-filter active"
+                            type="button"
+                            data-filter="todos"
+                        >
+                            Todos
+                        </button>
+
+                        <button
+                            class="locator-filter"
+                            type="button"
+                            data-filter="disponiveis"
+                        >
+                            Disponíveis
+                        </button>
+
+                        <button
+                            class="locator-filter"
+                            type="button"
+                            data-filter="potencia"
+                        >
+                            Alta potência
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="locator-map-wrapper">
+
+                    <div
+                        id="user-map"
+                        class="user-map-container"
+                    ></div>
+
+
+                    <button
+                        id="user-location-button"
+                        class="locator-location-button"
+                        type="button"
+                        aria-label="Usar minha localização"
+                        title="Usar minha localização"
+                    >
+
+                        <svg viewBox="0 0 24 24">
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="4"
+                            />
+                            <path d="M12 2v3" />
+                            <path d="M12 19v3" />
+                            <path d="M2 12h3" />
+                            <path d="M19 12h3" />
+                        </svg>
+
+                    </button>
+
+
+                    <aside class="locator-panel">
+
+                        <span class="section-label">
+                            CARREGADOR
+                        </span>
+
+                        <h2 id="selected-charger-name">
+                            Selecione um carregador
+                        </h2>
+
+                        <p id="selected-charger-location">
+                            Clique em um ponto do mapa
+                            para visualizar os detalhes.
+                        </p>
+
+
+                        <div class="locator-panel-info">
+
+                            <div>
+                                <span>
+                                    Status
+                                </span>
+
+                                <strong id="selected-charger-status">
+                                    --
+                                </strong>
+                            </div>
+
+
+                            <div>
+                                <span>
+                                    Distância
+                                </span>
+
+                                <strong id="selected-charger-distance">
+                                    --
+                                </strong>
+                            </div>
+
+
+                            <div>
+                                <span>
+                                    Potência
+                                </span>
+
+                                <strong id="selected-charger-power">
+                                    --
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            id="charger-route-button"
+                            class="locator-route-button"
+                            type="button"
+                            disabled
+                        >
+                            Traçar rota
+                        </button>
+
+                    </aside>
+
+                </div>
+
+
+                <div
+                    id="map-status"
+                    class="map-status"
+                >
+                    Carregando carregadores...
+                </div>
+
+                <div class="user-chargers-section">
+
+                <div class="user-chargers-heading">
+                    <span class="section-label">
+                        ESTAÇÕES
+                    </span>
+
+                    <h2>
+                        Carregadores disponíveis
+                    </h2>
+
+                    <p>
+                        Veja os pontos de recarga cadastrados
+                        e abra a localização diretamente no Google Maps.
+                    </p>
+                </div>
+
+                <div
+                    id="user-chargers-list"
+                    class="user-chargers-grid"
+                >
+                    <div class="user-chargers-loading">
+                        Carregando carregadores...
+                    </div>
+                </div>
+
+            </div>
+
+            </section>
+
+            <section
+                class="user-page"
+                id="page-rfid"
+            >
+                <div class="page-header">
+                    <span class="section-label">
+                        IDENTIFICAÇÃO
+                    </span>
+
+                    <h2>
+                        Meu RFID
+                    </h2>
+
+                    <p>
+                        Consulte seu cartão vinculado à conta.
+                    </p>
+                </div>
+                
+                <div class="rfid-card-panel">
+
+                <div class="rfid-card-visual">
+
+                    <div class="rfid-card-chip"></div>
+
+                    <div class="rfid-card-content">
+
+                        <span class="rfid-card-label">
+                            CARTÃO RFID
+                        </span>
+
+                        <strong id="rfid-uid">
+                            --
+                        </strong>
+
+                        <span id="rfid-status-badge" class="rfid-status-badge">
+                            --
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="rfid-info-grid">
+
+                    <div class="rfid-info-item">
+                        <span>UID</span>
+                        <strong id="rfid-info-uid">--</strong>
+                    </div>
+
+                    <div class="rfid-info-item">
+                        <span>Status</span>
+                        <strong id="rfid-info-status">--</strong>
+                    </div>
+
+                    <div class="rfid-info-item">
+                        <span>Data de cadastro</span>
+                        <strong id="rfid-info-date">--</strong>
+                    </div>
+
+                    <div class="rfid-info-item">
+                        <span>Vínculo</span>
+                        <strong id="rfid-info-link">
+                            Vinculado à sua conta
+                         </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+    <!-- =========================================
+         MENSAGEM DE BOAS-VINDAS DA IA
+    ========================================== -->
+
+    <div
+        class="ai-welcome-message"
+        id="ai-welcome-message"
+    >
+        <strong>
+            Assistente EV
+        </strong>
+
+        <span>
+            Olá! Estou por aqui caso precise
+            de ajuda com suas recargas.
+        </span>
+    </div>
+
+
+    <!-- =========================================
+         PAINEL LATERAL DA IA
+    ========================================== -->
+
+    <div
+        class="user-ai-overlay"
+        id="user-ai-overlay"
+    ></div>
+
+
+    <aside
+        class="user-ai-panel"
+        id="user-ai-panel"
+    >
+
+        <div class="user-ai-header">
+
+            <div>
+
+                <span class="section-label">
+                    ASSISTENTE INTELIGENTE
+                </span>
+
+                <h2>
+                    Assistente EV
+                </h2>
+
+                <p>
+                    Consulte suas recargas,
+                    consumo e gastos.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="user-ai-close"
+                class="user-ai-close"
+                aria-label="Fechar assistente"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="user-ai-chat"
+            id="user-ai-chat"
+        >
+
+            <div class="user-ai-message assistant">
+
+                <div class="user-ai-avatar">
+                    ✦
+                </div>
+
+                <div class="user-ai-bubble">
+
+                    <strong>
+                        Assistente EV
+                    </strong>
+
+                    <p>
+                        Olá! Posso ajudar você
+                        com informações sobre
+                        suas recargas.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="user-ai-suggestions">
+
+            <button
+                type="button"
+                data-ai-question="Quanto eu já gastei?"
+            >
+                Quanto gastei?
+            </button>
+
+            <button
+                type="button"
+                data-ai-question="Quanto eu consumi?"
+            >
+                Quanto consumi?
+            </button>
+
+            <button
+                type="button"
+                data-ai-question="Quantas recargas eu fiz?"
+            >
+                Minhas recargas
+            </button>
+
+            <button
+                type="button"
+                data-ai-question="Qual foi minha última recarga?"
+            >
+                Última recarga
+            </button>
+
+        </div>
+
+
+        <form
+            class="user-ai-form"
+            id="user-ai-form"
+        >
+
+            <input
+                type="text"
+                id="user-ai-input"
+                placeholder="Pergunte sobre suas recargas..."
+                autocomplete="off"
+            >
+
+            <button type="submit">
+                Enviar
+            </button>
+
+        </form>
+
+    </aside>
+
+
+    <!-- =========================================
+         BOTÃO FLUTUANTE DA IA
+    ========================================== -->
+
+    <button
+        type="button"
+        class="ai-floating-button"
+        id="ai-floating-button"
+        aria-label="Abrir assistente inteligente"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+        >
+            <rect
+                x="5"
+                y="7"
+                width="14"
+                height="11"
+                rx="3"
+            />
+
+            <path d="M12 3v4" />
+
+            <circle
+                cx="12"
+                cy="3"
+                r="1"
+            />
+
+            <circle
+                cx="9"
+                cy="12"
+                r="1"
+            />
+
+            <circle
+                cx="15"
+                cy="12"
+                r="1"
+            />
+
+            <path d="M9 15h6" />
+            <path d="M3 11v4" />
+            <path d="M21 11v4" />
+
+        </svg>
+
+    </button>
+
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+
+    <script src="usuario.js"></script>
+
+</body>
+
+</html>

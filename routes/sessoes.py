@@ -1,6 +1,22 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from datetime import datetime
+from database.database import get_db
+from database.models import Sessao, Usuario 
 from schemas.sessao import SessaoCreate
-from services.sessao_service import listar_todas_sessoes, criar_nova_sessao
+from schemas.associacao import AssociacaoLote
+from services.sessao_service import (
+    listar_todas_sessoes,
+    finalizar_sessao,
+    associar_usuario_sessao,
+    listar_sessoes_sem_usuario,
+    associar_usuarios_em_lote,
+    listar_sessoes_por_usuario,
+    listar_sessoes_por_carregador
+)
+from services.auth_service import obter_usuario_atual
+
 
 router = APIRouter(
     prefix="/sessoes",
@@ -9,12 +25,238 @@ router = APIRouter(
 
 
 @router.get("/")
-def listar_sessoes():
+def listar_sessoes(db: Session = Depends(get_db)):
     return {
-        "sessoes": listar_todas_sessoes()
+        "sessoes": listar_todas_sessoes(db)
     }
 
 
 @router.post("/")
-def criar_sessao(sessao: SessaoCreate):
-    return criar_nova_sessao(sessao)
+def criar_sessao(
+    sessao: SessaoCreate,
+    db: Session = Depends(get_db)
+):
+    nova_sessao = Sessao(
+        usuario_id=sessao.usuario_id,
+        carregador_id=sessao.carregador_id,
+        inicio=sessao.inicio,
+        fim=sessao.fim,
+        consumo_kwh=sessao.consumo_kwh,
+        tarifa=sessao.tarifa,
+        valor_total=sessao.valor_total,
+        status=sessao.status
+    )
+
+    db.add(nova_sessao)
+    db.commit()
+    db.refresh(nova_sessao)
+
+    return nova_sessao
+
+
+@router.put("/{sessao_id}/finalizar")
+def finalizar(
+    sessao_id: int,
+    consumo_kwh: float,
+    db: Session = Depends(get_db)
+):
+    sessao = finalizar_sessao(
+        db,
+        sessao_id,
+        consumo_kwh
+    )
+
+    if sessao is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Sessao nao encontrada"
+        )
+
+    return sessao
+
+@router.put("/{sessao_id}/associar-usuario")
+def associar_usuario(
+    sessao_id: int,
+    usuario_id: int,
+    db: Session = Depends(get_db)
+):
+    sessao = associar_usuario_sessao(
+        db,
+        sessao_id,
+        usuario_id
+    )
+
+    if sessao is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Sessao nao encontrada"
+        )
+
+    return sessao
+
+@router.get("/sem-usuario")
+def sessoes_sem_usuario(
+    db: Session = Depends(get_db)
+):
+    return {
+        "sessoes": listar_sessoes_sem_usuario(db)
+    }
+
+@router.put("/associar-usuarios-lote")
+def associar_lote(
+    dados: AssociacaoLote,
+    db: Session = Depends(get_db)
+):
+    return associar_usuarios_em_lote(
+        db,
+        dados.associacoes
+    )
+
+@router.get("/minhas")
+def minhas_sessoes(
+    inicio: datetime | None = None,
+    fim: datetime | None = None,
+    db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(
+        obter_usuario_atual
+    )
+):
+    sessoes = listar_sessoes_por_usuario(
+        db=db,
+        usuario_id=usuario_atual.id,
+        inicio=inicio,
+        fim=fim
+    )
+
+    consumo_total = round(
+        sum(
+            sessao.consumo_kwh or 0
+            for sessao in sessoes
+        ),
+        3
+    )
+
+    valor_total = round(
+        sum(
+            sessao.valor_total or 0
+            for sessao in sessoes
+        ),
+        2
+    )
+
+    media_consumo = round(
+        consumo_total / len(sessoes),
+        2
+    ) if sessoes else 0
+
+    return {
+        "usuario_id":
+            usuario_atual.id,
+
+        "usuario_nome":
+            usuario_atual.nome,
+
+        "periodo": {
+            "inicio": inicio,
+            "fim": fim
+        },
+
+        "total_sessoes":
+            len(sessoes),
+
+        "consumo_total_kwh":
+            consumo_total,
+
+        "valor_total":
+            valor_total,
+
+        "media_consumo_kwh":
+            media_consumo,
+
+        "sessoes":
+            sessoes
+    }
+
+@router.get("/usuario/{usuario_id}")
+def historico_usuario(
+    usuario_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None,
+    db: Session = Depends(get_db)
+):
+    sessoes = listar_sessoes_por_usuario(
+        db=db,
+        usuario_id=usuario_id,
+        inicio=inicio,
+        fim=fim
+    )
+
+    consumo_total = round(
+        sum(
+            sessao.consumo_kwh or 0
+            for sessao in sessoes
+        ),
+        3
+    )
+
+    valor_total = round(
+        sum(
+            sessao.valor_total or 0
+            for sessao in sessoes
+        ),
+        2
+    )
+
+    return {
+        "usuario_id": usuario_id,
+        "periodo": {
+            "inicio": inicio,
+            "fim": fim
+        },
+        "total_sessoes": len(sessoes),
+        "consumo_total_kwh": consumo_total,
+        "valor_total": valor_total,
+        "sessoes": sessoes
+    }
+
+@router.get("/carregador/{carregador_id}")
+def historico_carregador(
+    carregador_id: int,
+    inicio: datetime | None = None,
+    fim: datetime | None = None,
+    db: Session = Depends(get_db)
+):
+    sessoes = listar_sessoes_por_carregador(
+        db=db,
+        carregador_id=carregador_id,
+        inicio=inicio,
+        fim=fim
+    )
+
+    consumo_total = round(
+        sum(
+            sessao.consumo_kwh or 0
+            for sessao in sessoes
+        ),
+        3
+    )
+
+    valor_total = round(
+        sum(
+            sessao.valor_total or 0
+            for sessao in sessoes
+        ),
+        2
+    )
+
+    return {
+        "carregador_id": carregador_id,
+        "periodo": {
+            "inicio": inicio,
+            "fim": fim
+        },
+        "total_sessoes": len(sessoes),
+        "consumo_total_kwh": consumo_total,
+        "valor_total": valor_total,
+        "sessoes": sessoes
+    }

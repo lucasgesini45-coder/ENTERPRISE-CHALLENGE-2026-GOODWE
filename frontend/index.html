@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>EV ChargeOps</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- LOGO -->
+
+        <div class="brand">
+
+            <div class="brand-mark">
+
+                <svg
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M14 8
+                           C8 12 5 18 5 24
+                           C5 34 13 42 23 42
+                           C30 42 36 38 40 32"
+                    />
+
+                    <path
+                        d="M19 20
+                           H28
+                           V15
+                           L38 24
+                           L28 33
+                           V28
+                           H19"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="brand-text">
+
+                <span class="brand-ev">
+                    EV
+                </span>
+
+                <span>
+                    Charge
+                </span>
+
+                <span class="brand-ops">
+                    Ops
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- MENU -->
+
+        <nav class="sidebar-menu">
+
+    <!-- VISÃO GERAL -->
+
+    <button
+        class="menu-item active"
+        data-page="overview"
+        type="button"
+    >
+        <span class="menu-icon">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M4 13h6V4H4v9zm0 7h6v-5H4v5zm10 0h6v-9h-6v9zm0-16v5h6V4h-6z"
+                />
+            </svg>
+        </span>
+
+        <span>
+            Visão Geral
+        </span>
+    </button>
+
+
+    <!-- OPERAÇÃO -->
+
+    <div class="menu-group">
+
+        <span class="menu-group-title">
+            OPERAÇÃO
+        </span>
+
+        <button
+            class="menu-item"
+            data-page="chargers"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M7 2h10v9h2a2 2 0 0 1 2 2v5a4 4 0 0 1-8 0v-1h2v1a2 2 0 0 0 4 0v-5h-2v3H7V2zm2 2v10h6V4H9z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Carregadores
+            </span>
+        </button>
+
+
+        <button
+            class="menu-item"
+            data-page="locator"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Localizar carregadores
+            </span>
+        </button>
+
+
+        <button
+            class="menu-item"
+            data-page="sessions"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm2 5v2h8V7H8zm0 4v2h8v-2H8zm0 4v2h5v-2H8z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Sessões
+            </span>
+        </button>
+
+    </div>
+
+
+    <!-- GESTÃO -->
+
+    <div class="menu-group">
+
+        <span class="menu-group-title">
+            GESTÃO
+        </span>
+
+        <button
+            class="menu-item"
+            data-page="users"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M16 11a4 4 0 1 0-3.9-5A4 4 0 0 0 16 11zM8 12a3 3 0 1 0 0-6a3 3 0 0 0 0 6zM16 13c-3.3 0-6 1.8-6 4v3h12v-3c0-2.2-2.7-4-6-4zM8 14c-3 0-5.5 1.5-5.5 3.5V20H8v-3c0-1.1.4-2.1 1.2-3A7 7 0 0 0 8 14z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Usuários
+            </span>
+        </button>
+
+
+        <button
+            class="menu-item"
+            data-page="rfid"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M3 6h18v12H3V6zm2 2v8h14V8H5zm3 2h5v2H8v-2zm0 3h3v2H8v-2zm8-3c2 1.4 2 4.6 0 6l-1.2-1.6c1-.8 1-2.2 0-3L16 10zm2-2c3.5 2.5 3.5 7.5 0 10l-1.2-1.5c2.4-1.8 2.4-5.2 0-7L18 8z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Cartões RFID
+            </span>
+        </button>
+
+    </div>
+
+
+    <!-- FINANCEIRO -->
+
+    <div class="menu-group">
+
+        <span class="menu-group-title">
+            FINANCEIRO
+        </span>
+
+        <button
+            class="menu-item"
+            data-page="invoices"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M6 2h12v20l-3-2-3 2-3-2-3 2V2zm3 5v2h6V7H9zm0 4v2h6v-2H9zm0 4v2h4v-2H9z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Faturas
+            </span>
+        </button>
+
+
+        <button
+            class="menu-item"
+            data-page="rateio"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 5v1.2c1.7.3 3 1.3 3 2.8h-2c0-.7-.8-1.2-2-1.2s-2 .5-2 1.2.7 1 2.4 1.4c2.6.6 4 1.5 4 3.4 0 1.6-1.3 2.8-3.4 3.1V20h-2v-1.2c-2-.3-3.5-1.5-3.5-3.3h2c0 .9 1 1.5 2.5 1.5 1.4 0 2.4-.5 2.4-1.3 0-.7-.7-1.1-2.7-1.6C9.2 13.5 8 12.7 8 11c0-1.5 1.2-2.6 3-2.9V7h2z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Rateio
+            </span>
+        </button>
+
+    </div>
+
+
+    <!-- INTELIGÊNCIA -->
+
+    <div class="menu-group">
+
+        <span class="menu-group-title">
+            INTELIGÊNCIA
+        </span>
+
+        <button
+            class="menu-item"
+            data-page="ai"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M4 18h16v2H4v-2zm1-3 4-4 3 3 5-6 2 1-7 8-3-3-3 3-1-2z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Previsão de consumo
+            </span>
+        </button>
+
+
+        <button
+            class="menu-item"
+            data-page="ai"
+            type="button"
+        >
+            <span class="menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2 1 21h22L12 2zm0 6 1 7h-2l1-7zm0 10a1.3 1.3 0 1 1 0 2.6A1.3 1.3 0 0 1 12 18z"
+                    />
+                </svg>
+            </span>
+
+            <span>
+                Anomalias
+            </span>
+        </button>
+
+    </div>
+
+</nav>
+
+
+        <!-- CONDOMÍNIO -->
+
+        <div class="property-card">
+
+            <div class="property-icon">
+                RA
+            </div>
+
+
+            <div>
+
+                <span class="property-label">
+                    Condomínio
+                </span>
+
+                <strong>
+                    Residencial Aurora
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- ==========================================
+         CONTEÚDO PRINCIPAL
+    =========================================== -->
+
+    <main class="main">
+
+
+<header class="topbar">
+
+    <div class="topbar-title">
+
+        <span class="page-eyebrow">
+            Dashboard
+        </span>
+
+        <h1>
+            Visão Geral
+        </h1>
+
+        <p>
+            Gestão inteligente da recarga em ambientes compartilhados.
+        </p>
+
+    </div>
+
+
+    <div class="topbar-actions">
+
+        <div class="account-menu">
+
+    <div class="account-menu-top">
+
+        <!-- FOTO DE PERFIL -->
+
+        <div class="profile-photo-wrapper">
+
+            <button
+                id="profile-photo-button"
+                class="profile-avatar"
+                type="button"
+                aria-label="Opções da foto de perfil"
+            >
+                LG
+            </button>
+
+            <input
+                id="profile-photo-input"
+                type="file"
+                accept="image/*"
+                hidden
+            >
+
+            <div
+                id="profile-photo-menu"
+                class="profile-photo-menu"
+            >
+
+                <button
+                    id="btn-profile-photo-change"
+                    type="button"
+                >
+                    Trocar foto
+                </button>
+
+                <button
+                    id="btn-profile-photo-remove"
+                    type="button"
+                >
+                    Remover foto
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOTÃO PRINCIPAL DA CONTA -->
+
+        <button
+            id="account-menu-toggle"
+            class="account-menu-toggle"
+            type="button"
+            aria-expanded="false"
+        >
+
+            <div class="account-menu-user">
+
+                <strong>
+                    Administrador
+                </strong>
+
+                <span>
+                    EV ChargeOps
+                </span>
+
+            </div>
+
+            <span class="account-menu-arrow">
+                ▾
+            </span>
+
+        </button>
+
+    </div>
+
+
+            <div
+                id="account-dropdown"
+                class="account-dropdown"
+            >
+
+                <div class="account-dropdown-header">
+
+                    <div class="profile-avatar">
+                        LG
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Administrador
+                        </strong>
+
+                        <span>
+                            EV ChargeOps
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="account-dropdown-divider"></div>
+
+
+                <div class="account-info-row">
+
+                    <div>
+
+                        <span class="account-info-label">
+                            Status da API
+                        </span>
+
+                        <strong class="account-status-online">
+
+                            <span class="account-status-dot"></span>
+
+                            Online
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="account-info-row">
+
+                    <div>
+
+                        <span class="account-info-label">
+                            Período
+                        </span>
+
+                        <strong> id="account-period-label">
+                            Setembro 2026
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="account-dropdown-divider"></div>
+
+
+                <button
+                    id="btn-configuracoes"
+                    class="account-menu-item"
+                    type="button"
+                >
+
+                    <span class="account-menu-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Configurações
+                    </span>
+
+                </button>
+
+
+                <div class="account-dropdown-divider"></div>
+
+
+                <button
+                    id="btn-logout"
+                    class="account-menu-item account-menu-logout"
+                    type="button"
+                >
+
+                    <span class="account-menu-icon">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+        <!-- ==========================================
+             CARDS DE RESUMO
+        =========================================== -->
+
+        <section class="metrics-grid">
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon energy">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M13 2 5 14h6l-1 8 9-13h-6V2z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Energia
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="consumo-total">
+                        --
+                    </strong>
+
+                    <span>
+                        kWh
+                    </span>
+
+                </div>
+
+
+                <p>
+                    Consumo total registrado
+                </p>
+
+            </article>
+
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon billing">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M12 2a10 10 0 1 0 0 20
+                                10 10 0 0 0 0-20zm1 5v1
+                                c1.7.3 3 1.3 3 2.8h-2
+                                c0-.7-.8-1.2-2-1.2s-2 .5-2 1.2
+                                c0 .6.6 1 2.4 1.4 2.6.6 4 1.5 4 3.4
+                                0 1.6-1.3 2.8-3.4 3.1V20h-2v-1.2
+                                c-2-.3-3.5-1.5-3.5-3.3h2c0 .9 1 1.5
+                                2.5 1.5 1.4 0 2.4-.5 2.4-1.3
+                                0-.7-.7-1.1-2.7-1.6C9.2 13.5 8 12.7
+                                8 11c0-1.5 1.2-2.6 3-2.9V7h2z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Faturamento
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="valor-total">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <p>
+                    Valor total das recargas
+                </p>
+
+            </article>
+
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon sessions">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M6 3h12v18H6V3zm3 4v2h6V7H9zm0 4v2h6v-2H9zm0 4v2h4v-2H9z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Sessões
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="total-sessoes">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <p>
+                    Recargas concluídas
+                </p>
+
+            </article>
+
+
+
+            <article class="metric-card">
+
+                <div class="metric-top">
+
+                    <div class="metric-icon chargers">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M7 2h10v10h2a2 2 0 0 1 2 2v4
+                                a4 4 0 0 1-8 0v-1h2v1a2 2 0 1 0 4 0v-4h-2v3H7V2zm2 2v11h6V4H9z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <span class="metric-caption">
+                        Infraestrutura
+                    </span>
+
+                </div>
+
+
+                <div class="metric-value">
+
+                    <strong id="total-carregadores">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <p>
+                    Carregadores cadastrados
+                </p>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             PREVISÃO + IA
+        =========================================== -->
+
+        <section class="dashboard-grid">
+
+
+            <!-- GRÁFICO -->
+
+            <article class="dashboard-card forecast-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Inteligência preditiva
+                        </span>
+
+                        <h2>
+                            Previsão de Consumo
+                        </h2>
+
+                        <p>
+                            Estimativa energética para os próximos 7 dias.
+                        </p>
+
+                    </div>
+
+
+                    <span class="model-badge">
+                        Random Forest
+                    </span>
+
+                </div>
+
+
+
+                <div class="forecast-summary">
+
+
+                    <div>
+
+                        <span>
+                            Consumo previsto
+                        </span>
+
+                        <strong id="previsao-consumo">
+                            --
+                        </strong>
+
+                        <small>
+                            kWh
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Horário de pico
+                        </span>
+
+                        <strong id="horario-pico">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Demanda
+                        </span>
+
+                        <strong id="nivel-demanda">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="chart-container">
+
+                    <canvas id="grafico-consumo"></canvas>
+
+                </div>
+
+
+            </article>
+
+
+
+            <!-- INTELIGÊNCIA DO SISTEMA -->
+
+            <article class="dashboard-card intelligence-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Monitoramento
+                        </span>
+
+                        <h2>
+                            Inteligência do Sistema
+                        </h2>
+
+                        <p>
+                            Análise automática das sessões.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="intelligence-status">
+
+                    <div class="attention-icon">
+
+                        <svg viewBox="0 0 24 24">
+
+                            <path
+                                d="M12 2 1 21h22L12 2zm0 6 1 7h-2l1-7zm0 10
+                                a1.3 1.3 0 1 1 0 2.6A1.3 1.3 0 0 1 12 18z"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Nível de atenção
+                        </span>
+
+                        <strong id="nivel-atencao">
+                            Analisando...
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="intelligence-metric">
+
+                    <span>
+                        Anomalias detectadas
+                    </span>
+
+                    <strong id="total-anomalias">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <div
+                    id="detalhe-anomalia"
+                    class="anomaly-detail"
+                >
+                    Aguardando análise das sessões.
+                </div>
+
+
+                <div class="model-footer">
+
+                    <span>
+                        Modelo
+                    </span>
+
+                    <strong>
+                        Isolation Forest
+                    </strong>
+
+                </div>
+
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             RATEIO + STATUS
+        =========================================== -->
+
+        <section class="dashboard-grid bottom-grid">
+
+
+            <!-- RATEIO -->
+
+            <article class="dashboard-card rateio-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Financeiro
+                        </span>
+
+                        <h2>
+                            Rateio Mensal
+                        </h2>
+
+                        <p>
+                            Consumo e cobrança individual por morador.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="text-button"
+                        type="button"
+                    >
+                        Ver detalhes
+                    </button>
+
+                </div>
+
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>
+                                Usuário
+                            </th>
+
+                            <th>
+                                Sessões
+                            </th>
+
+                            <th>
+                                Consumo
+                            </th>
+
+                            <th>
+                                Valor
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+
+                        <tbody id="tabela-rateio">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </article>
+
+
+
+            <!-- STATUS -->
+
+            <article class="dashboard-card system-card">
+
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            Infraestrutura
+                        </span>
+
+                        <h2>
+                            Status do Sistema
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="system-list">
+
+
+                    <div>
+
+                        <span>
+                            FastAPI
+                        </span>
+
+                        <strong class="system-online">
+                            Online
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Banco de dados
+                        </span>
+
+                        <strong class="system-online">
+                            Online
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Inteligência Artificial
+                        </span>
+
+                        <strong class="system-online">
+                            Ativa
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Integração GoodWe
+                        </span>
+
+                        <strong>
+                            CSV
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             FOOTER
+        =========================================== -->
+
+        <footer class="footer">
+
+            EV ChargeOps • Gestão inteligente de recarga
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+<!-- =========================================
+     MODAL DE CONFIGURAÇÕES
+========================================= -->
+
+<div
+    id="config-modal"
+    class="config-modal"
+    aria-hidden="true"
+>
+
+    <div class="config-modal-backdrop"></div>
+
+    <div
+        class="config-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="config-modal-title"
+    >
+
+        <div class="config-modal-header">
+
+            <div>
+                <span class="section-label">
+                    Conta
+                </span>
+
+                <h2 id="config-modal-title">
+                    Configurações
+                </h2>
+
+                <p>
+                    Gerencie suas preferências e segurança.
+                </p>
+            </div>
+
+            <button
+                id="config-modal-close"
+                class="config-modal-close"
+                type="button"
+                aria-label="Fechar configurações"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="config-modal-body">
+
+            <!-- PERFIL -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Perfil
+                        </span>
+
+                        <h3>
+                            Dados da conta
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <div class="config-grid">
+
+                    <div class="config-field">
+
+                        <span>
+                            Nome
+                        </span>
+
+                        <strong id="config-user-name">
+                            Administrador
+                        </strong>
+
+                    </div>
+
+
+                    <div class="config-field">
+
+                        <span>
+                            E-mail
+                        </span>
+
+                        <strong id="config-user-email">
+                            lucas@teste.com
+                        </strong>
+
+                    </div>
+
+
+                    <div class="config-field">
+
+                        <span>
+                            Perfil
+                        </span>
+
+                        <strong id="config-user-role">
+                            ADMIN
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- APARÊNCIA -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Aparência
+                        </span>
+
+                        <h3>
+                            Tema do sistema
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="config-theme-toggle"
+                    class="config-action-button"
+                    type="button"
+                >
+                    Alternar entre tema claro e escuro
+                </button>
+
+            </section>
+
+
+            <!-- SEGURANÇA -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Segurança
+                        </span>
+
+                        <h3>
+                            Senha da conta
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="config-change-password"
+                    class="config-action-button"
+                    type="button"
+                >
+                    Alterar senha
+                </button>
+
+            </section>
+
+
+            <!-- PREFERÊNCIAS -->
+
+            <section class="config-section">
+
+                <div class="config-section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            Preferências
+                        </span>
+
+                        <h3>
+                            Dashboard
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <label class="config-select-label">
+
+                    <span>
+                        Período padrão
+                    </span>
+
+                    <select id="config-period">
+
+                        <option value="setembro-2026">
+                            Setembro 2026
+                        </option>
+
+                        <option value="ultimos-30-dias">
+                            Últimos 30 dias
+                        </option>
+
+                        <option value="mes-atual">
+                            Mês atual
+                        </option>
+
+                    </select>
+
+                </label>
+
+            </section>
+
+        </div>
+
+
+        <div class="config-modal-footer">
+
+            <button
+                id="config-modal-cancel"
+                class="secondary-action"
+                type="button"
+            >
+                Fechar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- =========================================
+     MODAL ALTERAR SENHA
+========================================= -->
+
+<div
+    id="password-modal"
+    class="config-modal"
+    aria-hidden="true"
+>
+
+    <div class="password-modal-backdrop config-modal-backdrop"></div>
+
+    <div
+        class="config-modal-dialog password-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+    >
+
+        <div class="config-modal-header">
+
+            <div>
+
+                <span class="section-label">
+                    Segurança
+                </span>
+
+                <h2>
+                    Alterar senha
+                </h2>
+
+                <p>
+                    Defina uma nova senha para sua conta.
+                </p>
+
+            </div>
+
+            <button
+                id="password-modal-close"
+                class="config-modal-close"
+                type="button"
+                aria-label="Fechar"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="change-password-form"
+            class="password-form"
+        >
+
+            <label class="password-field">
+
+                <span>
+                    Senha atual
+                </span>
+
+                <input
+                    id="current-password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </label>
+
+
+            <label class="password-field">
+
+                <span>
+                    Nova senha
+                </span>
+
+                <input
+                    id="new-password"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required
+                >
+
+            </label>
+
+
+            <label class="password-field">
+
+                <span>
+                    Confirmar nova senha
+                </span>
+
+                <input
+                    id="confirm-password"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+
+            </label>
+
+
+            <div
+                id="password-message"
+                class="password-message"
+            ></div>
+
+
+            <div class="config-modal-footer password-modal-footer">
+
+                <button
+                    id="password-modal-cancel"
+                    class="secondary-action"
+                    type="button"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    class="primary-action"
+                    type="submit"
+                >
+                    Salvar nova senha
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- =========================================
+     MODAL DETALHES DO CARREGADOR
+========================================= -->
+
+<div
+    id="charger-detail-modal"
+    class="config-modal"
+    aria-hidden="true"
+>
+
+    <div class="charger-detail-backdrop config-modal-backdrop"></div>
+
+    <div
+        class="config-modal-dialog charger-detail-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="charger-detail-title"
+    >
+
+        <div class="config-modal-header">
+
+            <div>
+
+                <span class="section-label">
+                    Infraestrutura
+                </span>
+
+                <h2 id="charger-detail-title">
+                    Detalhes do carregador
+                </h2>
+
+                <p>
+                    Informações do equipamento cadastrado.
+                </p>
+
+            </div>
+
+            <button
+                id="charger-detail-close"
+                class="config-modal-close"
+                type="button"
+                aria-label="Fechar detalhes"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="charger-detail-body">
+
+            <div class="charger-detail-hero">
+
+                <div class="charger-detail-image-wrapper">
+
+                    <img
+                        src="assets/evcharger.png"
+                        alt="Carregador EV Charge"
+                        class="charger-detail-image"
+                    >
+
+                </div>
+
+                <div>
+
+                    <span class="section-label">
+                        Equipamento
+                    </span>
+
+                    <h3 id="charger-detail-name">
+                        --
+                    </h3>
+
+                    <span
+                        id="charger-detail-status"
+                        class="charger-status active"
+                    >
+                        --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="charger-detail-grid">
+
+                <div class="charger-detail-info">
+                    <span>Serial GoodWe</span>
+                    <strong id="charger-detail-serial">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>Modelo</span>
+                    <strong id="charger-detail-model">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>Potência máxima</span>
+                    <strong id="charger-detail-power">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>Localização</span>
+                    <strong id="charger-detail-location">--</strong>
+                </div>
+
+                <div class="charger-detail-info">
+                    <span>ID do equipamento</span>
+                    <strong id="charger-detail-id">--</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="config-modal-footer">
+
+            <button
+                id="charger-detail-cancel"
+                class="secondary-action"
+                type="button"
+            >
+                Fechar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script
+    src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"
+></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js"></script>
+<script src="carregadores-ui.js"></script>
+<script src="usuarios-ui.js"></script>
+<script src="sessoes-ui.js"></script>
+<script src="faturas-ui.js"></script>
+<script src="rateio-ui.js"></script>
+<script src="inteligencia-ui.js"></script>
+<script src="rfid-ui.js"></script>
+<script src="./localizar-carregadores-ui.js"></script>
+<script src="assistente-ia-ui.js"></script>
+
+</body>
+</html>

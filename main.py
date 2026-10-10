@@ -1,20 +1,47 @@
 from fastapi import FastAPI
 
+from fastapi.middleware.cors import CORSMiddleware
 from routes.consumo import router as consumo_router
 from routes.carregadores import router as carregadores_router
 from routes.sessoes import router as sessoes_router
 from routes.usuarios import router as usuarios_router
+from routes.goodwe import router as goodwe_router
+from routes.dashboard import router as dashboard_router
+from routes.ia import router as ia_router
+from routes.auth import router as auth_router
+from routes.rfid import router as rfid_router
+from routes import assistente_ia
+
+from database.database import engine
+from database.models import Base
 
 app = FastAPI(
     title="EV ChargeOps API",
     version="1.0.0"
 )
 
+Base.metadata.create_all(
+    bind=engine
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(consumo_router)
 app.include_router(carregadores_router)
 app.include_router(sessoes_router)
 app.include_router(usuarios_router)
-
+app.include_router(goodwe_router)
+app.include_router(dashboard_router)
+app.include_router(ia_router)
+app.include_router(auth_router)
+app.include_router(rfid_router)
+app.include_router(assistente_ia.router)
 
 @app.get("/")
 def home():
