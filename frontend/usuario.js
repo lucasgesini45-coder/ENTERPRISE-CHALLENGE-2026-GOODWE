@@ -1185,9 +1185,9 @@ document
     );
 
 
-/* =========================================
+    /* =========================================
    CONFIGURAÇÕES
-========================================= */
+    ========================================= */
 
 if (settingsButton) {
 
@@ -1195,8 +1195,8 @@ if (settingsButton) {
         "click",
         () => {
 
-            alert(
-                "As configurações da conta serão adicionadas nesta área."
+            abrirPagina(
+                "configuracoes"
             );
 
         }
@@ -1204,6 +1204,332 @@ if (settingsButton) {
 
 }
 
+/* =========================================
+   DADOS DA CONTA
+========================================= */
+
+const settingsName =
+    document.getElementById(
+        "settings-name"
+    );
+
+const settingsEmail =
+    document.getElementById(
+        "settings-email"
+    );
+
+const settingsPhone =
+    document.getElementById(
+        "settings-phone"
+    );
+
+
+function carregarDadosConta() {
+
+    const usuarioSalvo =
+        localStorage.getItem(
+            "ev_chargeops_usuario"
+        );
+
+    if (!usuarioSalvo) {
+        return;
+    }
+
+    try {
+
+        const usuario =
+            JSON.parse(
+                usuarioSalvo
+            );
+
+        if (settingsName) {
+
+            settingsName.value =
+                usuario.nome ?? "";
+
+        }
+
+        if (settingsEmail) {
+
+            settingsEmail.value =
+                usuario.email ?? "";
+
+        }
+
+        if (settingsPhone) {
+
+            settingsPhone.value =
+                usuario.telefone ?? "";
+
+        }
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar dados da conta:",
+            erro
+        );
+
+    }
+
+}
+
+/* =========================================
+   ALTERAR SENHA
+========================================= */
+
+const settingsPasswordForm =
+    document.getElementById(
+        "user-password-form"
+    );
+
+const settingsCurrentPassword =
+    document.getElementById(
+        "settings-current-password"
+    );
+
+const settingsNewPassword =
+    document.getElementById(
+        "settings-new-password"
+    );
+
+const settingsConfirmPassword =
+    document.getElementById(
+        "settings-confirm-password"
+    );
+
+const settingsPasswordMessage =
+    document.getElementById(
+        "settings-password-message"
+    );
+
+
+if (
+    settingsPasswordForm &&
+    settingsCurrentPassword &&
+    settingsNewPassword &&
+    settingsConfirmPassword &&
+    settingsPasswordMessage
+) {
+
+    settingsPasswordForm.addEventListener(
+        "submit",
+        async evento => {
+
+            evento.preventDefault();
+
+            settingsPasswordMessage.textContent =
+                "";
+
+            settingsPasswordMessage.className =
+                "settings-message";
+
+            const senhaAtual =
+                settingsCurrentPassword.value.trim();
+
+            const novaSenha =
+                settingsNewPassword.value.trim();
+
+            const confirmarSenha =
+                settingsConfirmPassword.value.trim();
+
+
+            if (!senhaAtual) {
+
+                settingsPasswordMessage.textContent =
+                    "Informe sua senha atual.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (novaSenha.length < 8) {
+
+                settingsPasswordMessage.textContent =
+                    "A nova senha deve possuir pelo menos 8 caracteres.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (
+                novaSenha !==
+                confirmarSenha
+            ) {
+
+                settingsPasswordMessage.textContent =
+                    "A confirmação da senha não confere.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (
+                senhaAtual ===
+                novaSenha
+            ) {
+
+                settingsPasswordMessage.textContent =
+                    "A nova senha deve ser diferente da senha atual.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const token =
+                localStorage.getItem(
+                    "ev_chargeops_token"
+                );
+
+
+            try {
+
+                const resposta =
+                    await fetch(
+                        `${API_URL}/auth/alterar-senha`,
+                        {
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${token}`
+
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    senha_atual:
+                                        senhaAtual,
+
+                                    nova_senha:
+                                        novaSenha
+                                })
+                        }
+                    );
+
+
+                const dados =
+                    await resposta.json();
+
+
+                if (!resposta.ok) {
+
+                    throw new Error(
+                        dados.detail ??
+                        "Não foi possível alterar a senha."
+                    );
+
+                }
+
+
+                settingsPasswordMessage.textContent =
+                    dados.mensagem ??
+                    "Senha alterada com sucesso.";
+
+                settingsPasswordMessage.classList.add(
+                    "success"
+                );
+
+
+                settingsPasswordForm.reset();
+
+
+            } catch (erro) {
+
+                settingsPasswordMessage.textContent =
+                    erro.message;
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+carregarDadosConta();
+
+/* =========================================
+   TEMA CLARO / ESCURO
+========================================= */
+
+const themeToggle =
+    document.getElementById(
+        "settings-dark-theme"
+    );
+
+function aplicarTema(tema) {
+
+    document.body.setAttribute(
+        "data-theme",
+        tema
+    );
+
+    localStorage.setItem(
+        "ev_chargeops_theme",
+        tema
+    );
+
+    if (themeToggle) {
+
+        themeToggle.checked =
+            tema === "dark";
+
+    }
+
+}
+
+const temaSalvo =
+    localStorage.getItem(
+        "ev_chargeops_theme"
+    ) || "dark";
+
+aplicarTema(
+    temaSalvo
+);
+
+if (themeToggle) {
+
+    themeToggle.addEventListener(
+        "change",
+        () => {
+
+            const novoTema =
+                themeToggle.checked
+                    ? "dark"
+                    : "light";
+
+            aplicarTema(
+                novoTema
+            );
+
+        }
+    );
+
+}
 
 /* =========================================
    ASSISTENTE IA
