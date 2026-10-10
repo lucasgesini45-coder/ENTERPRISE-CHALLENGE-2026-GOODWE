@@ -4,15 +4,15 @@
 
 O **EV ChargeOps** é uma plataforma para gestão inteligente de infraestruturas compartilhadas de recarga de veículos elétricos.
 
-O projeto foi desenvolvido para o **Enterprise Challenge 2026**, em parceria com a **GoodWe**, com o objetivo de transformar os dados gerados pelos carregadores em informações úteis para operação, monitoramento, controle de consumo e tomada de decisão.
+O projeto foi desenvolvido para o **Enterprise Challenge 2026**, em parceria com a **GoodWe**, com o objetivo de transformar dados de recarga em informações úteis para operação, monitoramento, controle de consumo, controle de acesso, análise de desempenho e apoio à tomada de decisão.
 
 ---
 
 # 1. Sobre o projeto
 
-Infraestruturas de recarga compartilhada, como as presentes em condomínios, empresas e instituições de ensino, apresentam desafios relacionados ao controle de acesso, identificação dos usuários, acompanhamento das sessões, consumo de energia e divisão dos custos.
+Infraestruturas de recarga compartilhada, como as presentes em condomínios, empresas e instituições de ensino, apresentam desafios relacionados ao controle de acesso, identificação dos usuários, acompanhamento das sessões, consumo de energia, divisão dos custos e monitoramento dos carregadores.
 
-O **EV ChargeOps** propõe uma solução centralizada para organizar essas informações e permitir que administradores acompanhem a utilização da infraestrutura de recarga.
+O **EV ChargeOps** propõe uma solução centralizada para organizar essas informações e disponibilizá-las de forma clara para administradores e usuários.
 
 A plataforma trabalha com dados de:
 
@@ -20,8 +20,14 @@ A plataforma trabalha com dados de:
 - Carregadores;
 - Sessões de recarga;
 - Consumo energético;
+- Valores e rateio;
+- RFID;
 - Indicadores operacionais;
-- Previsões e análises utilizando Inteligência Artificial.
+- Dados históricos;
+- Previsões;
+- Detecção de anomalias;
+- Assistente inteligente;
+- Informações de localização dos carregadores.
 
 ---
 
@@ -32,6 +38,7 @@ O objetivo do EV ChargeOps é desenvolver uma plataforma capaz de gerenciar uma 
 A solução busca permitir:
 
 - Cadastro e gerenciamento de usuários;
+- Cadastro de novos usuários pela interface;
 - Autenticação e controle de acesso;
 - Monitoramento dos carregadores;
 - Registro das sessões de recarga;
@@ -40,7 +47,12 @@ A solução busca permitir:
 - Análise histórica dos dados;
 - Identificação de possíveis anomalias;
 - Previsão de consumo;
-- Apoio à tomada de decisão por meio de Inteligência Artificial.
+- Controle por RFID;
+- Localização dos carregadores;
+- Traçado de rota;
+- Consulta de dados pelo usuário;
+- Alteração de senha;
+- Apoio à tomada de decisão por meio de análise de dados e Inteligência Artificial.
 
 ---
 
@@ -55,7 +67,9 @@ Em ambientes compartilhados, podem surgir problemas como:
 - Dificuldade para acompanhar o consumo individual;
 - Falta de indicadores para administração da infraestrutura;
 - Dificuldade para identificar comportamentos fora do padrão;
-- Necessidade de maior controle operacional dos carregadores.
+- Necessidade de maior controle operacional dos carregadores;
+- Dificuldade para localizar pontos de recarga;
+- Necessidade de separar funcionalidades administrativas das funcionalidades disponíveis ao usuário comum.
 
 O EV ChargeOps foi desenvolvido para centralizar essas informações e transformar os dados de utilização em indicadores que auxiliem a operação.
 
@@ -73,9 +87,12 @@ A solução permite trabalhar com:
 - Consumo energético;
 - Indicadores;
 - Dados históricos;
-- Inteligência Artificial.
+- RFID;
+- Localização;
+- Inteligência Artificial;
+- OCPP em ambiente de protótipo.
 
-A plataforma possui uma área administrativa para acompanhamento da operação e uma interface web para visualização dos dados.
+A plataforma possui uma área administrativa para acompanhamento da operação e uma área específica para o usuário final.
 
 ---
 
@@ -85,12 +102,14 @@ A plataforma possui uma área administrativa para acompanhamento da operação e
 
 O sistema possui autenticação de usuários utilizando:
 
+- Cadastro de usuário;
 - Login;
 - Senha protegida por hash;
 - Token JWT;
-- Controle de acesso por perfil.
+- Controle de acesso por perfil;
+- Alteração de senha.
 
-A autenticação é utilizada para controlar o acesso às funcionalidades administrativas da plataforma.
+A autenticação é utilizada para controlar o acesso às funcionalidades administrativas e também às informações individuais de cada usuário.
 
 ---
 
@@ -108,6 +127,18 @@ Os dados utilizados incluem informações como:
 
 O acesso às informações administrativas de usuários é protegido por autenticação.
 
+O sistema também possui cadastro de novos usuários diretamente pela interface web, permitindo o fluxo:
+
+```text
+Cadastro
+   │
+   ▼
+Login
+   │
+   ▼
+Dashboard do usuário
+```
+
 ---
 
 ## 5.3 Gerenciamento de carregadores
@@ -116,14 +147,18 @@ A plataforma permite trabalhar com informações dos carregadores disponíveis n
 
 Entre os dados utilizados estão:
 
-- Nome/localização;
+- Nome;
+- Localização;
 - Número de série;
 - Modelo;
 - Potência;
 - Status;
-- Localização geográfica.
+- Latitude;
+- Longitude.
 
 Os carregadores podem ser associados às sessões de recarga para geração do histórico de utilização.
+
+No dashboard do usuário, os carregadores também podem ser visualizados em mapa e em cards individuais.
 
 ---
 
@@ -154,29 +189,60 @@ A aplicação permite organizar informações relacionadas a:
 - Histórico de utilização;
 - Quantidade de sessões;
 - Valores associados ao consumo;
-- Utilização dos carregadores.
+- Utilização dos carregadores;
+- Média de consumo por sessão;
+- Total gasto pelo usuário.
 
 ---
 
-## 5.6 Dashboard
+## 5.6 Dashboard administrativo
 
-O sistema possui um dashboard para visualização dos principais indicadores da infraestrutura.
+O sistema possui um dashboard administrativo para visualização dos principais indicadores da infraestrutura.
 
-O dashboard utiliza os dados armazenados no banco de dados para apresentar informações de forma organizada e facilitar o acompanhamento da operação.
-
-Entre os dados apresentados estão informações relacionadas a:
+Entre os dados e recursos apresentados estão informações relacionadas a:
 
 - Sessões;
 - Consumo;
 - Carregadores;
 - Usuários;
-- Indicadores operacionais.
+- Indicadores operacionais;
+- Rateio;
+- RFID;
+- Inteligência Artificial;
+- Integrações.
+
+---
+
+## 5.7 Dashboard do usuário
+
+O EV ChargeOps possui um dashboard específico para usuários comuns.
+
+Entre os recursos disponíveis estão:
+
+- Visualização do consumo total;
+- Quantidade de sessões;
+- Total gasto;
+- Média de consumo por sessão;
+- Últimas recargas;
+- Histórico completo de sessões;
+- Mapa de carregadores;
+- Localização de estações;
+- Traçado de rota;
+- Abertura de rota no Google Maps;
+- Consulta do RFID vinculado;
+- Assistente EV;
+- Configurações da conta;
+- Consulta de nome, e-mail e telefone;
+- Alteração de senha;
+- Tema claro e escuro.
+
+Os dados pessoais exibidos nas configurações são apresentados somente para consulta.
 
 ---
 
 # 6. Inteligência Artificial
 
-Um dos diferenciais do EV ChargeOps é a utilização de Inteligência Artificial para análise dos dados de recarga.
+Um dos diferenciais do EV ChargeOps é a utilização de recursos de Inteligência Artificial e análise de dados aplicados às informações de recarga.
 
 A solução possui módulos voltados para:
 
@@ -194,121 +260,178 @@ Avaliação dos dados históricos para identificar comportamentos recorrentes de
 
 ### Apoio à tomada de decisão
 
-As informações produzidas pela camada de Inteligência Artificial podem auxiliar administradores na identificação de problemas e oportunidades de otimização.
+As informações produzidas pela camada de análise podem auxiliar administradores na identificação de problemas e oportunidades de otimização.
 
 ---
 
-# 7. Assistente de IA
+# 7. Assistente EV
 
-O projeto também possui um módulo de **Assistente de IA**, integrado à API.
+O projeto possui um módulo de **Assistente EV**, integrado à API e ao dashboard do usuário.
 
-O assistente permite que o usuário envie perguntas relacionadas aos dados da operação.
+O assistente permite realizar consultas relacionadas aos próprios dados de recarga.
+
+Exemplos:
+
+- Quanto eu já gastei?
+- Quanto eu consumi?
+- Quantas recargas eu fiz?
+- Qual foi minha última recarga?
 
 A API disponibiliza o endpoint:
 
+```http
+POST /assistente-ia/perguntar
+```
 
-## 8. RFID e Controle de Acesso
+O Assistente EV trabalha dentro do contexto e dos dados disponíveis na plataforma.
+
+---
+
+# 8. RFID e Controle de Acesso
 
 O projeto possui uma estrutura dedicada ao **controle de acesso por RFID**, permitindo identificar o usuário responsável pela utilização de um carregador.
 
-A identificação é associada à sessão de recarga, possibilitando maior controle e organização das informações de utilização.
+A identificação é associada ao usuário e pode fazer parte da sessão de recarga, possibilitando maior controle e rastreabilidade.
 
 ### Principais funcionalidades
 
-* **Identificação do usuário** por RFID;
-* **Controle de acesso** aos carregadores;
-* **Associação do usuário à sessão de recarga**;
-* **Organização e rastreabilidade** do histórico de utilização.
+- Identificação do usuário por RFID;
+- Associação do RFID à conta;
+- Consulta do RFID pelo usuário;
+- Controle de acesso aos carregadores;
+- Associação do usuário à sessão;
+- Organização e rastreabilidade do histórico de utilização.
 
-POST /assistente-ia/perguntar
+---
 
-## 9. Arquitetura da Solução
+# 9. Mapa de carregadores
 
-A arquitetura do **EV ChargeOps** foi desenvolvida de forma modular, tendo o **FastAPI** como núcleo da aplicação. A API é responsável por intermediar a comunicação entre o frontend, banco de dados e os diferentes serviços da solução.
+O dashboard do usuário possui uma área dedicada à localização dos carregadores.
 
-O fluxo da aplicação pode ser representado da seguinte forma:
+Entre os recursos implementados estão:
+
+- Mapa interativo;
+- Visualização das estações cadastradas;
+- Seleção de carregadores;
+- Consulta de status;
+- Consulta de potência;
+- Uso da localização do usuário;
+- Traçado de rota;
+- Cards individuais das estações;
+- Abertura da localização diretamente no Google Maps.
+
+O mapa utiliza **Leaflet** no frontend.
+
+---
+
+# 10. Configurações do usuário
+
+A área de configurações permite ao usuário:
+
+- Consultar nome;
+- Consultar e-mail;
+- Consultar telefone;
+- Alterar a senha;
+- Alternar entre tema claro e escuro.
+
+A preferência de tema é armazenada no navegador para manter a aparência escolhida pelo usuário.
+
+Os dados pessoais são apresentados em modo de consulta, sem edição direta.
+
+---
+
+# 11. Arquitetura da Solução
+
+A arquitetura do **EV ChargeOps** foi desenvolvida de forma modular, tendo o **FastAPI** como núcleo da aplicação.
 
 ```text
                          USUÁRIO
                             │
                             ▼
-                  ┌──────────────────┐
-                  │     FRONTEND     │
-                  │      Web App     │
-                  └────────┬─────────┘
-                           │
-                           │ HTTP / REST
-                           ▼
-                  ┌──────────────────┐
-                  │     FASTAPI      │
-                  │       API        │
-                  └────────┬─────────┘
-                           │
-              ┌────────────┼────────────┐
-              │            │            │
-              ▼            ▼            ▼
-         ┌─────────┐  ┌──────────┐  ┌──────────────┐
-         │ Usuários│  │ Sessões  │  │ Carregadores │
-         └────┬────┘  └────┬─────┘  └──────┬───────┘
-              │            │               │
-              └────────────┼───────────────┘
-                           ▼
-                  ┌──────────────────┐
-                  │    PostgreSQL    │
-                  │   Banco de Dados │
-                  └────────┬─────────┘
-                           │
-                           ▼
-                  ┌──────────────────┐
-                  │   IA / Análise   │
-                  │ Previsões        │
-                  │ Detecção de      │
-                  │ Anomalias        │
-                  └──────────────────┘
+                   ┌──────────────────┐
+                   │     FRONTEND     │
+                   │      Web App     │
+                   └────────┬─────────┘
+                            │
+                            │ HTTP / REST
+                            ▼
+                   ┌──────────────────┐
+                   │     FASTAPI      │
+                   │       API        │
+                   └────────┬─────────┘
+                            │
+              ┌─────────────┼─────────────┐
+              │             │             │
+              ▼             ▼             ▼
+         ┌─────────┐   ┌──────────┐  ┌──────────────┐
+         │ Usuários│   │ Sessões  │  │ Carregadores │
+         └────┬────┘   └────┬─────┘  └──────┬───────┘
+              │             │               │
+              └─────────────┼───────────────┘
+                            ▼
+                   ┌──────────────────┐
+                   │    PostgreSQL    │
+                   │   Banco de Dados │
+                   └────────┬─────────┘
+                            │
+               ┌────────────┴────────────┐
+               ▼                         ▼
+      ┌──────────────────┐       ┌──────────────────┐
+      │ IA / Análise     │       │ RFID / OCPP      │
+      │ Previsões        │       │ Integrações      │
+      │ Anomalias        │       │ experimentais    │
+      └──────────────────┘       └──────────────────┘
 ```
 
 ### Principais componentes
-* **Frontend**: interface web utilizada pelo usuário para visualizar e interagir com a plataforma.
-* **FastAPI**: camada responsável pela API e pela comunicação entre os componentes da aplicação.
-* **PostgreSQL**: armazenamento dos dados relacionados a usuários, carregadores e sessões de recarga.
-* ***IA e análise de dados**: processamento das informações para geração de previsões e identificação de possíveis anomalias.
 
-## 10. Tecnologias Utilizadas
+- **Frontend:** interface web utilizada por administradores e usuários.
+- **FastAPI:** API responsável pela comunicação entre os componentes.
+- **PostgreSQL:** armazenamento dos dados em produção.
+- **SQLite:** banco utilizado em desenvolvimento local.
+- **IA e análise de dados:** previsão, detecção de anomalias e análise dos dados.
+- **RFID:** identificação e controle de acesso.
+- **OCPP:** camada experimental de comunicação com carregadores.
 
-O **EV ChargeOps** utiliza um conjunto de tecnologias voltadas para desenvolvimento de APIs, gerenciamento de dados, análise inteligente e disponibilização da aplicação.
+---
 
-### Backend
+# 12. Tecnologias Utilizadas
 
-* **Python** — linguagem principal do backend;
-* **FastAPI** — desenvolvimento da API REST;
-* **SQLAlchemy** — mapeamento e gerenciamento do banco de dados;
-* **Pydantic** — validação e estruturação dos dados;
-* **JWT** — autenticação e gerenciamento de sessões;
-* **Passlib** — gerenciamento e proteção de credenciais;
-* **Uvicorn** — servidor ASGI para execução da aplicação;
-* **Scikit-learn** — recursos de Machine Learning;
-* **NumPy** — processamento e manipulação de dados numéricos;
-* **SciPy** — recursos para análise e processamento científico.
+## Backend
 
-### Frontend
+- **Python** — linguagem principal;
+- **FastAPI** — API REST;
+- **SQLAlchemy** — ORM;
+- **Pydantic** — validação e estruturação;
+- **JWT** — autenticação;
+- **Passlib** — proteção de credenciais;
+- **Uvicorn** — servidor ASGI;
+- **Scikit-learn** — Machine Learning;
+- **NumPy** — processamento numérico;
+- **SciPy** — análise e processamento científico.
 
-* **HTML** — estrutura das páginas;
-* **CSS** — estilização e identidade visual;
-* **JavaScript** — interatividade e comunicação com a API.
+## Frontend
 
-### Banco de Dados
+- **HTML** — estrutura;
+- **CSS** — estilização;
+- **JavaScript** — interatividade e integração com a API;
+- **Leaflet** — mapa interativo.
 
-* **PostgreSQL** — banco de dados utilizado em produção;
-* **SQLite** — banco utilizado para desenvolvimento e testes locais.
+## Banco de Dados
 
-### Deploy e Infraestrutura
+- **PostgreSQL** — produção;
+- **SQLite** — desenvolvimento e testes locais.
 
-* **Render** — hospedagem do backend e banco PostgreSQL;
-* **Vercel** — hospedagem do frontend.
+## Deploy e Infraestrutura
 
-## 11. Estrutura do Projeto
+- **Render** — backend e banco PostgreSQL;
+- **Vercel** — frontend;
+- **GitHub** — versionamento e colaboração;
+- **Git** — controle de versão.
 
-A estrutura do **EV ChargeOps** foi organizada de forma modular, separando as responsabilidades da aplicação entre banco de dados, rotas, serviços, inteligência artificial e frontend.
+---
+
+# 13. Estrutura do Projeto
 
 ```text
 ENTERPRISE-CHALLENGE-2026-GOODWE/
@@ -352,48 +475,51 @@ ENTERPRISE-CHALLENGE-2026-GOODWE/
 │   ├── gerar_dados_teste.py
 │   └── __init__.py
 │
+├── ocpp/
+│   └── ...
+│
 ├── frontend/
-│   ├── index.html
-│   ├── app.js
-│   ├── login.js
-│   ├── rfid-ui.js
-│   ├── assistente-ia-ui.js
+│   ├── landing.html
+│   ├── login.html
+│   ├── cadastro.html
+│   ├── usuario.html
+│   ├── usuario.css
+│   ├── usuario.js
+│   ├── assets/
 │   └── ...
 │
 ├── seed_sessoes.py
 ├── main.py
 ├── requirements.txt
-├── README.md
-└── ...
+├── .gitignore
+└── README.md
 ```
 
 ### Organização dos módulos
 
-| Diretório   | Responsabilidade                                                   |
-| ----------- | ------------------------------------------------------------------ |
-| `database/` | Configuração do banco e definição dos modelos                      |
-| `routes/`   | Endpoints e rotas da API                                           |
-| `schemas/`  | Validação e estruturação dos dados                                 |
-| `services/` | Regras de negócio e integração entre componentes                   |
-| `ia/`       | Modelos, previsões, detecção de anomalias e processamento de dados |
-| `frontend/` | Interface web e interação com a API                                |
+| Diretório | Responsabilidade |
+|---|---|
+| `database/` | Configuração do banco e modelos |
+| `routes/` | Endpoints e rotas da API |
+| `schemas/` | Validação e estruturação dos dados |
+| `services/` | Regras de negócio |
+| `ia/` | Previsões, anomalias e análise de dados |
+| `ocpp/` | Comunicação OCPP em ambiente de protótipo |
+| `frontend/` | Interface web e comunicação com a API |
 
-Essa organização permite maior **separação de responsabilidades, manutenção, escalabilidade e evolução independente dos componentes** da aplicação.
+---
 
-> A estrutura pode receber novos arquivos e módulos conforme a evolução do projeto.
+# 14. Backend
 
+O backend do **EV ChargeOps** foi desenvolvido em **Python**, utilizando **FastAPI**.
 
-## 12. Backend
-
-O backend do **EV ChargeOps** foi desenvolvido em **Python**, utilizando o framework **FastAPI** para construção da API REST.
-
-O ponto de entrada principal da aplicação é:
+Ponto de entrada:
 
 ```text
 main.py
 ```
 
-A aplicação utiliza uma arquitetura modular baseada em **routers**, organizando os endpoints de acordo com o domínio de cada funcionalidade.
+A aplicação utiliza uma arquitetura modular baseada em routers.
 
 ### Principais endpoints
 
@@ -410,92 +536,63 @@ A aplicação utiliza uma arquitetura modular baseada em **routers**, organizand
 /assistente-ia
 ```
 
-Cada domínio possui sua própria camada de **rotas, serviços e schemas**, permitindo uma melhor separação de responsabilidades e facilitando a manutenção e evolução do sistema.
+---
 
-Essa estrutura também permite adicionar novas funcionalidades sem comprometer a organização dos módulos existentes.
+# 15. Banco de Dados
 
-## 13. Banco de Dados
+O EV ChargeOps utiliza **SQLAlchemy** como ORM.
 
-O **EV ChargeOps** utiliza o **SQLAlchemy** como ORM (*Object-Relational Mapping*) para facilitar a comunicação entre a aplicação e o banco de dados.
+A configuração permite diferentes ambientes:
 
-A configuração foi estruturada para permitir diferentes ambientes:
+- **SQLite** — desenvolvimento e testes locais;
+- **PostgreSQL** — produção.
 
-* **SQLite** — utilizado em ambiente de desenvolvimento e testes locais;
-* **PostgreSQL** — utilizado no ambiente de produção.
-
-A conexão com o banco de dados é definida por meio da variável de ambiente:
+A conexão é definida pela variável:
 
 ```text
 DATABASE_URL
 ```
 
-Dessa forma, a aplicação pode alternar entre diferentes bancos de dados de acordo com o ambiente, sem a necessidade de alterar a estrutura principal do código.
-
-Essa abordagem contribui para a **portabilidade, organização e facilidade de implantação** do sistema.
-
-# 14. Configuração do Ambiente Local
-
-## 14.1 Pré-requisitos
-
-Para executar o **EV ChargeOps** localmente, é necessário possuir:
-
-* **Python 3**
-* **Git**
-* **pip**
+Essa abordagem permite alternar entre bancos sem alterar a estrutura principal do sistema.
 
 ---
 
-## 14.2 Clonar o Repositório
+# 16. Configuração do Ambiente Local
 
-Clone o repositório:
+## 16.1 Pré-requisitos
+
+- Python 3;
+- Git;
+- pip.
+
+## 16.2 Clonar o repositório
 
 ```bash
 git clone https://github.com/lucasgesini45-coder/ENTERPRISE-CHALLENGE-2026-GOODWE.git
-```
-
-Entre na pasta do projeto:
-
-```bash
 cd ENTERPRISE-CHALLENGE-2026-GOODWE
 ```
 
 ---
 
-# 15. Criar Ambiente Virtual
+# 17. Criar Ambiente Virtual
 
-### Windows
+## Windows
 
-Crie o ambiente virtual:
-
-```bash
-python -m venv venv
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
-Ative o ambiente:
+## Linux / macOS
 
 ```bash
-venv\Scripts\activate
-```
-
-### Linux / macOS
-
-Crie o ambiente virtual:
-
-```bash
-python3 -m venv venv
-```
-
-Ative o ambiente:
-
-```bash
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 ---
 
-# 16. Instalar Dependências
-
-Com o ambiente virtual ativado, instale as dependências do projeto:
+# 18. Instalar Dependências
 
 ```bash
 pip install -r requirements.txt
@@ -503,21 +600,19 @@ pip install -r requirements.txt
 
 ---
 
-# 17. Executar o Backend
-
-Para iniciar a API localmente em modo de desenvolvimento:
+# 19. Executar o Backend
 
 ```bash
 uvicorn main:app --reload
 ```
 
-Após iniciar, a API estará disponível em:
+API local:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-A documentação interativa do FastAPI pode ser acessada em:
+Swagger local:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -525,9 +620,26 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# 18. Health Check
+# 20. Executar o Frontend
 
-O backend possui um endpoint de verificação de disponibilidade:
+Em outro terminal:
+
+```powershell
+cd frontend
+python -m http.server 5500
+```
+
+Acesse:
+
+```text
+http://localhost:5500
+```
+
+---
+
+# 21. Health Check
+
+Endpoint:
 
 ```http
 GET /health
@@ -541,9 +653,7 @@ Resposta esperada:
 }
 ```
 
-### Ambiente de produção
-
-O endpoint também está disponível na aplicação publicada:
+Produção:
 
 ```text
 https://enterprise-challenge-2026-goodwe.onrender.com/health
@@ -551,39 +661,43 @@ https://enterprise-challenge-2026-goodwe.onrender.com/health
 
 ---
 
-# 19. Dados de Teste
+# 22. Dados de Teste
 
-Para facilitar o desenvolvimento e a demonstração do protótipo, o projeto utiliza **dados de teste** para representar sessões de recarga e utilização dos carregadores.
+Para facilitar o desenvolvimento e a demonstração, o projeto utiliza dados de teste para representar sessões e utilização dos carregadores.
 
-O script responsável pela geração dessas sessões é:
+Script:
 
 ```text
 seed_sessoes.py
 ```
 
-Para executá-lo:
+Execução:
 
 ```bash
 python seed_sessoes.py
 ```
 
-O script permite popular o banco de dados com **sessões históricas de recarga associadas aos carregadores cadastrados**, facilitando os testes das funcionalidades de consumo, dashboard e análise de dados.
+Esses dados permitem testar consumo, dashboard, sessões, indicadores e módulos de análise.
 
 ---
 
-# 20. API
+# 23. API
 
-A API do **EV ChargeOps** foi desenvolvida com **FastAPI**, que disponibiliza automaticamente uma documentação interativa dos endpoints.
+A API foi desenvolvida com **FastAPI**, que disponibiliza documentação interativa pelo Swagger.
 
-Após iniciar o backend, acesse:
+Local:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-Por meio da documentação, é possível consultar os endpoints disponíveis e realizar requisições diretamente pela interface do Swagger.
+Produção:
 
-### Principais recursos da API
+```text
+https://enterprise-challenge-2026-goodwe.onrender.com/docs
+```
+
+### Principais recursos
 
 ```text
 Autenticação
@@ -595,80 +709,74 @@ Dashboard
 Integração GoodWe
 Inteligência Artificial
 RFID
-Assistente de IA
+Assistente EV
 ```
 
-A organização modular da API permite que cada recurso possua suas próprias rotas, serviços e schemas, facilitando a manutenção e a expansão do sistema.
+---
 
-# 21. Deploy
+# 24. Deploy
 
-O **EV ChargeOps** foi estruturado com frontend e backend independentes, permitindo que cada camada seja implantada e evolua de forma separada.
+O EV ChargeOps possui frontend e backend independentes.
 
 ## Backend
 
-O backend está hospedado na plataforma **Render**.
-
-**URL da API:**
+Hospedado no **Render**:
 
 ```text
 https://enterprise-challenge-2026-goodwe.onrender.com
 ```
 
-**Health Check:**
+## Health Check
 
 ```text
 https://enterprise-challenge-2026-goodwe.onrender.com/health
 ```
 
+## Swagger
+
+```text
+https://enterprise-challenge-2026-goodwe.onrender.com/docs
+```
+
 ## Banco de Dados
 
-O ambiente de produção utiliza **PostgreSQL**, hospedado no Render e integrado ao backend da aplicação.
+O ambiente de produção utiliza **PostgreSQL** integrado ao backend.
 
 ## Frontend
 
-O frontend está hospedado na **Vercel**.
-
-A URL definitiva pode ser adicionada ao projeto após a definição do domínio utilizado:
+Hospedado na **Vercel**:
 
 ```text
-FRONTEND_URL
+https://chargevision.vercel.app
 ```
 
 ---
 
-# 22. Decisões Técnicas
+# 25. Decisões Técnicas
 
 ## FastAPI
 
-O **FastAPI** foi escolhido para o desenvolvimento do backend devido à sua facilidade para criação de APIs REST, alto desempenho e geração automática de documentação.
-
-A documentação através do **Swagger UI** facilita o desenvolvimento, testes e apresentação dos endpoints da aplicação.
+Foi escolhido pela facilidade de criação de APIs REST, organização, desempenho e documentação automática via Swagger.
 
 ## SQLAlchemy
 
-O **SQLAlchemy** foi utilizado como ORM (*Object-Relational Mapping*) para facilitar a comunicação entre a aplicação Python e o banco de dados.
-
-A utilização de ORM também contribui para a manutenção e evolução da estrutura de dados.
+Utilizado como ORM para simplificar a comunicação entre aplicação e banco de dados.
 
 ## PostgreSQL
 
-O **PostgreSQL** foi escolhido para o ambiente de produção por ser um banco de dados relacional robusto, confiável e adequado para o armazenamento dos dados estruturados da aplicação.
+Utilizado em produção por ser um banco relacional robusto e adequado ao armazenamento dos dados estruturados da aplicação.
 
 ## SQLite
 
-O **SQLite** é utilizado como alternativa para desenvolvimento e testes locais.
-
-Essa abordagem permite executar o projeto sem a necessidade de configurar um servidor de banco de dados local.
+Utilizado em desenvolvimento e testes locais.
 
 ## JWT
 
-O sistema utiliza **JWT (JSON Web Token)** para autenticação.
+Utilizado para autenticação e proteção de rotas.
 
-Os tokens são utilizados para validar usuários autenticados e proteger os endpoints que exigem autorização.
+## Separação em camadas
 
-## Separação em Camadas
-
-A aplicação foi organizada em diferentes camadas:
+A aplicação foi organizada em:
 
 ```text
 routes/
@@ -676,216 +784,306 @@ schemas/
 services/
 database/
 ia/
+frontend/
+ocpp/
 ```
 
-Essa divisão promove a **separação de responsabilidades**, facilitando a manutenção, testes e evolução do código.
+Essa divisão promove separação de responsabilidades e facilita manutenção e evolução.
 
 ---
 
-# 23. Inteligência Artificial Aplicada
+# 26. Inteligência Artificial Aplicada
 
-A **Inteligência Artificial** foi incorporada ao EV ChargeOps como uma camada de análise dos dados relacionados às sessões e ao consumo dos carregadores.
-
-A arquitetura considera diferentes aplicações de IA:
+A Inteligência Artificial foi incorporada ao EV ChargeOps como uma camada de análise dos dados relacionados às sessões e ao consumo.
 
 ```text
 Dados históricos
        │
        ▼
-┌──────────────────────┐
+┌─────────────────────────┐
 │ Inteligência Artificial │
-└──────────┬───────────┘
-           │
-     ┌─────┼─────┐
-     ▼     ▼     ▼
- Previsão Anomalias Indicadores
+└────────────┬────────────┘
+             │
+       ┌─────┼─────┐
+       ▼     ▼     ▼
+  Previsão Anomalias Indicadores
 ```
-
-A camada de IA utiliza dados de consumo e sessões para gerar informações que podem auxiliar na **gestão da infraestrutura, identificação de comportamentos fora do padrão e análise da demanda**.
 
 Entre as funcionalidades implementadas estão:
 
-* **Previsão de consumo;**
-* **Detecção de anomalias;**
-* **Análise dos dados de utilização;**
-* **Assistente de IA.**
+- Previsão de consumo;
+- Detecção de anomalias;
+- Análise de utilização;
+- Assistente EV.
 
 ---
 
-# 24. Integração com GoodWe
+# 27. Integração com GoodWe
 
-A arquitetura do **EV ChargeOps** foi planejada considerando a integração com o ecossistema de energia e carregamento da **GoodWe**.
-
-O projeto também considera possibilidades de evolução da integração com equipamentos e sistemas externos.
+A arquitetura do EV ChargeOps foi planejada considerando integração com o ecossistema de energia e carregamento da **GoodWe**.
 
 Entre os conceitos considerados estão:
 
-* **Integração com sistemas GoodWe;**
-* **Monitoramento energético;**
-* **Dados de carregamento;**
-* **Integração com geração fotovoltaica;**
-* **Protocolos de comunicação aplicáveis ao ecossistema de recarga, como OCPP.**
+- Integração com sistemas GoodWe;
+- Monitoramento energético;
+- Dados de carregamento;
+- Integração com geração fotovoltaica;
+- Protocolos aplicáveis ao ecossistema de recarga;
+- OCPP.
 
-A arquitetura modular permite que novas integrações sejam adicionadas futuramente sem a necessidade de reestruturar completamente a aplicação.
+A arquitetura modular permite que futuras integrações sejam adicionadas sem necessidade de reconstruir completamente a aplicação.
 
 ---
 
-# 25. Segurança
-
-O projeto possui mecanismos de segurança voltados à autenticação, autorização e proteção das informações da aplicação.
+# 28. Segurança
 
 Entre as medidas implementadas estão:
 
-* **Autenticação por usuário e senha;**
-* **Armazenamento de senhas utilizando hash;**
-* **Autenticação baseada em JWT;**
-* **Controle de acesso para operações administrativas;**
-* **Separação de responsabilidades entre rotas e serviços;**
-* **Utilização de variáveis de ambiente para informações de infraestrutura.**
-
-Informações sensíveis, como credenciais e chaves de acesso, não devem ser armazenadas diretamente no código-fonte.
-
----
-
-# 26. Desvios em Relação à Sprint 01
-
-Na **Sprint 01**, o projeto estava concentrado principalmente em pesquisa, documentação, definição da arquitetura e levantamento das funcionalidades da solução.
-
-Durante a etapa de prototipação, algumas decisões foram adaptadas para permitir a construção e validação de uma versão funcional dentro do período disponível.
-
-## 26.1 Integrações Externas
-
-A arquitetura foi planejada considerando integrações com equipamentos e serviços externos. Para a demonstração do protótipo, também foram utilizados **dados estruturados e dados de teste**.
-
-Essa abordagem permitiu validar o fluxo da aplicação sem depender exclusivamente da disponibilidade de equipamentos físicos durante o desenvolvimento e apresentação.
-
-## 26.2 Inteligência Artificial
-
-A proposta inicial considerava diferentes possibilidades de aplicação de IA.
-
-Na implementação do protótipo, o foco foi direcionado para:
-
-* **Previsão de consumo;**
-* **Detecção de anomalias;**
-* **Análise dos dados de utilização;**
-* **Assistente de IA.**
-
-Essa abordagem permitiu demonstrar aplicações práticas de IA dentro do contexto de gestão da infraestrutura de carregamento.
-
-## 26.3 Evolução do Controle de Usuários
-
-A autenticação e o controle administrativo foram priorizados para estabelecer uma base funcional para a aplicação.
-
-Funcionalidades adicionais relacionadas ao gerenciamento de usuários permanecem como pontos de evolução do projeto.
+- Autenticação por usuário e senha;
+- Senhas armazenadas com hash;
+- JWT;
+- Controle de acesso;
+- Proteção de endpoints;
+- Separação de responsabilidades;
+- Uso de variáveis de ambiente;
+- `.gitignore` para ambientes virtuais, bancos locais e caches;
+- Não armazenamento de credenciais diretamente no código.
 
 ---
 
-# 27. Evidências de Funcionamento
+# 29. Desvios em Relação à Sprint 01
 
-As evidências do funcionamento do protótipo podem ser organizadas no repositório para facilitar a avaliação das funcionalidades implementadas.
+Na **Sprint 01**, o projeto estava concentrado principalmente em pesquisa, documentação, definição da arquitetura, levantamento de requisitos e planejamento das funcionalidades.
 
-Sugestão de organização:
+Ao longo do desenvolvimento, algumas decisões foram adaptadas para permitir a entrega de um protótipo funcional dentro dos recursos disponíveis.
+
+Os desvios não alteraram o objetivo principal do EV ChargeOps. Eles representam adaptações técnicas e evoluções realizadas durante a implementação.
+
+## 29.1 Integração com equipamentos GoodWe
+
+### Planejamento inicial
+
+A proposta considerava uma integração mais direta com equipamentos, APIs e serviços da GoodWe.
+
+### Implementação atual
+
+A arquitetura mantém módulos preparados para integração, porém utiliza dados estruturados e simulados em partes do protótipo.
+
+### Motivo
+
+A equipe não possui acesso à API oficial da GoodWe nem aos equipamentos físicos necessários para executar testes em ambiente real.
+
+### Resultado
+
+Foi possível validar:
+
+- Fluxo da aplicação;
+- Cadastro de carregadores;
+- Sessões;
+- Consumo;
+- Status;
+- Banco de dados;
+- Dashboard;
+- Indicadores.
+
+---
+
+## 29.2 OCPP
+
+### Planejamento inicial
+
+A comunicação entre carregadores e sistema seria representada por protocolos aplicáveis à infraestrutura de recarga.
+
+### Implementação atual
+
+Foi criada uma camada experimental utilizando **OCPP**, trabalhando com cenários simulados.
+
+### Motivo
+
+Não houve disponibilidade de carregadores físicos compatíveis para realizar testes reais.
+
+### Resultado
+
+A solução demonstra a arquitetura e o fluxo de comunicação, deixando a aplicação preparada para evolução futura.
+
+---
+
+## 29.3 Evolução do dashboard do usuário
+
+### Planejamento inicial
+
+O foco inicial estava principalmente na estrutura administrativa e no gerenciamento da infraestrutura.
+
+### Implementação atual
+
+Foi desenvolvido um dashboard completo específico para o usuário.
+
+Foram adicionados:
+
+- Consumo;
+- Sessões;
+- Gastos;
+- Média por sessão;
+- Histórico;
+- Mapa;
+- Rotas;
+- Google Maps;
+- RFID;
+- Assistente EV;
+- Configurações;
+- Alteração de senha;
+- Tema claro/escuro.
+
+### Motivo
+
+Durante o desenvolvimento foi identificada a necessidade de separar claramente a experiência administrativa da experiência do usuário comum.
+
+---
+
+## 29.4 Cadastro pela interface
+
+### Planejamento inicial
+
+O gerenciamento de usuários era concentrado principalmente na API e na área administrativa.
+
+### Implementação atual
+
+O sistema passou a permitir criação de conta diretamente pelo frontend.
+
+### Resultado
+
+O usuário consegue realizar o fluxo completo:
 
 ```text
-docs/
-└── evidencias/
-    ├── login.png
-    ├── dashboard.png
-    ├── carregadores.png
-    ├── sessoes.png
-    ├── consumo.png
-    ├── inteligencia-artificial.png
-    ├── assistente-ia.png
-    ├── swagger.png
-    └── sistema-online.png
+Cadastro → Login → Dashboard
 ```
 
-As imagens podem demonstrar as principais funcionalidades da aplicação, desde a autenticação até a utilização dos recursos de análise e IA.
+---
+
+## 29.5 RFID
+
+### Planejamento inicial
+
+O RFID estava previsto como forma de identificação e controle de acesso.
+
+### Implementação atual
+
+O RFID passou a fazer parte do fluxo da aplicação e também pode ser consultado no dashboard do usuário.
+
+### Resultado
+
+A funcionalidade passou a contribuir para:
+
+- Identificação;
+- Vínculo com usuário;
+- Rastreabilidade;
+- Controle de acesso;
+- Histórico das sessões.
 
 ---
 
-# 28. Fluxo de Demonstração
+## 29.6 Inteligência Artificial
 
-Para demonstrar o funcionamento do sistema, recomenda-se o seguinte fluxo:
+### Planejamento inicial
 
-### 1. Login
+A Sprint 01 considerava diferentes possibilidades de uso de IA na análise da infraestrutura.
 
-Acessar a aplicação e realizar a autenticação.
+### Implementação atual
 
-### 2. Dashboard
+O foco foi direcionado para funcionalidades que pudessem ser demonstradas com os dados disponíveis:
 
-Apresentar os principais indicadores da infraestrutura.
+- Previsão de consumo;
+- Detecção de anomalias;
+- Análise de utilização;
+- Assistente EV.
 
-### 3. Carregadores
+### Motivo
 
-Visualizar os carregadores cadastrados e suas respectivas informações.
-
-### 4. Sessões
-
-Apresentar o histórico das sessões de recarga.
-
-### 5. Consumo
-
-Demonstrar o
-
-# 29. Status do Projeto
-
-O **EV ChargeOps** possui uma versão funcional com os principais módulos da solução implementados.
-
-| Funcionalidade                                     | Status       |
-| -------------------------------------------------- | ------------ |
-| API FastAPI                                        | Concluído    |
-| Banco de dados                                     | Concluído    |
-| PostgreSQL em produção                             | Concluído    |
-| Autenticação                                       | Concluído    |
-| JWT                                                | Concluído    |
-| Gerenciamento de usuários                          | Concluído    |
-| Gerenciamento de carregadores                      | Concluído    |
-| Sessões de recarga                                 | Concluído    |
-| Dados de consumo                                   | Concluído    |
-| Dashboard                                          | Concluído    |
-| Inteligência Artificial                            | Concluído    |
-| Detecção de anomalias                              | Concluído    |
-| Previsão de consumo                                | Concluído    |
-| Assistente de IA                                   | Concluído    |
-| RFID                                               | Implementado |
-| Deploy do backend                                  | Concluído    |
-| Deploy do frontend                                 | Concluído    |
-| Documentação Swagger                               | Concluído    |
-| Cadastro completo de novos usuários pela interface | Em evolução  |
-| Dashboard específico para usuário comum            | Em evolução  |
+Essa abordagem permitiu demonstrar aplicações práticas de análise inteligente dentro do contexto do projeto.
 
 ---
 
-# 30. Próximos Passos
+## 29.7 Uso de dados simulados
 
-A evolução do **EV ChargeOps** está direcionada ao aprimoramento das funcionalidades existentes e à ampliação das integrações da plataforma.
+### Planejamento inicial
 
-Entre os principais próximos passos estão:
+Parte das informações seria obtida diretamente da infraestrutura física.
 
-* **Evolução do dashboard** específico para usuários comuns;
-* **Aperfeiçoamento do cadastro e gerenciamento de usuários**;
-* **Evolução da integração com equipamentos físicos**;
-* **Ampliação da integração com sistemas GoodWe**;
-* **Ampliação dos recursos de Inteligência Artificial**;
-* **Aprimoramento das previsões de demanda**;
-* **Evolução da detecção de anomalias**;
-* **Melhorias na experiência e usabilidade da plataforma**;
-* **Ampliação dos relatórios gerenciais**;
-* **Evolução do controle de acesso por RFID**.
+### Implementação atual
 
-# 31 Implementação do Protocolo OCPP
+Foram utilizados dados simulados e dados de teste.
 
-O **EV ChargeOps** possui uma implementação do protocolo **OCPP (Open Charge Point Protocol)** para estruturar a comunicação entre o sistema de gerenciamento e os carregadores de veículos elétricos.
+### Motivo
 
-O protocolo foi incorporado à arquitetura da solução com o objetivo de permitir o recebimento e processamento de informações relacionadas às operações de recarga, como status dos carregadores, sessões e dados de consumo.
+Ausência de acesso aos carregadores reais e à API oficial da GoodWe.
 
-### Comunicação no protótipo
+### Resultado
+
+Foi possível validar:
+
+- Sessões;
+- Consumo;
+- Status;
+- Indicadores;
+- Histórico;
+- Previsões;
+- Anomalias;
+- Dashboards.
+
+---
+
+## 29.8 Deploy
+
+### Planejamento inicial
+
+A Sprint 01 estava voltada principalmente à concepção e arquitetura.
+
+### Implementação atual
+
+A aplicação foi publicada em ambiente online:
+
+- Frontend na Vercel;
+- Backend no Render;
+- PostgreSQL em produção;
+- Swagger disponível online.
+
+Isso permitiu transformar a proposta inicial em um protótipo acessível pela internet.
+
+---
+
+# 30. Desvios de Tecnologias em Relação à Sprint 01
+
+Além das mudanças de escopo, algumas tecnologias e abordagens também sofreram adaptações.
+
+| Tecnologia / conceito | Planejamento inicial | Implementação atual | Motivo do desvio |
+|---|---|---|---|
+| GoodWe / SEMS+ | Integração direta com serviços e equipamentos | Estrutura preparada e dados simulados | Ausência de acesso à API oficial e equipamentos |
+| OCPP | Comunicação com carregadores | Camada experimental com simulação | Ausência de carregadores físicos para testes |
+| Dados dos carregadores | Dados reais da infraestrutura | Dados simulados e estruturados | Falta de acesso ao ambiente físico |
+| Banco de dados | Estrutura voltada ao desenvolvimento | SQLite local e PostgreSQL em produção | Separação entre desenvolvimento e produção |
+| Frontend | Interface inicialmente focada no fluxo principal | Dashboard administrativo + dashboard do usuário | Evolução de escopo e usabilidade |
+| Autenticação | Controle básico de acesso | JWT, cadastro web e alteração de senha | Evolução de segurança e experiência |
+| RFID | Identificação prevista | RFID integrado à conta e dashboard | Expansão da funcionalidade |
+| Inteligência Artificial | Análises planejadas | Previsão, anomalias e Assistente EV | Adequação aos dados disponíveis |
+| Mapa | Não era foco principal | Leaflet, localização, rota e Google Maps | Evolução do dashboard do usuário |
+| Deploy | Ambiente local | Render + Vercel + PostgreSQL | Necessidade de disponibilizar o protótipo |
+| Interface visual | Interface funcional inicial | Tema claro/escuro e configurações | Evolução de usabilidade |
+| Persistência local | Banco local para desenvolvimento | PostgreSQL para produção | Necessidade de ambiente online persistente |
+
+Essas alterações representam adaptações técnicas necessárias para transformar a proposta inicial em uma aplicação funcional.
+
+A arquitetura foi mantida modular para permitir que tecnologias simuladas atualmente possam ser substituídas por integrações reais futuramente.
+
+---
+
+# 31. Implementação do Protocolo OCPP
+
+O EV ChargeOps possui uma implementação do protocolo **OCPP (Open Charge Point Protocol)** para estruturar a comunicação entre o sistema e carregadores de veículos elétricos.
 
 ```text
 ┌──────────────────────┐
 │   Carregador EV      │
-│     Charge Point     │
+│    Charge Point      │
 └──────────┬───────────┘
            │
            │ OCPP
@@ -898,93 +1096,230 @@ O protocolo foi incorporado à arquitetura da solução com o objetivo de permit
            ▼
 ┌──────────────────────┐
 │       FastAPI        │
-│       Backend        │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
 │      PostgreSQL      │
-│        Dados         │
 └──────────────────────┘
 ```
 
-### Dados utilizados no protótipo
+## Dados utilizados no protótipo
 
-Durante o desenvolvimento acadêmico, a implementação do OCPP foi realizada utilizando **dados fictícios e simulados** para representar o comportamento dos carregadores e das sessões de recarga.
+Durante o desenvolvimento acadêmico, a implementação do OCPP utiliza **dados fictícios e simulados** para representar o comportamento dos carregadores e das sessões.
 
-Essa abordagem foi adotada porque a equipe **não possui acesso à API oficial da GoodWe nem aos equipamentos físicos necessários para realizar uma comunicação em ambiente real**.
+Essa abordagem foi adotada porque a equipe não possui acesso à API oficial da GoodWe nem aos equipamentos físicos necessários para uma comunicação real.
 
-Portanto, a implementação atual demonstra a **estrutura e o funcionamento do protocolo dentro da arquitetura do EV ChargeOps**, mas não representa uma integração oficial ou uma comunicação direta com a infraestrutura GoodWe.
+Portanto, a implementação demonstra a estrutura do protocolo dentro da arquitetura do EV ChargeOps, mas não representa uma integração oficial com a infraestrutura GoodWe.
 
-### Funcionamento
+## Funcionamento
 
-Os dados simulados são utilizados para reproduzir cenários de operação dos carregadores e alimentar os componentes do sistema, permitindo testar funcionalidades como:
+Os dados simulados permitem testar:
 
-* Identificação dos carregadores;
-* Status de operação;
-* Início e término de sessões;
-* Dados de consumo;
-* Monitoramento das sessões;
-* Processamento dos dados pelo backend;
-* Armazenamento das informações no banco de dados;
-* Visualização dos dados no dashboard.
+- Identificação dos carregadores;
+- Status;
+- Início e término de sessões;
+- Consumo;
+- Processamento pelo backend;
+- Persistência;
+- Visualização no dashboard.
 
-A utilização de dados simulados permite validar a arquitetura e o fluxo de processamento enquanto o acesso à infraestrutura oficial não está disponível.
+## Evolução futura
 
-### Evolução futura
-
-Com acesso à **API oficial da GoodWe e/ou a carregadores compatíveis em ambiente real**, a camada de comunicação poderá ser adaptada para substituir os dados simulados por dados reais, mantendo a arquitetura desenvolvida no protótipo.
-
-Dessa forma, o OCPP representa uma camada preparada para a evolução da solução, enquanto os dados fictícios utilizados atualmente permitem demonstrar e validar o funcionamento do sistema dentro do contexto acadêmico do **Enterprise Challenge 2026**.
-
-
-# 31. Organização do Desenvolvimento
-
-O desenvolvimento do **EV ChargeOps** foi realizado utilizando **Git e GitHub** para controle de versão e colaboração entre os integrantes da equipe.
-
-A utilização de branches permitiu organizar o desenvolvimento de diferentes funcionalidades de forma independente, reduzindo conflitos e facilitando a integração das alterações.
-
-A divisão das responsabilidades foi estruturada da seguinte forma:
-
-| Integrante | Responsabilidade           |
-| ---------- | -------------------------- |
-| Lucas      | FastAPI e integração geral |
-| Calebe     | Integração GoodWe / SEMS+  |
-| Filipe     | PostgreSQL e SQLAlchemy    |
-| Rafael     | Sessões de recarga         |
-| Paulo      | Consumo e rateio           |
-
-Essa organização permitiu que diferentes integrantes trabalhassem simultaneamente em módulos específicos da aplicação.
+Com acesso à API oficial da GoodWe e/ou carregadores compatíveis, a camada poderá ser adaptada para substituir os dados simulados por dados reais.
 
 ---
 
-# 32. Processo de Desenvolvimento
+# 32. Evidências de Funcionamento
 
-Durante o desenvolvimento foram utilizados **commits frequentes** para registrar a evolução das funcionalidades, correções e melhorias realizadas no projeto.
+As evidências podem ser organizadas no repositório:
 
-As alterações foram organizadas por funcionalidades, permitindo acompanhar a evolução do protótipo ao longo das etapas da Sprint.
+```text
+docs/
+└── evidencias/
+    ├── login.png
+    ├── pagina_inicial.png
+    ├── dashboard-admin.png
+    ├── dashboard-usuario.png
+    ├── carregadores.png
+    ├── mapa-carregadores.png
+    ├── sessoes.png
+    ├── faturas.png
+    ├── rfid.png
+    ├── assistente-user.png
+    ├── assistente-admin.png
+    ├── apreseentacao.pptx
+    └── video-funcionamento.mp4
+```
 
-A utilização de branches também possibilitou o desenvolvimento independente de funcionalidades antes da integração ao código principal.
+---
 
-O fluxo de desenvolvimento foi baseado em:
+# 33. Fluxo de Demonstração
+
+Para demonstrar o funcionamento do sistema:
+
+### 1. Landing Page
+
+Apresentar a página inicial.
+
+### 2. Cadastro
+
+Criar uma nova conta.
+
+### 3. Login
+
+Realizar a autenticação.
+
+### 4. Dashboard do usuário
+
+Apresentar consumo, sessões, gastos e indicadores.
+
+### 5. Sessões
+
+Mostrar o histórico de recargas.
+
+### 6. Carregadores
+
+Visualizar os carregadores cadastrados.
+
+### 7. Mapa
+
+Mostrar os pontos no mapa.
+
+### 8. Rota
+
+Traçar rota até um carregador.
+
+### 9. Google Maps
+
+Abrir a localização do carregador no Google Maps.
+
+### 10. RFID
+
+Consultar o RFID vinculado.
+
+### 11. Assistente EV
+
+Realizar perguntas relacionadas às recargas.
+
+### 12. Configurações
+
+Mostrar os dados da conta.
+
+### 13. Tema
+
+Alternar entre tema claro e escuro.
+
+### 14. Segurança
+
+Demonstrar a alteração de senha.
+
+### 15. Dashboard administrativo
+
+Apresentar os recursos administrativos.
+
+### 16. Swagger
+
+Apresentar os endpoints da API.
+
+---
+
+# 34. Status do Projeto
+
+O **EV ChargeOps** possui uma versão funcional com os principais módulos implementados.
+
+| Funcionalidade | Status |
+|---|---|
+| API FastAPI | Concluído |
+| Banco de dados | Concluído |
+| PostgreSQL em produção | Concluído |
+| SQLite para desenvolvimento | Concluído |
+| Autenticação | Concluído |
+| JWT | Concluído |
+| Cadastro pela interface | Concluído |
+| Login | Concluído |
+| Alteração de senha | Concluído |
+| Gerenciamento de usuários | Concluído |
+| Gerenciamento de carregadores | Concluído |
+| Sessões de recarga | Concluído |
+| Dados de consumo | Concluído |
+| Dashboard administrativo | Concluído |
+| Dashboard do usuário | Concluído |
+| Mapa de carregadores | Concluído |
+| Traçado de rota | Concluído |
+| Google Maps | Concluído |
+| Configurações do usuário | Concluído |
+| Tema claro/escuro | Concluído |
+| Inteligência Artificial | Implementado |
+| Detecção de anomalias | Implementado |
+| Previsão de consumo | Implementado |
+| Assistente EV | Implementado |
+| RFID | Implementado |
+| Deploy do backend | Concluído |
+| Deploy do frontend | Concluído |
+| Swagger | Concluído |
+| OCPP com dados simulados | Implementado para protótipo |
+| Integração oficial com equipamentos GoodWe | Evolução futura |
+
+---
+
+# 35. Próximos Passos
+
+Entre os principais próximos passos estão:
+
+- Integração com equipamentos físicos;
+- Integração oficial com sistemas GoodWe;
+- Evolução do OCPP para ambiente real;
+- Ampliação dos recursos de análise;
+- Aprimoramento das previsões;
+- Evolução da detecção de anomalias;
+- Relatórios gerenciais;
+- Novos indicadores;
+- Melhorias de acessibilidade;
+- Melhorias de responsividade;
+- Expansão do Assistente EV;
+- Testes automatizados;
+- Observabilidade e monitoramento da aplicação.
+
+---
+
+# 36. Organização do Desenvolvimento
+
+O desenvolvimento foi realizado utilizando **Git e GitHub**.
+
+A utilização de branches permitiu organizar diferentes funcionalidades de forma independente.
+
+| Integrante | Responsabilidade |
+|---|---|
+| Lucas Ribeiro Gesini | FastAPI e integração geral |
+| Calebe Gonçalves Garcia de Souza | Integração GoodWe / SEMS+ |
+| Filipe Souza Nascimento | PostgreSQL e SQLAlchemy |
+| Rafael De Freitas Silva | Sessões de recarga |
+| Paulo Henrique Gonçalves Bueno | Consumo e rateio |
+
+---
+
+# 37. Processo de Desenvolvimento
+
+O fluxo utilizado foi:
 
 ```text
 Desenvolvimento
       │
       ▼
-Branch
+    Branch
       │
       ▼
 Implementação
       │
       ▼
-Testes
+    Testes
       │
       ▼
-Commit
+    Commit
       │
       ▼
-Integração
+  Integração
       │
       ▼
 Código principal
@@ -992,36 +1327,42 @@ Código principal
 
 ---
 
-# 33. Considerações Finais
+# 38. Considerações Finais
 
 O **EV ChargeOps** transforma o gerenciamento de uma infraestrutura compartilhada de carregamento de veículos elétricos em uma solução digital centralizada.
 
-A plataforma reúne diferentes recursos para permitir uma gestão mais organizada e inteligente da infraestrutura:
+A plataforma reúne:
 
-* **Gestão de carregadores;**
-* **Monitoramento de sessões;**
-* **Análise de consumo;**
-* **Autenticação e controle de acesso;**
-* **Inteligência Artificial;**
-* **RFID;**
-* **API REST;**
-* **Dashboard para visualização dos dados.**
+- Gestão de carregadores;
+- Monitoramento de sessões;
+- Análise de consumo;
+- Autenticação;
+- Controle de acesso;
+- RFID;
+- Inteligência Artificial;
+- API REST;
+- Dashboard administrativo;
+- Dashboard do usuário;
+- Mapa de carregadores;
+- Rotas;
+- Configurações;
+- Deploy em produção.
 
-O protótipo demonstra a **viabilidade técnica da solução** e estabelece uma base para futuras evoluções, incluindo integrações mais amplas com carregadores reais, sistemas GoodWe e outros serviços relacionados à infraestrutura de mobilidade elétrica.
-
----
-
-# 34. Repositório
-
-O código-fonte e a documentação do projeto estão disponíveis no repositório oficial:
-
-[Repositório oficial — EV ChargeOps](https://github.com/lucasgesini45-coder/ENTERPRISE-CHALLENGE-2026-GOODWE?utm_source=chatgpt.com)
+O protótipo demonstra a viabilidade técnica da solução e estabelece uma base para futuras integrações com carregadores reais, sistemas GoodWe e outros serviços relacionados à mobilidade elétrica.
 
 ---
 
-# 35. Tecnologias
+# 39. Repositório
 
-As principais tecnologias utilizadas no desenvolvimento do projeto são:
+Código-fonte:
+
+```text
+https://github.com/lucasgesini45-coder/ENTERPRISE-CHALLENGE-2026-GOODWE
+```
+
+---
+
+# 40. Tecnologias
 
 ```text
 Python
@@ -1031,21 +1372,25 @@ PostgreSQL
 SQLite
 Pydantic
 JWT
+Passlib
+Uvicorn
 Scikit-learn
 NumPy
 SciPy
 HTML
 CSS
 JavaScript
+Leaflet
 Render
 Vercel
 Git
 GitHub
+OCPP
 ```
 
 ---
 
-# 36. Projeto Acadêmico
+# 41. Projeto Acadêmico
 
 **Enterprise Challenge 2026**
 
@@ -1055,14 +1400,14 @@ GitHub
 
 **Área:** Gestão inteligente de infraestrutura de recarga de veículos elétricos.
 
-O projeto foi desenvolvido como parte do **Enterprise Challenge 2026**, unindo conhecimentos de desenvolvimento de software, bancos de dados, APIs, análise de dados e Inteligência Artificial para criação de uma solução aplicada ao contexto de mobilidade elétrica.
+O projeto foi desenvolvido como parte do **Enterprise Challenge 2026**, unindo conhecimentos de desenvolvimento de software, bancos de dados, APIs, análise de dados, Inteligência Artificial, autenticação, integração de sistemas e desenvolvimento web.
 
 ## Integrantes da Equipe
 
-| Integrante                       | RM       |
-| -------------------------------- | -------- |
-| Lucas Ribeiro Gesini             | RM569383 |
+| Integrante | RM |
+|---|---|
+| Lucas Ribeiro Gesini | RM569383 |
 | Calebe Gonçalves Garcia de Souza | RM568743 |
-| Filipe Souza Nascimento          | RM573758 |
-| Rafael De Freitas Silva          | RM570089 |
-| Paulo Henrique Gonçalves Bueno   | RM570456 |
+| Filipe Souza Nascimento | RM573758 |
+| Rafael De Freitas Silva | RM570089 |
+| Paulo Henrique Gonçalves Bueno | RM570456 |
