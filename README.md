@@ -1132,8 +1132,6 @@ Com acesso à API oficial da GoodWe e/ou carregadores compatíveis, a camada pod
 
 # 32. Evidências de Funcionamento
 
-As evidências podem ser organizadas no repositório:
-
 ```text
 docs/
 └── evidencias/
