@@ -441,7 +441,7 @@ Esses conceitos servirão de base para o desenvolvimento da plataforma EV Charge
 
 ## Pessoa 2 — Análise de Mercado (Opção A)
 
-**Projeto:** EV ChargeOps — Energy Innovation Lab, GoodWe x FIAP  
+**Projeto:** EV ChargeOps — Energy Innovation Lab, GoodWe x FIAP
 **Sprint 01 — Pesquisa e Documentação | Frente: Análise de Mercado**
 
 ---

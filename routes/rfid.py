@@ -1,338 +1,40 @@
-from datetime import datetime
-
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status
-)
-
-from sqlalchemy.exc import IntegrityError
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
 from database.database import get_db
-from database.models import (
-    CartaoRFID,
-    Usuario
-)
+from database.models import CartaoRFID, Usuario
+from schemas.rfid import RFIDCreate, RFIDStatusUpdate
+from services.auth_service import obter_usuario_admin, obter_usuario_atual
+from services.cartao_service import criar_novo_cartao, alterar_status_cartao
 
-from schemas.rfid import (
-    RFIDCreate,
-    RFIDResponse,
-    RFIDStatusUpdate
-)
-
-from services.auth_service import (
-    obter_usuario_admin,
-    obter_usuario_atual
-)
+router = APIRouter(prefix="/rfid", tags=["RFID"])
 
 
-router = APIRouter(
-    prefix="/rfid",
-    tags=["RFID"]
-)
+def card_data(card):
+    return {"id": card.id, "codigo": card.codigo or f"RFID-{card.id:04d}",
+            "uid": card.uid, "usuario_id": card.usuario_id, "status": card.status,
+            "data_cadastro": card.data_cadastro}
 
-
-# =========================================
-# LISTAR CARTÕES
-# =========================================
 
 @router.get("/")
-def listar_cartoes(
-    db: Session = Depends(get_db),
-    usuario_admin: Usuario = Depends(
-        obter_usuario_admin
-    )
-):
+def list_cards(db: Session = Depends(get_db), admin=Depends(obter_usuario_admin)):
+    rows = db.query(CartaoRFID, Usuario).outerjoin(Usuario, CartaoRFID.usuario_id == Usuario.id).order_by(CartaoRFID.id.desc()).all()
+    return {"cartoes": [{**card_data(card), "usuario": user.nome if user else "Não associado",
+                         "email": user.email if user else None, "perfil": user.perfil if user else None}
+                        for card, user in rows]}
 
-    cartoes = (
-        db.query(
-            CartaoRFID,
-            Usuario
-        )
-        .join(
-            Usuario,
-            CartaoRFID.usuario_id == Usuario.id
-        )
-        .order_by(
-            CartaoRFID.id.desc()
-        )
-        .all()
-    )
-
-
-    resultado = []
-
-
-    for cartao, usuario in cartoes:
-
-        resultado.append({
-            "id": cartao.id,
-            "codigo": cartao.codigo,
-            "uid": cartao.uid,
-            "usuario_id": usuario.id,
-            "usuario": usuario.nome,
-            "email": usuario.email,
-            "perfil": usuario.perfil,
-            "status": cartao.status,
-            "data_cadastro": cartao.data_cadastro
-        })
-
-
-    return {
-        "cartoes": resultado
-    }
-
-# =========================================
-# MEU CARTÃO RFID
-# =========================================
 
 @router.get("/meu")
-def meu_cartao(
-    db: Session = Depends(get_db),
-    usuario_atual: Usuario = Depends(
-        obter_usuario_atual
-    )
-):
+def my_card(db: Session = Depends(get_db), user=Depends(obter_usuario_atual)):
+    card = db.query(CartaoRFID).filter_by(usuario_id=user.id).order_by(CartaoRFID.id.desc()).first()
+    return {"cartao": card_data(card) if card else None}
 
-    cartao = (
-        db.query(CartaoRFID)
-        .filter(
-            CartaoRFID.usuario_id ==
-            usuario_atual.id
-        )
-        .order_by(
-            CartaoRFID.id.desc()
-        )
-        .first()
-    )
 
+@router.post("/", status_code=201)
+def create_card(body: RFIDCreate, db: Session = Depends(get_db), admin=Depends(obter_usuario_admin)):
+    return card_data(criar_novo_cartao(db, body))
 
-    if cartao is None:
 
-        return {
-            "cartao": None
-        }
-
-
-    return {
-        "cartao": {
-            "id":
-                cartao.id,
-
-            "codigo":
-                cartao.codigo,
-
-            "uid":
-                cartao.uid,
-
-            "usuario_id":
-                cartao.usuario_id,
-
-            "status":
-                cartao.status,
-
-            "data_cadastro":
-                cartao.data_cadastro
-        }
-    }
-
-
-# =========================================
-# CRIAR CARTÃO
-# =========================================
-
-@router.post(
-    "/",
-    response_model=RFIDResponse,
-    status_code=status.HTTP_201_CREATED
-)
-def criar_cartao(
-    dados: RFIDCreate,
-    db: Session = Depends(get_db),
-    usuario_admin: Usuario = Depends(
-        obter_usuario_admin
-    )
-):
-
-    usuario = (
-        db.query(Usuario)
-        .filter(
-            Usuario.id ==
-            dados.usuario_id
-        )
-        .first()
-    )
-
-
-    if usuario is None:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Usuário não encontrado."
-        )
-
-
-    uid = dados.uid.strip()
-
-
-    if not uid:
-
-        raise HTTPException(
-            status_code=400,
-            detail="UID RFID é obrigatório."
-        )
-
-
-    status_cartao = (
-        dados.status
-        .strip()
-        .upper()
-    )
-
-
-    if status_cartao not in [
-        "ATIVO",
-        "BLOQUEADO"
-    ]:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Status RFID inválido."
-        )
-
-
-    novo_cartao = CartaoRFID(
-        uid=uid,
-        usuario_id=dados.usuario_id,
-        status=status_cartao,
-        data_cadastro=datetime.now()
-    )
-
-
-    try:
-
-        db.add(
-            novo_cartao
-        )
-
-        db.commit()
-
-        db.refresh(
-            novo_cartao
-        )
-
-
-        # Gera código interno automático
-        novo_cartao.codigo = (
-            f"RFID-{novo_cartao.id:04d}"
-        )
-
-
-        db.commit()
-
-        db.refresh(
-            novo_cartao
-        )
-
-
-        return novo_cartao
-
-
-    except IntegrityError:
-
-        db.rollback()
-
-        raise HTTPException(
-            status_code=400,
-            detail="Este UID RFID já está cadastrado."
-        )
-
-
-# =========================================
-# ALTERAR STATUS
-# =========================================
-
-@router.put(
-    "/{cartao_id}/status"
-)
-def alterar_status_cartao(
-    cartao_id: int,
-    dados: RFIDStatusUpdate,
-    db: Session = Depends(get_db),
-    usuario_admin: Usuario = Depends(
-        obter_usuario_admin
-    )
-):
-
-    cartao = (
-        db.query(CartaoRFID)
-        .filter(
-            CartaoRFID.id ==
-            cartao_id
-        )
-        .first()
-    )
-
-
-    if cartao is None:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Cartão RFID não encontrado."
-        )
-
-
-    novo_status = (
-        dados.status
-        .strip()
-        .upper()
-    )
-
-
-    if novo_status not in [
-        "ATIVO",
-        "BLOQUEADO"
-    ]:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Status RFID inválido."
-        )
-
-
-    cartao.status = novo_status
-
-
-    db.commit()
-
-    db.refresh(
-        cartao
-    )
-
-
-    return {
-        "mensagem":
-            "Status do cartão atualizado com sucesso.",
-
-        "cartao": {
-            "id":
-                cartao.id,
-
-            "codigo":
-                cartao.codigo,
-
-            "uid":
-                cartao.uid,
-
-            "usuario_id":
-                cartao.usuario_id,
-
-            "status":
-                cartao.status,
-
-            "data_cadastro":
-                cartao.data_cadastro
-        }
-    }
+@router.put("/{card_id}/status")
+def update_status(card_id: int, body: RFIDStatusUpdate, db: Session = Depends(get_db), admin=Depends(obter_usuario_admin)):
+    card = alterar_status_cartao(db, card_id, body.status)
+    return {"mensagem": "Status do cartão atualizado", "cartao": card_data(card)}

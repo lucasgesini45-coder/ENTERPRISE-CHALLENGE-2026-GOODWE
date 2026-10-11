@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import joblib
+from ia.storage import save_atomic
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 
@@ -19,7 +20,7 @@ class DetectorAnomalias:
         self.modelos: dict[int, IsolationForest] = {}
 
     def treinar(self, df: pd.DataFrame) -> dict:
-        self.modelos = {}
+        novos_modelos = {}
         ignorados = []
         for charger_id, grupo in df.groupby("charger_id"):
             if len(grupo) < self.MIN_SESSOES:
@@ -29,7 +30,8 @@ class DetectorAnomalias:
                 n_estimators=200, contamination=0.03, random_state=42
             )
             modelo.fit(grupo[self.FEATURES])
-            self.modelos[int(charger_id)] = modelo
+            novos_modelos[int(charger_id)] = modelo
+        self.modelos = novos_modelos
         return {"treinados": sorted(self.modelos), "sem_dados_suficientes": ignorados}
 
     def analisar(
@@ -57,7 +59,7 @@ class DetectorAnomalias:
             return self._resposta(
                 charger_id,
                 energia_kwh,
-                False,
+                None,
                 "SEM_HISTORICO",
                 motivo="Histórico insuficiente para este carregador",
             )
@@ -98,7 +100,7 @@ class DetectorAnomalias:
         return r
 
     def salvar(self, caminho=CAMINHO_PADRAO):
-        joblib.dump(self.modelos, caminho)
+        save_atomic(self.modelos, caminho)
 
     def carregar(self, caminho=CAMINHO_PADRAO):
         self.modelos = joblib.load(caminho)

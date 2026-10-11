@@ -128,7 +128,7 @@ class ChargePoint(ChargePointBase):
             db.close()
 
         return call_result.StatusNotification()
-    
+
     @on(Action.start_transaction)
     async def on_start_transaction(
         self,

@@ -19,7 +19,7 @@ const iniciarLocalizarCarregadoresUI = () => {
         document.createElement(
             "div"
         );
-    
+
         /* =========================================
     MENU
     ========================================= */
@@ -63,7 +63,7 @@ const iniciarLocalizarCarregadoresUI = () => {
 
                 setTimeout(
                     () => {
-                        mapa.invalidateSize();
+                        mapa?.invalidateSize();
                     },
                     200
                 );
@@ -153,7 +153,7 @@ const iniciarLocalizarCarregadoresUI = () => {
         >
             Carregando mapa...
         </div>
-        
+
         <button
             id="btn-centralizar-localizacao"
             class="locator-location-button"
@@ -356,7 +356,7 @@ function destacarMarcador(marcador) {
 }
 
         let carregadoresMapa = [];
-        
+
         function renderizarCarregadoresDisponiveis() {
 
             const lista =
@@ -375,7 +375,7 @@ function destacarMarcador(marcador) {
                             carregador.status ??
                             ""
                         ).toUpperCase() ===
-                        "ATIVO"
+                        "DISPONIVEL"
                 );
 
             if (
@@ -404,14 +404,10 @@ function destacarMarcador(marcador) {
                 carregador => {
 
                     const latitude =
-                        Number(
-                            carregador.latitude
-                        );
+                        coordinateNumber(carregador.latitude);
 
                     const longitude =
-                        Number(
-                            carregador.longitude
-                        );
+                        coordinateNumber(carregador.longitude);
 
                     const card =
                         document.createElement(
@@ -556,12 +552,11 @@ function destacarMarcador(marcador) {
             try {
 
                 const token =
-                    localStorage.getItem(
-                        "ev_chargeops_token"
+                    sessionStorage.getItem("ev_chargeops_token"
                     );
 
                 const resposta =
-                    await fetch(
+                    await apiFetch(
                         `${API_URL}/carregadores/`,
                         {
                             method: "GET",
@@ -586,12 +581,12 @@ function destacarMarcador(marcador) {
 
                 const carregadores =
                     dados.carregadores ?? [];
-                
+
                 carregadoresMapa =
                     carregadores;
-                    
+
                 renderizarCarregadoresDisponiveis();
-                        
+
                 marcadoresCarregadores.forEach(
                     marcador => {
                         mapa.removeLayer(
@@ -602,19 +597,15 @@ function destacarMarcador(marcador) {
 
                 marcadoresCarregadores.length =
                     0;
-                
+
                 carregadores.forEach(
                     carregador => {
 
                         const latitude =
-                            Number(
-                                carregador.latitude
-                            );
+                            coordinateNumber(carregador.latitude);
 
                         const longitude =
-                            Number(
-                                carregador.longitude
-                            );
+                            coordinateNumber(carregador.longitude);
 
                         if (
                             !Number.isFinite(
@@ -638,7 +629,7 @@ function destacarMarcador(marcador) {
                             "#e6007e";
 
                         if (
-                            status === "ATIVO"
+                            status === "DISPONIVEL"
                         ) {
 
                             cor =
@@ -647,7 +638,7 @@ function destacarMarcador(marcador) {
                         }
 
                         if (
-                            status === "EM_RECARGA"
+                            status === "EM_USO"
                         ) {
 
                             cor =
@@ -656,7 +647,7 @@ function destacarMarcador(marcador) {
                         }
 
                         if (
-                            status === "OFFLINE"
+                            status === "DESCONHECIDO"
                         ) {
 
                             cor =
@@ -916,7 +907,7 @@ botoesFiltro.forEach(
                         ) {
                             mostrar =
                                 status ===
-                                "ATIVO";
+                                "DISPONIVEL";
                         }
 
                         if (
@@ -1140,7 +1131,7 @@ if (campoBusca) {
                             createMarker: () => null
 
                         }).addTo(mapa);
-                        
+
                     botaoRota.textContent =
                         "Rota traçada";
 
@@ -1205,14 +1196,10 @@ if (campoBusca) {
             carregador => {
 
                 const latCarregador =
-                    Number(
-                        carregador.latitude
-                    );
+                    coordinateNumber(carregador.latitude);
 
                 const lngCarregador =
-                    Number(
-                        carregador.longitude
-                    );
+                    coordinateNumber(carregador.longitude);
 
                 if (
                     !Number.isFinite(
@@ -1434,7 +1421,7 @@ if (campoBusca) {
 
         setTimeout(
             () => {
-                mapa.invalidateSize();
+                mapa?.invalidateSize();
             },
             200
         );
@@ -1443,4 +1430,3 @@ if (campoBusca) {
 };
 
 iniciarLocalizarCarregadoresUI();
-

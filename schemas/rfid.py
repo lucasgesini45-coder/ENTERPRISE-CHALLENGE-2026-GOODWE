@@ -1,25 +1,21 @@
 from datetime import datetime
-
-from pydantic import BaseModel
-
-
-class RFIDCreate(BaseModel):
-    uid: str
-    usuario_id: int
-    status: str = "ATIVO"
+from pydantic import BaseModel, ConfigDict, Field
+from schemas.cartao import CartaoCreate, CartaoStatus
 
 
-class RFIDStatusUpdate(BaseModel):
-    status: str
+class RFIDCreate(CartaoCreate):
+    usuario_id: int = Field(gt=0)
+
+
+class RFIDStatusUpdate(CartaoStatus):
+    pass
 
 
 class RFIDResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     codigo: str | None = None
     uid: str
-    usuario_id: int
+    usuario_id: int | None
     status: str
-    data_cadastro: datetime
-
-    class Config:
-        from_attributes = True
+    data_cadastro: datetime | None = None

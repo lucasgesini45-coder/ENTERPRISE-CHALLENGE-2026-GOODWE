@@ -779,12 +779,11 @@ const iniciarRateioUI = () => {
 
 
             const token =
-                localStorage.getItem(
-                    "ev_chargeops_token"
+                sessionStorage.getItem("ev_chargeops_token"
                 );
 
             const resposta =
-                await fetch(
+                await apiFetch(
                     `${API_URL}/consumo/rateio-mensal?${query}`,
                     {
                         method: "GET",
@@ -1597,7 +1596,7 @@ const iniciarRateioUI = () => {
             }
         }
     );
-    
+
     /* =========================================
        EVENTOS
     ========================================= */

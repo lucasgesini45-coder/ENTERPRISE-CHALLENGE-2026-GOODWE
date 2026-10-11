@@ -1,6 +1,3 @@
-const API_URL =
-    "https://enterprise-challenge-2026-goodwe.onrender.com";
-
 const formCadastro =
     document.getElementById(
         "form-cadastro"
@@ -87,8 +84,8 @@ formCadastro.addEventListener(
         try {
 
             const resposta =
-                await fetch(
-                    `${API_URL}/usuarios/cadastro`,
+                await apiFetch(
+                    `${API_URL}/auth/cadastro`,
                     {
                         method: "POST",
 

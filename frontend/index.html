@@ -519,8 +519,8 @@
                             Período
                         </span>
 
-                        <strong> id="account-period-label">
-                            Setembro 2026
+                        <strong id="account-period-label">
+                            Todo o histórico
                         </strong>
 
                     </div>
@@ -1351,21 +1351,7 @@
                         Período padrão
                     </span>
 
-                    <select id="config-period">
-
-                        <option value="setembro-2026">
-                            Setembro 2026
-                        </option>
-
-                        <option value="ultimos-30-dias">
-                            Últimos 30 dias
-                        </option>
-
-                        <option value="mes-atual">
-                            Mês atual
-                        </option>
-
-                    </select>
+                    <select id="config-period"><option value="historico">Todo o histórico</option></select>
 
                 </label>
 
@@ -1656,6 +1642,7 @@
 
 </div>
 
+<script src="api.js"></script>
 <script
     src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
 ></script>
@@ -1666,6 +1653,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
+<script src="recovery-link.js"></script>
 <script src="carregadores-ui.js"></script>
 <script src="usuarios-ui.js"></script>
 <script src="sessoes-ui.js"></script>

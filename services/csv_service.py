@@ -1,4 +1,8 @@
+import os
+from zoneinfo import ZoneInfo
+from datetime import timezone
 import csv
+import math
 from datetime import datetime
 
 
@@ -85,6 +89,10 @@ def ler_csv_goodwe(caminho_arquivo: str):
                     "%m/%d/%Y %H:%M"
                 )
 
+                source_zone = ZoneInfo(os.environ.get("GOODWE_CSV_TIMEZONE", "America/Sao_Paulo"))
+                inicio = inicio.replace(tzinfo=source_zone).astimezone(timezone.utc).replace(tzinfo=None)
+                fim = fim.replace(tzinfo=source_zone).astimezone(timezone.utc).replace(tzinfo=None)
+
                 consumo_kwh = float(
                     consumo_texto
                 )
@@ -94,7 +102,7 @@ def ler_csv_goodwe(caminho_arquivo: str):
                         "Fim anterior ao inicio"
                     )
 
-                if consumo_kwh < 0:
+                if not math.isfinite(consumo_kwh) or consumo_kwh < 0:
                     raise ValueError(
                         "Consumo negativo"
                     )
@@ -106,7 +114,7 @@ def ler_csv_goodwe(caminho_arquivo: str):
                     "consumo_kwh": consumo_kwh
                 })
 
-            except (KeyError, ValueError) as erro:
+            except (KeyError, ValueError, TypeError, AttributeError) as erro:
                 erros.append({
                     "linha": numero_linha,
                     "erro": str(erro)

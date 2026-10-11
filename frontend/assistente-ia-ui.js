@@ -1,5 +1,5 @@
 const ASSISTENTE_IA_API =
-    "https://enterprise-challenge-2026-goodwe.onrender.com";
+    API_URL;
 
 
 /* =========================================================
@@ -895,8 +895,7 @@ function adicionarMensagem(
 function obterUsuarioIdAssistente() {
 
     const usuarioSalvo =
-        localStorage.getItem(
-            "ev_chargeops_usuario"
+        sessionStorage.getItem("ev_chargeops_usuario"
         );
 
     if (!usuarioSalvo) {
@@ -991,7 +990,7 @@ assistenteForm.addEventListener(
         try {
 
             const resposta =
-                await fetch(
+                await apiFetch(
                     `${ASSISTENTE_IA_API}/assistente-ia/perguntar`,
                     {
                         method:
@@ -1002,7 +1001,7 @@ assistenteForm.addEventListener(
                                 "application/json",
 
                             "Authorization":
-                                `Bearer ${localStorage.getItem("ev_chargeops_token")}`
+                                `Bearer ${sessionStorage.getItem("ev_chargeops_token")}`
                         },
 
                         body:

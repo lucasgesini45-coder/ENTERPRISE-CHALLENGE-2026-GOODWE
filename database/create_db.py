@@ -1,6 +1,5 @@
-from database.database import engine
-from database.models import Base
+from database.database import initialize_database
 
-Base.metadata.create_all(bind=engine)
-
-print("Tabelas criadas com sucesso!")
+if __name__ == "__main__":
+    initialize_database()
+    print("Schema validado.")

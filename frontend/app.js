@@ -1,10 +1,8 @@
-const API_URL = "https://enterprise-challenge-2026-goodwe.onrender.com";
-
 let graficoPrevisao = null;
 
 let carregadoresCache = [];
 
-const token = localStorage.getItem("ev_chargeops_token");
+const token = sessionStorage.getItem("ev_chargeops_token");
 
 if (!token) {
     window.location.href = "login.html";
@@ -196,7 +194,7 @@ async function verificarAPI() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/health`
             );
 
@@ -234,9 +232,10 @@ async function carregarDashboard() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/dashboard/resumo`
             );
+        if (!resposta.ok) throw Error("Não foi possível carregar o resumo");
 
         const dados =
             await resposta.json();
@@ -282,7 +281,7 @@ async function carregarIndicadoresIA() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/ia/indicadores?dias=7`
             );
 
@@ -333,7 +332,7 @@ async function carregarPrevisoes() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/ia/previsao-consumo?dias=7`
             );
 
@@ -563,7 +562,7 @@ async function carregarAnomalias() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/ia/anomalias`
             );
 
@@ -661,7 +660,7 @@ async function carregarRateio() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/consumo/rateio-mensal`
             );
 
@@ -1031,7 +1030,7 @@ async function carregarCarregadores() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/carregadores/`
             );
 
@@ -1046,7 +1045,7 @@ async function carregarCarregadores() {
 
         const carregadores =
             dados.carregadores ?? [];
-        
+
             carregadoresCache =
                 carregadores;
 
@@ -1092,21 +1091,21 @@ async function carregarCarregadores() {
                     "unknown";
 
                 if (
-                    status === "ATIVO"
+                    status === "DISPONIVEL"
                 ) {
                     statusClasse =
                         "active";
                 }
 
                 if (
-                    status === "EM_RECARGA"
+                    status === "EM_USO"
                 ) {
                     statusClasse =
                         "charging";
                 }
 
                 if (
-                    status === "OFFLINE"
+                    status === "DESCONHECIDO"
                 ) {
                     statusClasse =
                         "offline";
@@ -1277,7 +1276,7 @@ function atualizarResumoCarregadores(
                 (
                     item.status ?? ""
                 ).toUpperCase() ===
-                "ATIVO"
+                "DISPONIVEL"
         ).length;
 
     const carregando =
@@ -1286,7 +1285,7 @@ function atualizarResumoCarregadores(
                 (
                     item.status ?? ""
                 ).toUpperCase() ===
-                "EM_RECARGA"
+                "EM_USO"
         ).length;
 
     const offline =
@@ -1295,7 +1294,7 @@ function atualizarResumoCarregadores(
                 (
                     item.status ?? ""
                 ).toUpperCase() ===
-                "OFFLINE"
+                "DESCONHECIDO"
         ).length;
 
     document.getElementById(
@@ -1469,13 +1468,11 @@ if (botaoLogout) {
         "click",
         () => {
 
-            localStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
 
-            localStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
 
@@ -1927,8 +1924,7 @@ const configUserRole =
 function carregarDadosConfiguracoes() {
 
     const usuarioSalvo =
-        localStorage.getItem(
-            "ev_chargeops_usuario"
+        sessionStorage.getItem("ev_chargeops_usuario"
         );
 
     if (!usuarioSalvo) {
@@ -2144,13 +2140,13 @@ if (
 
 
             const senhaAtual =
-                currentPasswordInput.value.trim();
+                currentPasswordInput.value;
 
             const novaSenha =
-                newPasswordInput.value.trim();
+                newPasswordInput.value;
 
             const confirmarSenha =
-                confirmPasswordInput.value.trim();
+                confirmPasswordInput.value;
 
 
             if (novaSenha.length < 8) {
@@ -2204,7 +2200,7 @@ if (
             try {
 
                 const resposta =
-                    await fetch(
+                    await apiFetch(
                         `${API_URL}/auth/alterar-senha`,
                         {
                             method: "PUT",
@@ -2242,6 +2238,7 @@ if (
                 }
 
 
+                requireFreshLogin();
                 passwordMessage.classList.add(
                     "success"
                 );
@@ -2298,83 +2295,8 @@ const accountPeriodLabel =
     );
 
 
-const periodosDisponiveis = {
-    "setembro-2026":
-        "Setembro 2026",
-
-    "ultimos-30-dias":
-        "Últimos 30 dias",
-
-    "mes-atual":
-        "Mês atual"
-};
-
-
-function aplicarPeriodo(
-    periodo
-) {
-
-    const texto =
-        periodosDisponiveis[
-            periodo
-        ] ??
-        "Setembro 2026";
-
-
-    if (accountPeriodLabel) {
-
-        accountPeriodLabel.textContent =
-            texto;
-
-    }
-
-
-    if (configPeriod) {
-
-        configPeriod.value =
-            periodo;
-
-    }
-
-}
-
-
-const periodoSalvo =
-    localStorage.getItem(
-        "ev_chargeops_periodo"
-    ) ??
-    "setembro-2026";
-
-
-aplicarPeriodo(
-    periodoSalvo
-);
-
-
-if (configPeriod) {
-
-    configPeriod.addEventListener(
-        "change",
-        () => {
-
-            const periodo =
-                configPeriod.value;
-
-
-            localStorage.setItem(
-                "ev_chargeops_periodo",
-                periodo
-            );
-
-
-            aplicarPeriodo(
-                periodo
-            );
-
-        }
-    );
-
-}
+if (accountPeriodLabel) accountPeriodLabel.textContent = 'Todo o histórico';
+if (configPeriod) configPeriod.value = 'historico';
 
 /* =========================================
    DETALHES DO CARREGADOR
@@ -2508,7 +2430,7 @@ function abrirDetalhesCarregador(
 
         if (
             statusTexto ===
-            "ATIVO"
+            "DISPONIVEL"
         ) {
             statusClasse =
                 "active";
@@ -2517,7 +2439,7 @@ function abrirDetalhesCarregador(
 
         if (
             statusTexto ===
-            "EM_RECARGA"
+            "EM_USO"
         ) {
             statusClasse =
                 "charging";
@@ -2526,7 +2448,7 @@ function abrirDetalhesCarregador(
 
         if (
             statusTexto ===
-            "OFFLINE"
+            "DESCONHECIDO"
         ) {
             statusClasse =
                 "offline";

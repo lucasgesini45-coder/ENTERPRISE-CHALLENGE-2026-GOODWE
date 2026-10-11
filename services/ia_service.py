@@ -1,9 +1,7 @@
 from datetime import datetime
 
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
 from sqlalchemy.orm import Session
-from sklearn.ensemble import IsolationForest
 
 from database.models import Sessao
 
@@ -11,7 +9,6 @@ from database.models import Sessao
 from datetime import datetime, timedelta
 
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
 from sqlalchemy.orm import Session
 
 from database.models import Sessao
@@ -21,10 +18,17 @@ def prever_consumo(
     db: Session,
     dias_previsao: int = 7
 ):
+    # import aqui para o servidor subir mesmo se o scikit-learn estiver bloqueado/ausente
+    try:
+        from sklearn.ensemble import RandomForestRegressor
+    except (ImportError, OSError):
+        return {"sucesso": False, "estado": "INDISPONIVEL", "erro": "Instale requirements-ia.txt"}
+
     sessoes = (
         db.query(Sessao)
         .filter(
             Sessao.status == "CONCLUIDA",
+            Sessao.confirmado.is_(True),
             Sessao.consumo_kwh.isnot(None)
         )
         .order_by(Sessao.inicio.asc())
@@ -41,7 +45,7 @@ def prever_consumo(
     y = []
 
     for sessao in sessoes:
-        if sessao.inicio is None:
+        if sessao.inicio is None or sessao.consumo_kwh is None or not np.isfinite(sessao.consumo_kwh):
             continue
 
         X.append([
@@ -179,10 +183,17 @@ def prever_consumo(
 
 
 def detectar_anomalias(db: Session):
+    # import aqui para o servidor subir mesmo se o scikit-learn estiver bloqueado/ausente
+    try:
+        from sklearn.ensemble import IsolationForest
+    except (ImportError, OSError):
+        return {"sucesso": False, "estado": "INDISPONIVEL", "erro": "Instale requirements-ia.txt"}
+
     sessoes = (
         db.query(Sessao)
         .filter(
             Sessao.status == "CONCLUIDA",
+            Sessao.confirmado.is_(True),
             Sessao.consumo_kwh.isnot(None)
         )
         .order_by(Sessao.inicio.asc())
@@ -199,11 +210,13 @@ def detectar_anomalias(db: Session):
     sessoes_validas = []
 
     for sessao in sessoes:
-        if sessao.inicio is None:
+        if sessao.inicio is None or sessao.consumo_kwh is None or not np.isfinite(sessao.consumo_kwh):
             continue
 
         consumo = sessao.consumo_kwh or 0
-        duracao = sessao.duracao or 0
+        duracao = sessao.duracao
+        if duracao is None or not np.isfinite(duracao) or duracao <= 0:
+            continue
 
         X.append([
             consumo,

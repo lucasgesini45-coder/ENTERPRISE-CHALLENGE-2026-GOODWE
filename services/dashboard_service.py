@@ -29,7 +29,7 @@ def gerar_resumo_dashboard(
     sessoes_concluidas = [
         sessao
         for sessao in sessoes
-        if sessao.status == "CONCLUIDA"
+        if sessao.status == "CONCLUIDA" and sessao.confirmado
     ]
 
     sessoes_sem_usuario = sum(
@@ -62,6 +62,7 @@ def gerar_resumo_dashboard(
         "total_usuarios": total_usuarios,
         "total_carregadores": total_carregadores,
         "total_sessoes": len(sessoes),
+        "sessoes_pendentes": sum(s.status == "PENDENTE_CONCILIACAO" for s in sessoes),
         "sessoes_concluidas": len(sessoes_concluidas),
         "sessoes_sem_usuario": sessoes_sem_usuario,
         "consumo_total_kwh": consumo_total,

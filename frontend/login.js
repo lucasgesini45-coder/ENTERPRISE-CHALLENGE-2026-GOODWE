@@ -1,5 +1,3 @@
-const API_URL = "https://enterprise-challenge-2026-goodwe.onrender.com";
-
 const loginForm =
     document.getElementById("login-form");
 
@@ -119,7 +117,7 @@ function definirCarregando(carregando) {
 async function buscarUsuario(token) {
 
     const response =
-        await fetch(
+        await apiFetch(
             `${API_URL}/auth/me`,
             {
                 method: "GET",
@@ -221,7 +219,7 @@ if (loginForm) {
                 ----------------------------------------- */
 
                 const response =
-                    await fetch(
+                    await apiFetch(
                         `${API_URL}/auth/login`,
                         {
                             method: "POST",
@@ -286,8 +284,7 @@ if (loginForm) {
                    4. SALVA TOKEN
                 ----------------------------------------- */
 
-                localStorage.setItem(
-                    "ev_chargeops_token",
+                sessionStorage.setItem("ev_chargeops_token",
                     token
                 );
 
@@ -306,8 +303,7 @@ if (loginForm) {
                    6. SALVA DADOS DO USUÁRIO
                 ----------------------------------------- */
 
-                localStorage.setItem(
-                    "ev_chargeops_usuario",
+                sessionStorage.setItem("ev_chargeops_usuario",
                     JSON.stringify(
                         usuario
                     )
@@ -330,12 +326,10 @@ if (loginForm) {
                     erro
                 );
 
-                localStorage.removeItem(
-                    "ev_chargeops_token"
+                sessionStorage.removeItem("ev_chargeops_token"
                 );
 
-                localStorage.removeItem(
-                    "ev_chargeops_usuario"
+                sessionStorage.removeItem("ev_chargeops_usuario"
                 );
 
                 mostrarMensagem(

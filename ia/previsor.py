@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import joblib
+from ia.storage import save_atomic
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
@@ -39,16 +40,18 @@ class PrevisorDemanda:
         corte = int(len(dados) * 0.8)
         treino, teste = dados.iloc[:corte], dados.iloc[corte:]
 
-        self.modelo.fit(treino[self.FEATURES], treino["energia_kwh"])
+        candidato = RandomForestRegressor(n_estimators=200, min_samples_leaf=2, random_state=42)
+        candidato.fit(treino[self.FEATURES], treino["energia_kwh"])
         mae = mean_absolute_error(
-            teste["energia_kwh"], self.modelo.predict(teste[self.FEATURES])
+            teste["energia_kwh"], candidato.predict(teste[self.FEATURES])
         )
 
         mae_base = mean_absolute_error(
             teste["energia_kwh"], np.full(len(teste), treino["energia_kwh"].mean())
         )
 
-        self.modelo.fit(dados[self.FEATURES], dados["energia_kwh"])
+        candidato.fit(dados[self.FEATURES], dados["energia_kwh"])
+        self.modelo = candidato
         self.treinado = True
         return {
             "mae_kwh": round(float(mae), 2),
@@ -88,7 +91,7 @@ class PrevisorDemanda:
         }
 
     def salvar(self, caminho=CAMINHO_PADRAO):
-        joblib.dump(self.modelo, caminho)
+        save_atomic(self.modelo, caminho)
 
     def carregar(self, caminho=CAMINHO_PADRAO):
         self.modelo = joblib.load(caminho)

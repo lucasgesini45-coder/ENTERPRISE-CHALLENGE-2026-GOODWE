@@ -456,7 +456,7 @@ const carregarPaginaCarregadores = () => {
             try {
 
                 const resposta =
-                    await fetch(
+                    await apiFetch(
                         `${API_URL}/carregadores/`,
                         {
 

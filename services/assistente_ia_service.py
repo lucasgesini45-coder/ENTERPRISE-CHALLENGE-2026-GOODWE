@@ -31,61 +31,13 @@ AVISO_ANOMALIA = (
 
 # A ordem importa: do mais específico ao mais genérico.
 INTENCOES = {
-    "sessoes_anormais": [
-        "anorma",
-        "anomalia",
-        "suspeit",
-        "estranh"
-    ],
-
-    "previsao": [
-        "previsao",
-        "prever",
-        "previsto",
-        "estimativa de consumo"
-    ],
-
-    "usuario_top": [
-        "usuario mais",
-        "quem mais consumiu",
-        "maior consumidor"
-    ],
-
-    "carregador_top": [
-        "carregador mais",
-        "mais utilizado",
-        "mais usado"
-    ],
-
-    "faturamento": [
-        "fatur",
-        "receita",
-        "quanto gastei",
-        "quanto eu gastei",
-        "quanto eu ja gastei",
-        "quanto paguei",
-        "quanto eu paguei",
-        "quanto devo",
-        "gasto total",
-        "gastos"
-    ],
-
-    "ultima_recarga": [
-        "ultima recarga",
-        "minha ultima recarga",
-        "ultima sessao",
-        "minha ultima sessao",
-        "recarga mais recente"
-    ],
-
-    "consumo_total": [
-        "consum",
-        "energia",
-        "kwh",
-        "quanto consumi",
-        "quanto eu consumi",
-        "consumo total"
-    ],
+    "sessoes_anormais": ["anorma", "anomalia", "suspeit", "estranh"],
+    "previsao": ["previsao", "prever", "previsto", "estimativa de consumo"],
+    "usuario_top": ["usuario mais", "quem mais consumiu", "maior consumidor"],
+    "carregador_top": ["carregador mais", "mais utilizado", "mais usado"],
+    "faturamento": ["fatur", "receita", "quanto gastei", "quanto eu gastei", "quanto eu ja gastei", "quanto paguei", "quanto eu paguei", "quanto devo", "gasto total", "gastos"],
+    "ultima_recarga": ["ultima recarga", "ultima sessao", "recarga mais recente"],
+    "consumo_total": ["consum", "energia", "kwh"],
 }
 SOMENTE_ADMIN = {"usuario_top", "carregador_top", "sessoes_anormais", "previsao"}
 
@@ -175,7 +127,7 @@ def _dt(d: date) -> datetime:
 def _sessoes(db: Session, ctx: ContextoUsuario, inicio: date, fim: date):
     """Único ponto de acesso às sessões: aqui mora o escopo admin x usuário."""
     q = db.query(Sessao).filter(
-        func.upper(Sessao.status).in_(STATUS_VALIDOS),
+        func.upper(Sessao.status).in_(STATUS_VALIDOS), Sessao.confirmado.is_(True),
         Sessao.consumo_kwh.isnot(None),
         Sessao.inicio >= _dt(inicio),
         Sessao.inicio < _dt(fim),
@@ -187,7 +139,7 @@ def _sessoes(db: Session, ctx: ContextoUsuario, inicio: date, fim: date):
 
 def _ultima_sessao(db: Session, ctx: ContextoUsuario) -> str | None:
     q = db.query(func.max(Sessao.inicio)).filter(
-        func.upper(Sessao.status).in_(STATUS_VALIDOS), Sessao.consumo_kwh.isnot(None)
+        func.upper(Sessao.status).in_(STATUS_VALIDOS), Sessao.confirmado.is_(True), Sessao.consumo_kwh.isnot(None)
     )
     if ctx.papel == Papel.USUARIO:
         q = q.filter(Sessao.usuario_id == ctx.usuario_id)
@@ -224,7 +176,7 @@ def ferramenta_usuario_top(db, ctx, periodo, pergunta):
     linha = (
         db.query(Usuario.nome, func.sum(Sessao.consumo_kwh).label("kwh"))
         .join(Sessao, Sessao.usuario_id == Usuario.id)
-        .filter(func.upper(Sessao.status).in_(STATUS_VALIDOS),
+        .filter(func.upper(Sessao.status).in_(STATUS_VALIDOS), Sessao.confirmado.is_(True),
                 Sessao.inicio >= _dt(periodo[0]), Sessao.inicio < _dt(periodo[1]))
         .group_by(Usuario.id)
         .order_by(func.sum(Sessao.consumo_kwh).desc())
@@ -237,7 +189,7 @@ def ferramenta_carregador_top(db, ctx, periodo, pergunta):
     linha = (
         db.query(Carregador.nome, func.count(Sessao.id).label("qtd"))
         .join(Sessao, Sessao.carregador_id == Carregador.id)
-        .filter(func.upper(Sessao.status).in_(STATUS_VALIDOS),
+        .filter(func.upper(Sessao.status).in_(STATUS_VALIDOS), Sessao.confirmado.is_(True),
                 Sessao.inicio >= _dt(periodo[0]), Sessao.inicio < _dt(periodo[1]))
         .group_by(Carregador.id)
         .order_by(func.count(Sessao.id).desc())
@@ -289,7 +241,7 @@ def ferramenta_previsao(db, ctx, periodo, pergunta):
 
 
 def ferramenta_ultima_recarga(db, ctx, periodo, pergunta):
-    q = db.query(Sessao).filter(func.upper(Sessao.status).in_(STATUS_VALIDOS))
+    q = db.query(Sessao).filter(func.upper(Sessao.status).in_(STATUS_VALIDOS), Sessao.confirmado.is_(True))
     if ctx.papel == Papel.USUARIO:
         q = q.filter(Sessao.usuario_id == ctx.usuario_id)
     s = q.order_by(Sessao.inicio.desc()).first()

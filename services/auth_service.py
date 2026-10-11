@@ -1,176 +1,75 @@
+import base64
+import hashlib
+import hmac
+import os
+import secrets
 from datetime import datetime, timedelta, timezone
-
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
+import jwt
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
-
 from database.database import get_db
 from database.models import Usuario
 
-# =========================
-# SENHAS
-# =========================
-
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
-)
+bearer = HTTPBearer(auto_error=False)
 
 
-def gerar_hash_senha(senha: str) -> str:
-    return pwd_context.hash(senha)
+def secret():
+    value = os.environ.get('EV_CHARGEOPS_JWT_SECRET', '')
+    if len(value) < 32:
+        raise HTTPException(503, 'Chave de autenticação não configurada')
+    return value
 
 
-def verificar_senha(senha: str, senha_hash: str) -> bool:
-    return pwd_context.verify(senha, senha_hash)
+def gerar_hash_senha(password):
+    salt=secrets.token_bytes(16)
+    digest=hashlib.pbkdf2_hmac('sha256',password.encode(),salt,600000)
+    return 'pbkdf2_sha256$600000$'+base64.b64encode(salt).decode()+'$'+base64.b64encode(digest).decode()
 
 
-# =========================
-# JWT
-# =========================
-
-SECRET_KEY = "ev-chargeops-chave-secreta-2026"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
-RESET_TOKEN_EXPIRE_MINUTES = 15
-
-def criar_token_redefinicao_senha(usuario_id: int) -> str:
-    expiracao = datetime.now(timezone.utc) + timedelta(
-        minutes=RESET_TOKEN_EXPIRE_MINUTES
-    )
-
-    dados_token = {
-        "sub": str(usuario_id),
-        "tipo": "reset_senha",
-        "exp": expiracao
-    }
-
-    return jwt.encode(
-        dados_token,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
-
-
-def decodificar_token_redefinicao_senha(token: str):
+def verificar_senha(password, encoded):
     try:
-        dados = jwt.decode(
-            token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
-        )
-
-        if dados.get("tipo") != "reset_senha":
-            return None
-
-        return dados
-
-    except JWTError:
-        return None
-
-def criar_access_token(dados: dict) -> str:
-    dados_token = dados.copy()
-
-    expiracao = datetime.now(timezone.utc) + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-    )
-
-    dados_token.update({
-        "tipo": "access",
-        "exp": expiracao
-    })
-    return jwt.encode(
-        dados_token,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
+        if encoded.startswith(('$2a$', '$2b$', '$2y$')):
+            import bcrypt
+            return bcrypt.checkpw(password.encode(), encoded.encode())
+        scheme,iterations,salt,digest=encoded.split('$')
+        if scheme != 'pbkdf2_sha256' or not 100000 <= int(iterations) <= 1000000:
+            return False
+        computed=hashlib.pbkdf2_hmac('sha256',password.encode(),base64.b64decode(salt),int(iterations))
+        return hmac.compare_digest(computed,base64.b64decode(digest))
+    except (ValueError, TypeError, AttributeError):
+        return False
 
 
-def decodificar_access_token(token: str):
+def version(user):
+    return hmac.new(secret().encode(),(user.senha or '').encode(),hashlib.sha256).hexdigest()
+
+
+def create_token(user, kind='access'):
+    now=datetime.now(timezone.utc)
+    return jwt.encode({'sub':str(user.id),'tipo':kind,'ver':version(user),'iat':now,
+        'exp':now+timedelta(minutes=15 if kind=='reset' else 60),'aud':'evchargeops','iss':'evchargeops'},secret(),algorithm='HS256')
+
+
+def user_from_token(db, token, kind='access'):
     try:
-        dados = jwt.decode(
-            token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
-        )
+        data=jwt.decode(token,secret(),algorithms=['HS256'],audience='evchargeops',issuer='evchargeops',options={'require':['sub','exp','iat','tipo','ver']})
+        if data['tipo'] != kind:
+            raise ValueError('tipo')
+        user=db.get(Usuario,int(data['sub']))
+        if not user or not hmac.compare_digest(data['ver'],version(user)):
+            raise ValueError('revogado')
+        return user
+    except (jwt.PyJWTError, ValueError, TypeError, KeyError):
+        raise HTTPException(401,'Token inválido, expirado ou revogado')
 
-        print(
-            "[JWT] Token decodificado:",
-            dados
-        )
 
-        if dados.get("tipo") != "access":
-            print(
-                "[JWT] Tipo de token inválido:",
-                dados.get("tipo")
-            )
-            return None
+def obter_usuario_atual(credentials: HTTPAuthorizationCredentials | None=Depends(bearer), db=Depends(get_db)):
+    if credentials is None:
+        raise HTTPException(401,'Autenticação necessária')
+    return user_from_token(db,credentials.credentials)
 
-        return dados
 
-    except JWTError as erro:
-        print(
-            "[JWT] ERRO AO DECODIFICAR:",
-            repr(erro)
-        )
-        return None
-    
-security = HTTPBearer()
-
-def obter_usuario_atual(
-    credenciais: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
-):
-    token = credenciais.credentials
-
-    dados_token = decodificar_access_token(token)
-
-    if dados_token is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token inválido ou expirado."
-        )
-
-    usuario_id = dados_token.get("sub")
-
-    if usuario_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token inválido."
-        )
-
-    try:
-        usuario_id = int(usuario_id)
-
-    except (TypeError, ValueError):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token inválido."
-        )
-
-    usuario = (
-        db.query(Usuario)
-        .filter(Usuario.id == usuario_id)
-        .first()
-    )
-
-    if usuario is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuário não encontrado."
-        )
-
-    return usuario
-
-def obter_usuario_admin(
-    usuario_atual: Usuario = Depends(obter_usuario_atual)
-):
-    if usuario_atual.perfil != "ADMIN":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Acesso permitido apenas para administradores."
-        )
-
-    return usuario_atual
+def obter_usuario_admin(user=Depends(obter_usuario_atual)):
+    if user.perfil != 'ADMIN':
+        raise HTTPException(403, 'Acesso permitido apenas para administradores')
+    return user

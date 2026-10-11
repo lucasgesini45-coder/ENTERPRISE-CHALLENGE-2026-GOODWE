@@ -18,10 +18,9 @@ class ContextoUsuario:
 
 
 class PerguntaIn(BaseModel):
-    pergunta: str = Field(
-        min_length=3,
-        max_length=300
-    )
+    pergunta: str = Field(min_length=3, max_length=300)
+    # None = administrador (visão geral); com id = só os dados desse usuário
+    usuario_id: int | None = None
 
 
 class RespostaOut(BaseModel):

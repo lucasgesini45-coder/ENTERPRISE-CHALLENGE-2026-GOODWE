@@ -617,7 +617,7 @@ const iniciarSessoesUI = () => {
 
 
         const objeto =
-            new Date(data);
+            sessionDate(data);
 
 
         if (
@@ -663,15 +663,11 @@ const iniciarSessoesUI = () => {
         ) {
 
             const inicio =
-                new Date(
-                    sessao.inicio
-                );
+                sessionDate(sessao.inicio);
 
 
             const fim =
-                new Date(
-                    sessao.fim
-                );
+                sessionDate(sessao.fim);
 
 
             const diferenca =
@@ -1087,8 +1083,8 @@ const iniciarSessoesUI = () => {
         const ordenadas =
             [...sessoes].sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             );
 
 
@@ -1288,8 +1284,7 @@ const iniciarSessoesUI = () => {
         try {
 
             const token =
-                localStorage.getItem(
-                    "ev_chargeops_token"
+                sessionStorage.getItem("ev_chargeops_token"
                 );
 
             const headersAutenticados = {
@@ -1304,7 +1299,7 @@ const iniciarSessoesUI = () => {
             ] =
                 await Promise.all([
 
-                    fetch(
+                    apiFetch(
                         `${API_URL}/sessoes/`,
                         {
                             method: "GET",
@@ -1313,7 +1308,7 @@ const iniciarSessoesUI = () => {
                         }
                     ),
 
-                    fetch(
+                    apiFetch(
                         `${API_URL}/usuarios/`,
                         {
                             method: "GET",
@@ -1322,7 +1317,7 @@ const iniciarSessoesUI = () => {
                         }
                     ),
 
-                    fetch(
+                    apiFetch(
                         `${API_URL}/carregadores/`,
                         {
                             method: "GET",

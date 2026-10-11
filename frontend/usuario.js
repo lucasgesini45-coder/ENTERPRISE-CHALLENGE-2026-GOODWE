@@ -1,14 +1,9 @@
-const API_URL =
-    "https://enterprise-challenge-2026-goodwe.onrender.com";
-
 const token =
-    localStorage.getItem(
-        "ev_chargeops_token"
+    sessionStorage.getItem("ev_chargeops_token"
     );
 
 const usuarioSalvo =
-    localStorage.getItem(
-        "ev_chargeops_usuario"
+    sessionStorage.getItem("ev_chargeops_usuario"
     );
 
 
@@ -41,12 +36,10 @@ try {
         erro
     );
 
-    localStorage.removeItem(
-        "ev_chargeops_token"
+    sessionStorage.removeItem("ev_chargeops_token"
     );
 
-    localStorage.removeItem(
-        "ev_chargeops_usuario"
+    sessionStorage.removeItem("ev_chargeops_usuario"
     );
 
     window.location.href =
@@ -206,8 +199,8 @@ async function carregarResumoUsuario() {
     try {
 
         const resposta =
-            await fetch(
-                `${API_URL}/sessoes/minhas`,
+            await apiFetch(
+                `${API_URL}/me/sessoes`,
                 {
                     method: "GET",
 
@@ -221,12 +214,10 @@ async function carregarResumoUsuario() {
 
         if (resposta.status === 401) {
 
-            localStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            localStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =
@@ -346,7 +337,7 @@ async function carregarRFIDUsuario() {
     try {
 
         const resposta =
-            await fetch(
+            await apiFetch(
                 `${API_URL}/rfid/meu`,
                 {
                     method: "GET",
@@ -361,12 +352,10 @@ async function carregarRFIDUsuario() {
 
         if (resposta.status === 401) {
 
-            localStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            localStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =
@@ -470,9 +459,7 @@ async function carregarRFIDUsuario() {
 
         const dataCadastro =
             cartao.data_cadastro
-                ? new Date(
-                    cartao.data_cadastro
-                ).toLocaleDateString(
+                ? sessionDate(cartao.data_cadastro).toLocaleDateString(
                     "pt-BR"
                 )
                 : "--";
@@ -563,8 +550,8 @@ function carregarUltimasSessoes(sessoes) {
         [...sessoes]
             .sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             )
             .slice(0, 3);
 
@@ -575,9 +562,7 @@ function carregarUltimasSessoes(sessoes) {
 
                 const data =
                     sessao.inicio
-                        ? new Date(
-                            sessao.inicio
-                        )
+                        ? sessionDate(sessao.inicio)
                             .toLocaleDateString(
                                 "pt-BR"
                             )
@@ -711,7 +696,7 @@ function renderizarHistoricoSessoes(
         document.getElementById(
             "sessions-summary-valor"
         );
-    
+
     if (!container) {
         return;
     }
@@ -787,8 +772,8 @@ function renderizarHistoricoSessoes(
         [...sessoes]
             .sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             );
 
 
@@ -798,9 +783,7 @@ function renderizarHistoricoSessoes(
 
                 const data =
                     sessao.inicio
-                        ? new Date(
-                            sessao.inicio
-                        ).toLocaleDateString(
+                        ? sessionDate(sessao.inicio).toLocaleDateString(
                             "pt-BR"
                         )
                         : "--";
@@ -1227,8 +1210,7 @@ const settingsPhone =
 function carregarDadosConta() {
 
     const usuarioSalvo =
-        localStorage.getItem(
-            "ev_chargeops_usuario"
+        sessionStorage.getItem("ev_chargeops_usuario"
         );
 
     if (!usuarioSalvo) {
@@ -1393,15 +1375,14 @@ if (
 
 
             const token =
-                localStorage.getItem(
-                    "ev_chargeops_token"
+                sessionStorage.getItem("ev_chargeops_token"
                 );
 
 
             try {
 
                 const resposta =
-                    await fetch(
+                    await apiFetch(
                         `${API_URL}/auth/alterar-senha`,
                         {
                             method: "PUT",
@@ -1452,6 +1433,7 @@ if (
 
 
                 settingsPasswordForm.reset();
+                requireFreshLogin();
 
 
             } catch (erro) {
@@ -1601,12 +1583,10 @@ if (logoutButton) {
         "click",
         () => {
 
-            localStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            localStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =
@@ -1786,14 +1766,10 @@ function renderizarCardsCarregadores(carregadores) {
             carregador => {
 
                 const latitude =
-                    Number(
-                        carregador.latitude
-                    );
+                    coordinateNumber(carregador.latitude);
 
                 const longitude =
-                    Number(
-                        carregador.longitude
-                    );
+                    coordinateNumber(carregador.longitude);
 
                 const temLocalizacao =
                     Number.isFinite(latitude) &&
@@ -1832,18 +1808,18 @@ function renderizarCardsCarregadores(carregadores) {
                                     </span>
 
                                     <h3>
-                                        ${carregador.nome || "Carregador"}
+                                        ${escapeText(carregador.nome || "Carregador")}
                                     </h3>
                                 </div>
 
                                 <span class="user-charger-status">
-                                    ${status}
+                                    ${escapeText(status)}
                                 </span>
 
                             </div>
 
                             <p class="user-charger-location">
-                                ${carregador.localizacao || "Localização não informada"}
+                                ${escapeText(carregador.localizacao || "Localização não informada")}
                             </p>
 
                             <div class="user-charger-info">
@@ -1855,7 +1831,7 @@ function renderizarCardsCarregadores(carregadores) {
 
                                 <div>
                                     <span>Status</span>
-                                    <strong>${status}</strong>
+                                    <strong>${escapeText(status)}</strong>
                                 </div>
 
                             </div>
@@ -2007,8 +1983,8 @@ async function iniciarMapaCarregadores() {
     try {
 
         const resposta =
-            await fetch(
-                `${API_URL}/carregadores/`,
+            await apiFetch(
+                `${API_URL}/me/carregadores`,
                 {
                     method: "GET",
 
@@ -2035,7 +2011,7 @@ async function iniciarMapaCarregadores() {
 
         const carregadores =
             dados.carregadores || [];
-        
+
         renderizarCardsCarregadores(carregadores);
 
 
@@ -2047,14 +2023,10 @@ async function iniciarMapaCarregadores() {
             carregador => {
 
                 const latitude =
-                    Number(
-                        carregador.latitude
-                    );
+                    coordinateNumber(carregador.latitude);
 
                 const longitude =
-                    Number(
-                        carregador.longitude
-                    );
+                    coordinateNumber(carregador.longitude);
 
 
                 if (
@@ -2120,16 +2092,16 @@ async function iniciarMapaCarregadores() {
                     <div class="charger-popup">
 
                         <strong>
-                            ${carregador.nome}
+                            ${escapeText(carregador.nome)}
                         </strong>
 
                         <p>
-                            ${carregador.localizacao || ""}
+                            ${escapeText(carregador.localizacao || "")}
                         </p>
 
                         <p>
                             <b>Status:</b>
-                            ${status}
+                            ${escapeText(status)}
                         </p>
 
                         <p>
@@ -2139,7 +2111,7 @@ async function iniciarMapaCarregadores() {
 
                         <p>
                             <b>Modelo:</b>
-                            ${modelo}
+                            ${escapeText(modelo)}
                         </p>
 
                     </div>
@@ -2655,7 +2627,7 @@ function adicionarMensagemAssistente(
 
         mensagem.innerHTML = `
             <div class="user-ai-bubble">
-                <p>${texto}</p>
+                <p>${escapeText(texto)}</p>
             </div>
         `;
 
@@ -2672,7 +2644,7 @@ function adicionarMensagemAssistente(
                     Assistente EV
                 </strong>
 
-                <p>${texto}</p>
+                <p>${escapeText(texto)}</p>
 
             </div>
         `;
@@ -2832,8 +2804,8 @@ function responderPerguntaUsuario(
         const ordenadas =
             [...sessoes].sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             );
 
 
@@ -2843,9 +2815,7 @@ function responderPerguntaUsuario(
 
         const data =
             ultima.inicio
-                ? new Date(
-                    ultima.inicio
-                ).toLocaleDateString(
+                ? sessionDate(ultima.inicio).toLocaleDateString(
                     "pt-BR"
                 )
                 : "--";
@@ -2932,8 +2902,8 @@ async function perguntarAssistenteBackend(
     try {
 
         const resposta =
-            await fetch(
-                `${API_URL}/assistente-ia/perguntar`,
+            await apiFetch(
+                `${API_URL}/me/assistente`,
                 {
                     method: "POST",
 
@@ -2954,12 +2924,10 @@ async function perguntarAssistenteBackend(
 
         if (resposta.status === 401) {
 
-            localStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            localStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =
@@ -3222,8 +3190,8 @@ async function perguntarAssistenteBackend(
     try {
 
         const resposta =
-            await fetch(
-                `${API_URL}/assistente-ia/perguntar`,
+            await apiFetch(
+                `${API_URL}/me/assistente`,
                 {
                     method: "POST",
 
@@ -3248,12 +3216,10 @@ async function perguntarAssistenteBackend(
 
         if (resposta.status === 401) {
 
-            localStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            localStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =

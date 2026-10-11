@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from database.database import get_db
@@ -14,7 +14,7 @@ router = APIRouter(
 
 @router.get("/previsao-consumo")
 def previsao_consumo(
-    dias: int = 7,
+    dias: int = Query(default=7, ge=1, le=30),
     db: Session = Depends(get_db)
 ):
     return prever_consumo(
@@ -30,7 +30,7 @@ def anomalias(
 
 @router.get("/resumo")
 def resumo_ia(
-    dias: int = 7,
+    dias: int = Query(default=7, ge=1, le=30),
     db: Session = Depends(get_db)
 ):
     previsao = prever_consumo(
@@ -47,7 +47,7 @@ def resumo_ia(
 
 @router.get("/indicadores")
 def indicadores_ia(
-    dias: int = 7,
+    dias: int = Query(default=7, ge=1, le=30),
     db: Session = Depends(get_db)
 ):
     previsao = prever_consumo(

@@ -664,11 +664,11 @@ const iniciarInteligenciaUI = () => {
             ] =
                 await Promise.all([
 
-                    fetch(
+                    apiFetch(
                         `${API_URL}/ia/previsao-consumo?dias=7`
                     ),
 
-                    fetch(
+                    apiFetch(
                         `${API_URL}/ia/anomalias`
                     )
 

@@ -21,23 +21,9 @@ def finalizar_sessao(
     sessao_id: int,
     consumo_kwh: float
 ):
-    sessao = buscar_sessao(db, sessao_id)
+    from fastapi import HTTPException
+    raise HTTPException(409, "Use o fluxo idempotente de medições para finalizar")
 
-    if sessao is None:
-        return None
-
-    sessao.fim = datetime.now()
-    sessao.consumo_kwh = consumo_kwh
-    sessao.valor_total = round(
-        consumo_kwh * sessao.tarifa,
-        2
-    )
-    sessao.status = "CONCLUIDA"
-
-    db.commit()
-    db.refresh(sessao)
-
-    return sessao
 
 def associar_usuario_sessao(
     db: Session,
@@ -51,6 +37,10 @@ def associar_usuario_sessao(
             "sucesso": False,
             "erro": "Sessao nao encontrada"
         }
+
+    if sessao.confirmado:
+        from fastapi import HTTPException
+        raise HTTPException(409, "Sessão confirmada não pode trocar de usuário")
 
     usuario = (
         db.query(Usuario)
@@ -105,6 +95,11 @@ def associar_usuarios_em_lote(
                 "erro": "Sessao nao encontrada"
             })
 
+            erros += 1
+            continue
+
+        if sessao.confirmado:
+            resultados.append({"sessao_id": item.sessao_id, "sucesso": False, "erro": "Sessão confirmada não pode trocar de usuário"})
             erros += 1
             continue
 

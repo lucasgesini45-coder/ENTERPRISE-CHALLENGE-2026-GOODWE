@@ -5,49 +5,18 @@ from database.database import get_db
 from database.models import Usuario
 from schemas.assistente_ia import ContextoUsuario, Papel, PerguntaIn, RespostaOut
 from services import assistente_ia_service
-from services.auth_service import (obter_usuario_atual)
 
 router = APIRouter(prefix="/assistente-ia", tags=["OPS - Assistente virtual"])
 
 
-@router.post(
-    "/perguntar",
-    response_model=RespostaOut
-)
-def perguntar(
-    body: PerguntaIn,
-    usuario_atual: Usuario = Depends(
-        obter_usuario_atual
-    ),
-    db: Session = Depends(get_db)
-):
-
-    perfil = str(
-        usuario_atual.perfil or ""
-    ).upper()
-
-    if perfil == "ADMIN":
-
-        ctx = ContextoUsuario(
-            papel=Papel.ADMIN
-        )
-
-    elif perfil == "USER":
-
-        ctx = ContextoUsuario(
-            papel=Papel.USUARIO,
-            usuario_id=usuario_atual.id
-        )
-
+@router.post("/perguntar", response_model=RespostaOut)
+def perguntar(body: PerguntaIn, db: Session = Depends(get_db)):
+    # Esta rota requer autenticação administrativa no registro do router.
+    # usuario_id limita uma consulta do administrador, não define autorização.
+    if body.usuario_id is None:
+        ctx = ContextoUsuario(papel=Papel.ADMIN)
     else:
-
-        raise HTTPException(
-            status_code=403,
-            detail="Perfil de usuário não autorizado."
-        )
-
-    return assistente_ia_service.responder(
-        db,
-        ctx,
-        body.pergunta
-    )
+        if db.get(Usuario, body.usuario_id) is None:
+            raise HTTPException(404, "Usuário não encontrado.")
+        ctx = ContextoUsuario(papel=Papel.USUARIO, usuario_id=body.usuario_id)
+    return assistente_ia_service.responder(db, ctx, body.pergunta)

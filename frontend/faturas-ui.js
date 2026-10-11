@@ -678,7 +678,7 @@ const iniciarFaturasUI = () => {
 
 
         const data =
-            new Date(valor);
+            sessionDate(valor);
 
 
         return data.toLocaleString(
@@ -727,8 +727,7 @@ const iniciarFaturasUI = () => {
 
 
             const token =
-                localStorage.getItem(
-                    "ev_chargeops_token"
+                sessionStorage.getItem("ev_chargeops_token"
                 );
 
             const headersAutenticados = {
@@ -742,7 +741,7 @@ const iniciarFaturasUI = () => {
             ] =
                 await Promise.all([
 
-                    fetch(
+                    apiFetch(
                         `${API_URL}/consumo/rateio-mensal?${query}`,
                         {
                             method: "GET",
@@ -751,7 +750,7 @@ const iniciarFaturasUI = () => {
                         }
                     ),
 
-                    fetch(
+                    apiFetch(
                         `${API_URL}/usuarios/`,
                         {
                             method: "GET",
@@ -1177,12 +1176,11 @@ const iniciarFaturasUI = () => {
 
 
             const token =
-                localStorage.getItem(
-                    "ev_chargeops_token"
+                sessionStorage.getItem("ev_chargeops_token"
                 );
 
             const resposta =
-                await fetch(
+                await apiFetch(
                     `${API_URL}/consumo/fatura-usuario/${usuarioId}?${query}`,
                     {
                         method: "GET",
@@ -1490,78 +1488,11 @@ const iniciarFaturasUI = () => {
        PDF
     ========================================= */
 
-    async function abrirPdf(
-        usuarioId
-    ) {
-
-        const query =
-            criarQueryPeriodo();
-
-        const token =
-            localStorage.getItem(
-                "ev_chargeops_token"
-            );
-
+    async function abrirPdf(usuarioId) {
         try {
-
-            const resposta =
-                await fetch(
-                    `${API_URL}/consumo/fatura-usuario/${usuarioId}/pdf?${query}`,
-                    {
-                        method: "GET",
-
-                        headers: {
-                            "Authorization":
-                                `Bearer ${token}`
-                        }
-                    }
-                );
-
-            if (!resposta.ok) {
-                throw new Error(
-                    "Não foi possível gerar o PDF."
-                );
-            }
-
-            const blob =
-                await resposta.blob();
-
-            const urlTemporaria =
-                URL.createObjectURL(
-                    blob
-                );
-
-            window.open(
-                urlTemporaria,
-                "_blank"
-            );
-
-            setTimeout(
-                () => {
-                    URL.revokeObjectURL(
-                        urlTemporaria
-                    );
-                },
-                60000
-            );
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao gerar PDF:",
-                erro
-            );
-
-            alert(
-                erro.message
-            );
-        }
+            await downloadInvoicePdf(`${API_URL}/consumo/fatura-usuario/${usuarioId}/pdf?${criarQueryPeriodo()}`, `fatura-${usuarioId}.pdf`);
+        } catch (erro) { alert(erro.message); }
     }
-
-
-    /* =========================================
-       FECHAR MODAL
-    ========================================= */
 
     function fecharModal() {
 

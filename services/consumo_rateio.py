@@ -1,3 +1,4 @@
+from decimal import Decimal
 from sqlalchemy.orm import Session
 
 from database.models import (
@@ -5,19 +6,20 @@ from database.models import (
     Usuario,
     Carregador
 )
-from datetime import datetime
+from datetime import datetime, timezone
 
 def calcular_valor_individual(
     consumo_kwh: float,
     tarifa_kwh: float
 ) -> float:
-    return round(consumo_kwh * tarifa_kwh, 2)
+    from services.consumo_service import calcular_valor_recarga
+    return calcular_valor_recarga(consumo_kwh, tarifa_kwh)
 
 
 def buscar_sessoes_concluidas(db: Session):
     return (
         db.query(Sessao)
-        .filter(Sessao.status == "CONCLUIDA")
+        .filter(Sessao.status == "CONCLUIDA", Sessao.confirmado.is_(True), Sessao.usuario_id.isnot(None), Sessao.consumo_kwh.isnot(None), Sessao.valor_total.isnot(None))
         .all()
     )
 
@@ -53,7 +55,7 @@ def calcular_rateio_por_usuario(db: Session):
                 "usuario_id": usuario.id,
                 "nome": usuario.nome,
                 "consumo_kwh": 0.0,
-                "valor_total": 0.0
+                "valor_total": Decimal("0")
             }
 
         rateio[usuario.id]["consumo_kwh"] += (
@@ -61,7 +63,7 @@ def calcular_rateio_por_usuario(db: Session):
         )
 
         rateio[usuario.id]["valor_total"] += (
-            sessao.valor_total or 0
+            Decimal(str(sessao.valor_total or 0))
         )
 
     for dados in rateio.values():
@@ -103,7 +105,7 @@ def gerar_relatorio_rateio(db: Session):
         "usuarios": rateio
     }
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def gerar_rateio_por_periodo(
@@ -113,7 +115,7 @@ def gerar_rateio_por_periodo(
 ):
     consulta = (
         db.query(Sessao)
-        .filter(Sessao.status == "CONCLUIDA")
+        .filter(Sessao.status == "CONCLUIDA", Sessao.confirmado.is_(True), Sessao.usuario_id.isnot(None), Sessao.consumo_kwh.isnot(None), Sessao.valor_total.isnot(None))
     )
 
     if inicio is not None:
@@ -149,7 +151,7 @@ def gerar_rateio_por_periodo(
                 "nome": usuario.nome,
                 "total_sessoes": 0,
                 "consumo_kwh": 0.0,
-                "valor_total": 0.0
+                "valor_total": Decimal("0")
             }
 
         rateio[usuario.id]["total_sessoes"] += 1
@@ -159,7 +161,7 @@ def gerar_rateio_por_periodo(
         )
 
         rateio[usuario.id]["valor_total"] += (
-            sessao.valor_total or 0
+            Decimal(str(sessao.valor_total or 0))
         )
 
     usuarios = list(rateio.values())
@@ -224,7 +226,7 @@ def gerar_fatura_usuario(
         db.query(Sessao)
         .filter(
             Sessao.usuario_id == usuario_id,
-            Sessao.status == "CONCLUIDA"
+            Sessao.status == "CONCLUIDA", Sessao.confirmado.is_(True), Sessao.usuario_id.isnot(None), Sessao.consumo_kwh.isnot(None), Sessao.valor_total.isnot(None)
         )
     )
 
@@ -271,12 +273,14 @@ def gerar_fatura_usuario(
         2
     ) if tarifas else 0.0
 
-    numero_fatura = (
-        f"FAT-{usuario.id}-"
-        f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    )
+    import hashlib
+    import json
+    identity = json.dumps({"usuario": usuario.id, "inicio": str(inicio), "fim": str(fim),
+        "sessoes": [(s.id, s.consumo_kwh, s.tarifa, s.valor_total) for s in sessoes]}, sort_keys=True)
+    numero_fatura = "FAT-" + hashlib.sha256(identity.encode()).hexdigest()[:24]
 
-    data_emissao = datetime.now()
+
+    data_emissao = datetime.now(timezone.utc)
 
     detalhes = []
 

@@ -755,7 +755,7 @@ const iniciarUsuariosUI = () => {
             try {
 
                 const resposta =
-                    await fetch(
+                    await apiFetch(
                         `${API_URL}/usuarios/`,
                         {
 
@@ -768,8 +768,7 @@ const iniciarUsuariosUI = () => {
                                     "application/json",
 
                                 "Authorization":
-                                    `Bearer ${localStorage.getItem(
-                                        "ev_chargeops_token"
+                                    `Bearer ${sessionStorage.getItem("ev_chargeops_token"
                                     )}`
 
                             },
@@ -885,12 +884,11 @@ const iniciarUsuariosUI = () => {
         try {
 
             const token =
-                localStorage.getItem(
-                    "ev_chargeops_token"
+                sessionStorage.getItem("ev_chargeops_token"
                 );
 
             const resposta =
-                await fetch(
+                await apiFetch(
                     `${API_URL}/usuarios/`,
                     {
                         method: "GET",
@@ -1234,7 +1232,7 @@ const iniciarUsuariosUI = () => {
                 fecharDetalhesUsuario();
             }
         }
-    );    
+    );
 
 };
 

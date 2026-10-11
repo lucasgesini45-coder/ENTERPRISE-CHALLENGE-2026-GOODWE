@@ -4,12 +4,9 @@ from sqlalchemy.orm import Session
 
 from database.database import get_db
 from database.models import Usuario
-from schemas.usuario import (
-    UsuarioCreate,
-    UsuarioCadastro,
-    UsuarioResponse
-)
-from services.auth_service import gerar_hash_senha, obter_usuario_admin
+from services.auth_service import gerar_hash_senha
+from schemas.usuario import UsuarioCreate, UsuarioResponse
+
 
 router = APIRouter(
     prefix="/usuarios",
@@ -17,71 +14,18 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=dict[str, list[UsuarioResponse]])
+@router.get("/")
 def listar_usuarios(
-    db: Session = Depends(get_db),
-    usuario_admin: Usuario = Depends(obter_usuario_admin)
+    db: Session = Depends(get_db)
 ):
     usuarios = db.query(Usuario).all()
 
     return {
-        "usuarios": usuarios
+        "usuarios": [UsuarioResponse.model_validate(u).model_dump() for u in usuarios]
     }
 
-@router.post(
-    "/cadastro",
-    response_model=UsuarioResponse
-)
-def cadastrar_usuario(
-    usuario: UsuarioCadastro,
-    db: Session = Depends(get_db)
-):
-    email = usuario.email.strip().lower()
 
-    if len(usuario.senha) < 8:
-        raise HTTPException(
-            status_code=400,
-            detail="A senha deve ter pelo menos 8 caracteres."
-        )
-
-    usuario_existente = (
-        db.query(Usuario)
-        .filter(Usuario.email == email)
-        .first()
-    )
-
-    if usuario_existente:
-        raise HTTPException(
-            status_code=400,
-            detail="Já existe um usuário cadastrado com este e-mail."
-        )
-
-    novo_usuario = Usuario(
-        nome=usuario.nome.strip(),
-        email=email,
-        telefone=usuario.telefone,
-        senha=gerar_hash_senha(
-            usuario.senha
-        ),
-        perfil="USER"
-    )
-
-    try:
-        db.add(novo_usuario)
-        db.commit()
-        db.refresh(novo_usuario)
-
-        return novo_usuario
-
-    except IntegrityError:
-        db.rollback()
-
-        raise HTTPException(
-            status_code=400,
-            detail="Já existe um usuário cadastrado com este e-mail."
-        )
-    
-@router.post("/", response_model=UsuarioResponse)
+@router.post("/")
 def criar_usuario(
     usuario: UsuarioCreate,
     db: Session = Depends(get_db)
@@ -89,9 +33,9 @@ def criar_usuario(
     novo_usuario = Usuario(
         nome=usuario.nome,
         email=usuario.email,
-        telefone=usuario.telefone,
-        senha=gerar_hash_senha(usuario.senha)
-)
+        senha=gerar_hash_senha(usuario.senha) if usuario.senha else None,
+        telefone=usuario.telefone
+    )
 
     try:
 
@@ -101,13 +45,13 @@ def criar_usuario(
 
         db.refresh(novo_usuario)
 
-        return novo_usuario
+        return UsuarioResponse.model_validate(novo_usuario)
 
     except IntegrityError:
 
         db.rollback()
 
         raise HTTPException(
-            status_code=400,
+            status_code=409,
             detail="Já existe um usuário cadastrado com este e-mail."
         )

@@ -1,3 +1,5 @@
+from datetime import timezone
+from zoneinfo import ZoneInfo
 from io import BytesIO
 
 from reportlab.lib import colors
@@ -11,6 +13,15 @@ from reportlab.platypus import (
     Table,
     TableStyle
 )
+
+
+SAO_PAULO = ZoneInfo("America/Sao_Paulo")
+
+
+def horario_sao_paulo(value):
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    return value.astimezone(SAO_PAULO)
 
 
 def gerar_pdf_fatura(dados: dict):
@@ -50,7 +61,7 @@ def gerar_pdf_fatura(dados: dict):
     periodo = dados["periodo"]
     numero_fatura = dados["numero_fatura"]
 
-    data_emissao = dados["data_emissao"].strftime(
+    data_emissao = horario_sao_paulo(dados["data_emissao"]).strftime(
     "%d/%m/%Y %H:%M:%S"
     )
 
@@ -80,7 +91,7 @@ def gerar_pdf_fatura(dados: dict):
 
     dados_usuario = [
     ["Numero da Fatura", numero_fatura],
-    ["Data de Emissao", data_emissao],
+    ["Emissao (SP)", data_emissao],
     ["Usuario", usuario["nome"]],
     ["Email", usuario["email"]],
     [
@@ -216,7 +227,7 @@ def gerar_pdf_fatura(dados: dict):
         "Sessao",
         "Carregador",
         "Serial",
-        "Inicio",
+        "Inicio (SP)",
         "Consumo",
         "Valor"
     ]
@@ -224,13 +235,13 @@ def gerar_pdf_fatura(dados: dict):
 
     for sessao in dados["sessoes"]:
         inicio = (
-            sessao["inicio"].strftime("%d/%m/%Y %H:%M")
+            horario_sao_paulo(sessao["inicio"]).strftime("%d/%m/%Y %H:%M")
             if sessao["inicio"]
             else "-"
         )
 
         fim = (
-            sessao["fim"].strftime("%d/%m/%Y %H:%M")
+            horario_sao_paulo(sessao["fim"]).strftime("%d/%m/%Y %H:%M")
             if sessao["fim"]
             else "-"
         )
@@ -383,7 +394,7 @@ def gerar_pdf_fatura(dados: dict):
 
     elementos.append(
         Paragraph(
-            "Documento gerado automaticamente pelo EV ChargeOps.",
+            "Horarios das recargas e emissao: America/Sao_Paulo. Documento gerado pelo EV ChargeOps.",
             subtitulo_style
         )
     )

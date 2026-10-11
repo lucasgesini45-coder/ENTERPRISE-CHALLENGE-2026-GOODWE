@@ -16,7 +16,7 @@ const iniciarRfidUI = () => {
     ========================================= */
 
     const RFID_API_URL =
-        "https://enterprise-challenge-2026-goodwe.onrender.com";
+        API_URL;
 
 
     const cartoesDemo = [];
@@ -27,8 +27,7 @@ const iniciarRfidUI = () => {
 
     function obterToken() {
 
-        return localStorage.getItem(
-            "ev_chargeops_token"
+        return sessionStorage.getItem("ev_chargeops_token"
         );
 
     }
@@ -43,9 +42,7 @@ const iniciarRfidUI = () => {
         }
 
 
-        return new Date(
-            data
-        ).toLocaleDateString(
+        return sessionDate(data).toLocaleDateString(
             "pt-BR"
         );
 
@@ -615,7 +612,7 @@ const iniciarRfidUI = () => {
         try {
 
             const resposta =
-                await fetch(
+                await apiFetch(
                     `${RFID_API_URL}/usuarios/`,
                     {
                         method: "GET",
@@ -733,7 +730,7 @@ const iniciarRfidUI = () => {
         try {
 
             const resposta =
-                await fetch(
+                await apiFetch(
                     `${RFID_API_URL}/rfid/`,
                     {
                         method: "GET",
@@ -1565,7 +1562,7 @@ const iniciarRfidUI = () => {
 
 
                         const resposta =
-                            await fetch(
+                            await apiFetch(
                                 `${RFID_API_URL}/rfid/${cartaoId}/status`,
                                 {
                                     method:
@@ -1693,7 +1690,7 @@ const iniciarRfidUI = () => {
         try {
 
             const resposta =
-                await fetch(
+                await apiFetch(
                     `${RFID_API_URL}/sessoes/usuario/${cartao.usuario_id}`,
                     {
                         method:
@@ -1824,16 +1821,12 @@ const iniciarRfidUI = () => {
 
                         const inicio =
                             sessao.inicio
-                                ? new Date(
-                                    sessao.inicio
-                                ).toLocaleString("pt-BR")
+                                ? sessionDate(sessao.inicio).toLocaleString("pt-BR")
                                 : "-";
 
                         const fim =
                             sessao.fim
-                                ? new Date(
-                                    sessao.fim
-                                ).toLocaleString("pt-BR")
+                                ? sessionDate(sessao.fim).toLocaleString("pt-BR")
                                 : "-";
 
                         const consumo =
@@ -2300,7 +2293,7 @@ const iniciarRfidUI = () => {
             try {
 
                 const resposta =
-                    await fetch(
+                    await apiFetch(
                         `${RFID_API_URL}/rfid/`,
                         {
                             method:

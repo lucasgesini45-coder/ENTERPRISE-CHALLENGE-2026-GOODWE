@@ -1,5 +1,6 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, Boolean, Text, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import declarative_base
+from datetime import datetime, timezone
 
 Base = declarative_base()
 
@@ -11,8 +12,8 @@ class Usuario(Base):
     nome = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
     senha = Column(String)
-    telefone = Column(String)
     perfil = Column(String, nullable=False, default="USER")
+    telefone = Column(String)
 
 
 class Carregador(Base):
@@ -23,12 +24,10 @@ class Carregador(Base):
     serial_number = Column(String, unique=True, index=True)
     localizacao = Column(String)
     potencia_maxima = Column(Float)
-    status = Column(String)
+    status = Column(String, default="DESCONHECIDO")
     modelo = Column(String)
-
     latitude = Column(Float)
     longitude = Column(Float)
-
     atualizado_em = Column(DateTime)
 
 
@@ -54,44 +53,50 @@ class Sessao(Base):
     duracao = Column(Float)
 
     tarifa = Column(Float, default=0.0)
-    valor_total = Column(Float, default=0.0)
+    valor_total = Column(Float)
 
     status = Column(String)
 
+    chave_operacao = Column(String(128), unique=True)
+    solicitacao = Column(Text)
+    ultima_medicao = Column(DateTime)
+    confirmado = Column(Boolean, nullable=False, default=False)
+    origem = Column(String, default="RFID")
+
+
 class CartaoRFID(Base):
     __tablename__ = "cartoes_rfid"
+    __table_args__ = (CheckConstraint("status IN ('ATIVO','BLOQUEADO','CANCELADO')"),)
+    id = Column(Integer, primary_key=True)
+    uid = Column(String(128), nullable=False, unique=True)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    status = Column(String, nullable=False, default="ATIVO")
+    # Nullable for cards registered before the group UI was added.
+    data_cadastro = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    codigo = Column(String, unique=True, nullable=True)
 
-    id = Column(
-        Integer,
-        primary_key=True,
-        index=True
-    )
 
-    uid = Column(
-        String,
-        nullable=False,
-        unique=True,
-        index=True
-    )
+class EventoSessao(Base):
+    __tablename__ = "eventos_sessao"
+    __table_args__ = (UniqueConstraint("sessao_id", "chave_evento"),)
+    id = Column(Integer, primary_key=True)
+    sessao_id = Column(Integer, ForeignKey("sessoes.id"), nullable=False)
+    chave_evento = Column(String(128), nullable=False)
+    dados = Column(Text, nullable=False)
 
-    usuario_id = Column(
-        Integer,
-        ForeignKey("usuarios.id"),
-        nullable=False
-    )
 
-    status = Column(
-        String,
-        nullable=False,
-        default="ATIVO"
-    )
+class RelatorioSEMS(Base):
+    __tablename__ = "relatorios_sems"
+    id = Column(Integer, primary_key=True)
+    sha256 = Column(String(64), nullable=False, unique=True)
+    recebido_em = Column(DateTime, nullable=False)
+    dados = Column(Text, nullable=False)
 
-    data_cadastro = Column(
-        DateTime,
-        nullable=False
-    )
-    codigo = Column(
-        String,
-        unique=True,
-        nullable=True
-    )   
+
+class TelemetriaCarregador(Base):
+    __tablename__ = "telemetria_carregador"
+    __table_args__ = (UniqueConstraint("carregador_id", "chave_evento"),)
+    id = Column(Integer, primary_key=True)
+    carregador_id = Column(Integer, ForeignKey("carregadores.id"), nullable=False)
+    chave_evento = Column(String(128), nullable=False)
+    dados = Column(Text, nullable=False)
