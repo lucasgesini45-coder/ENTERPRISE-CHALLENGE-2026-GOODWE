@@ -14,7 +14,40 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Configure `EV_CHARGEOPS_ADMIN_PASSWORD` para o acesso administrativo inicial e `EV_CHARGEOPS_JWT_SECRET` com um segredo aleatório persistente de pelo menos 32 caracteres para login. Use variáveis de ambiente; não coloque segredos no Git. A aplicação não carrega `.env` automaticamente.
+### Inicialização com um comando (macOS/Linux)
+
+Depois de instalar as dependências, execute na raiz do projeto:
+
+```bash
+bash iniciar.sh
+```
+
+Na primeira execução, o inicializador guarda uma chave aleatória em `data/config-local.json`, com permissão de leitura/escrita apenas para o proprietário. Se a chave válida já estiver exportada no terminal, preserva essa chave. Nas próximas execuções carrega a mesma chave, inclusive após fechar o VS Code. A pasta `data/` é ignorada pelo Git: não compartilhe esse arquivo de configuração. O inicializador também preserva credenciais Basic já exportadas na primeira configuração, se houver. A senha de login continua armazenada como hash no banco, separada da configuração.
+
+O comando usa `.venv` sem exigir ativação manual, mantém o banco `data/chargeops.db` e serve o painel em `http://127.0.0.1:8000/painel/login.html`. Não executa seed, migração ou redefinição de senha. Pare uma API anterior com Control+C antes de iniciar; mantenha o terminal aberto durante o uso.
+
+Para conferir a configuração sem iniciar a API ou alterar o banco:
+
+```bash
+bash iniciar.sh --check
+```
+
+### Testes em outro computador do grupo
+
+Cada integrante instala as dependências e cria sua própria conta administrativa no banco local novo:
+
+```bash
+bash iniciar.sh --create-admin administrador@example.com
+bash iniciar.sh
+```
+
+Substitua o e-mail pelo escolhido para os testes. O primeiro comando solicita e confirma a senha sem exibi-la. Se o e-mail já existir, recusa a alteração. Senhas redefinidas e cadastros no Mac de um integrante não são enviados pelo Git. Cada instalação possui sua própria chave e seu próprio banco. `127.0.0.1` permite acesso somente no computador que iniciou a API.
+
+Roteiro de conferência: entrar; cadastrar usuário, carregador e cartão ativo associado; registrar início e encerramento com medição verificada; conferir sessão concluída, consumo e valor no painel; conferir rateio no período e baixar o PDF. Para demonstrar IA, use ao menos três sessões concluídas para previsão e quatro para detecção de anomalias; os resultados com poucos registros são demonstrativos. Na recuperação, conferir a fila e arquivar somente tentativas revisadas, exportando uma cópia antes. Validar hardware requer testes próprios descritos em Limites operacionais.
+
+### Inicialização manual (alternativa)
+
+Configure `EV_CHARGEOPS_ADMIN_PASSWORD` para o acesso administrativo inicial e `EV_CHARGEOPS_JWT_SECRET` com um segredo aleatório persistente de pelo menos 32 caracteres para login. Use variáveis de ambiente; não coloque segredos no Git. A execução direta por Uvicorn não carrega `.env` nem `data/config-local.json` automaticamente; para a configuração persistente acima, use `bash iniciar.sh`.
 
 ```bash
 export EV_CHARGEOPS_ADMIN_USER=admin
