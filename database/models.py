@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, Boolean, Text, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import declarative_base
+from datetime import datetime, timezone
 
 Base = declarative_base()
 
@@ -70,6 +71,9 @@ class CartaoRFID(Base):
     uid = Column(String(128), nullable=False, unique=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
     status = Column(String, nullable=False, default="ATIVO")
+    # Nullable for cards registered before the group UI was added.
+    data_cadastro = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    codigo = Column(String, unique=True, nullable=True)
 
 
 class EventoSessao(Base):

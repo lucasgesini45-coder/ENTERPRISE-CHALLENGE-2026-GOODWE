@@ -35,7 +35,7 @@ INTENCOES = {
     "previsao": ["previsao", "prever", "previsto", "estimativa de consumo"],
     "usuario_top": ["usuario mais", "quem mais consumiu", "maior consumidor"],
     "carregador_top": ["carregador mais", "mais utilizado", "mais usado"],
-    "faturamento": ["fatur", "receita", "quanto gastei", "quanto paguei", "quanto devo"],
+    "faturamento": ["fatur", "receita", "quanto gastei", "quanto eu gastei", "quanto eu ja gastei", "quanto paguei", "quanto eu paguei", "quanto devo", "gasto total", "gastos"],
     "ultima_recarga": ["ultima recarga", "ultima sessao", "recarga mais recente"],
     "consumo_total": ["consum", "energia", "kwh"],
 }

@@ -1,13 +1,9 @@
-
-
 const token =
-    sessionStorage.getItem(
-        "ev_chargeops_token"
+    sessionStorage.getItem("ev_chargeops_token"
     );
 
 const usuarioSalvo =
-    sessionStorage.getItem(
-        "ev_chargeops_usuario"
+    sessionStorage.getItem("ev_chargeops_usuario"
     );
 
 
@@ -40,12 +36,10 @@ try {
         erro
     );
 
-    sessionStorage.removeItem(
-        "ev_chargeops_token"
+    sessionStorage.removeItem("ev_chargeops_token"
     );
 
-    sessionStorage.removeItem(
-        "ev_chargeops_usuario"
+    sessionStorage.removeItem("ev_chargeops_usuario"
     );
 
     window.location.href =
@@ -220,12 +214,10 @@ async function carregarResumoUsuario() {
 
         if (resposta.status === 401) {
 
-            sessionStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            sessionStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =
@@ -346,7 +338,7 @@ async function carregarRFIDUsuario() {
 
         const resposta =
             await apiFetch(
-                `${API_URL}/me/cartoes`,
+                `${API_URL}/rfid/meu`,
                 {
                     method: "GET",
 
@@ -360,12 +352,10 @@ async function carregarRFIDUsuario() {
 
         if (resposta.status === 401) {
 
-            sessionStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            sessionStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =
@@ -469,20 +459,15 @@ async function carregarRFIDUsuario() {
 
         const dataCadastro =
             cartao.data_cadastro
-                ? new Date(
-                    cartao.data_cadastro
-                ).toLocaleDateString(
+                ? sessionDate(cartao.data_cadastro).toLocaleDateString(
                     "pt-BR"
                 )
                 : "--";
 
 
-        if (uidPrincipal) {
-
-            uidPrincipal.textContent =
-                cartao.uid || "--";
-
-        }
+        uidPrincipal.textContent =
+            cartao.codigo ||
+            `RFID-${String(cartao.id).padStart(4, "0")}`;
 
 
         if (statusBadge) {
@@ -565,8 +550,8 @@ function carregarUltimasSessoes(sessoes) {
         [...sessoes]
             .sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             )
             .slice(0, 3);
 
@@ -577,9 +562,7 @@ function carregarUltimasSessoes(sessoes) {
 
                 const data =
                     sessao.inicio
-                        ? new Date(
-                            sessao.inicio
-                        )
+                        ? sessionDate(sessao.inicio)
                             .toLocaleDateString(
                                 "pt-BR"
                             )
@@ -645,13 +628,6 @@ function carregarUltimasSessoes(sessoes) {
 
                 }
 
-
-                const carregador =
-                    sessao.carregador?.nome ||
-                    sessao.carregador_nome ||
-                    `Carregador #${sessao.carregador_id || "--"}`;
-
-
                 return `
                     <div class="session-item">
 
@@ -687,11 +663,6 @@ function carregarUltimasSessoes(sessoes) {
                                 ${valor}
                             </span>
 
-                        </div>
-
-
-                        <div class="session-location">
-                            ${carregador}
                         </div>
 
                     </div>
@@ -801,8 +772,8 @@ function renderizarHistoricoSessoes(
         [...sessoes]
             .sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             );
 
 
@@ -812,9 +783,7 @@ function renderizarHistoricoSessoes(
 
                 const data =
                     sessao.inicio
-                        ? new Date(
-                            sessao.inicio
-                        ).toLocaleDateString(
+                        ? sessionDate(sessao.inicio).toLocaleDateString(
                             "pt-BR"
                         )
                         : "--";
@@ -877,22 +846,12 @@ function renderizarHistoricoSessoes(
                 }
 
 
-                const carregador =
-                    sessao.carregador?.nome ||
-                    sessao.carregador_nome ||
-                    `Carregador #${sessao.carregador_id || "--"}`;
-
-
                 return `
                     <div class="history-session-card">
 
                         <div class="history-session-top">
 
                             <div class="history-session-title">
-
-                                <strong>
-                                    ${carregador}
-                                </strong>
 
                                 <span>
                                     ${data}
@@ -1209,9 +1168,9 @@ document
     );
 
 
-/* =========================================
+    /* =========================================
    CONFIGURAÇÕES
-========================================= */
+    ========================================= */
 
 if (settingsButton) {
 
@@ -1219,8 +1178,8 @@ if (settingsButton) {
         "click",
         () => {
 
-            alert(
-                "As configurações da conta serão adicionadas nesta área."
+            abrirPagina(
+                "configuracoes"
             );
 
         }
@@ -1228,6 +1187,331 @@ if (settingsButton) {
 
 }
 
+/* =========================================
+   DADOS DA CONTA
+========================================= */
+
+const settingsName =
+    document.getElementById(
+        "settings-name"
+    );
+
+const settingsEmail =
+    document.getElementById(
+        "settings-email"
+    );
+
+const settingsPhone =
+    document.getElementById(
+        "settings-phone"
+    );
+
+
+function carregarDadosConta() {
+
+    const usuarioSalvo =
+        sessionStorage.getItem("ev_chargeops_usuario"
+        );
+
+    if (!usuarioSalvo) {
+        return;
+    }
+
+    try {
+
+        const usuario =
+            JSON.parse(
+                usuarioSalvo
+            );
+
+        if (settingsName) {
+
+            settingsName.value =
+                usuario.nome ?? "";
+
+        }
+
+        if (settingsEmail) {
+
+            settingsEmail.value =
+                usuario.email ?? "";
+
+        }
+
+        if (settingsPhone) {
+
+            settingsPhone.value =
+                usuario.telefone ?? "";
+
+        }
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar dados da conta:",
+            erro
+        );
+
+    }
+
+}
+
+/* =========================================
+   ALTERAR SENHA
+========================================= */
+
+const settingsPasswordForm =
+    document.getElementById(
+        "user-password-form"
+    );
+
+const settingsCurrentPassword =
+    document.getElementById(
+        "settings-current-password"
+    );
+
+const settingsNewPassword =
+    document.getElementById(
+        "settings-new-password"
+    );
+
+const settingsConfirmPassword =
+    document.getElementById(
+        "settings-confirm-password"
+    );
+
+const settingsPasswordMessage =
+    document.getElementById(
+        "settings-password-message"
+    );
+
+
+if (
+    settingsPasswordForm &&
+    settingsCurrentPassword &&
+    settingsNewPassword &&
+    settingsConfirmPassword &&
+    settingsPasswordMessage
+) {
+
+    settingsPasswordForm.addEventListener(
+        "submit",
+        async evento => {
+
+            evento.preventDefault();
+
+            settingsPasswordMessage.textContent =
+                "";
+
+            settingsPasswordMessage.className =
+                "settings-message";
+
+            const senhaAtual =
+                settingsCurrentPassword.value.trim();
+
+            const novaSenha =
+                settingsNewPassword.value.trim();
+
+            const confirmarSenha =
+                settingsConfirmPassword.value.trim();
+
+
+            if (!senhaAtual) {
+
+                settingsPasswordMessage.textContent =
+                    "Informe sua senha atual.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (novaSenha.length < 8) {
+
+                settingsPasswordMessage.textContent =
+                    "A nova senha deve possuir pelo menos 8 caracteres.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (
+                novaSenha !==
+                confirmarSenha
+            ) {
+
+                settingsPasswordMessage.textContent =
+                    "A confirmação da senha não confere.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (
+                senhaAtual ===
+                novaSenha
+            ) {
+
+                settingsPasswordMessage.textContent =
+                    "A nova senha deve ser diferente da senha atual.";
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const token =
+                sessionStorage.getItem("ev_chargeops_token"
+                );
+
+
+            try {
+
+                const resposta =
+                    await apiFetch(
+                        `${API_URL}/auth/alterar-senha`,
+                        {
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${token}`
+
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    senha_atual:
+                                        senhaAtual,
+
+                                    nova_senha:
+                                        novaSenha
+                                })
+                        }
+                    );
+
+
+                const dados =
+                    await resposta.json();
+
+
+                if (!resposta.ok) {
+
+                    throw new Error(
+                        dados.detail ??
+                        "Não foi possível alterar a senha."
+                    );
+
+                }
+
+
+                settingsPasswordMessage.textContent =
+                    dados.mensagem ??
+                    "Senha alterada com sucesso.";
+
+                settingsPasswordMessage.classList.add(
+                    "success"
+                );
+
+
+                settingsPasswordForm.reset();
+                requireFreshLogin();
+
+
+            } catch (erro) {
+
+                settingsPasswordMessage.textContent =
+                    erro.message;
+
+                settingsPasswordMessage.classList.add(
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+carregarDadosConta();
+
+/* =========================================
+   TEMA CLARO / ESCURO
+========================================= */
+
+const themeToggle =
+    document.getElementById(
+        "settings-dark-theme"
+    );
+
+function aplicarTema(tema) {
+
+    document.body.setAttribute(
+        "data-theme",
+        tema
+    );
+
+    localStorage.setItem(
+        "ev_chargeops_theme",
+        tema
+    );
+
+    if (themeToggle) {
+
+        themeToggle.checked =
+            tema === "dark";
+
+    }
+
+}
+
+const temaSalvo =
+    localStorage.getItem(
+        "ev_chargeops_theme"
+    ) || "dark";
+
+aplicarTema(
+    temaSalvo
+);
+
+if (themeToggle) {
+
+    themeToggle.addEventListener(
+        "change",
+        () => {
+
+            const novoTema =
+                themeToggle.checked
+                    ? "dark"
+                    : "light";
+
+            aplicarTema(
+                novoTema
+            );
+
+        }
+    );
+
+}
 
 /* =========================================
    ASSISTENTE IA
@@ -1299,12 +1583,10 @@ if (logoutButton) {
         "click",
         () => {
 
-            sessionStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            sessionStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =
@@ -1454,6 +1736,171 @@ function atualizarPainelCarregador(
 
 }
 
+function renderizarCardsCarregadores(carregadores) {
+
+    const container =
+        document.getElementById(
+            "user-chargers-list"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    if (
+        !carregadores ||
+        carregadores.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="user-chargers-loading">
+                Nenhum carregador disponível.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        carregadores.map(
+            carregador => {
+
+                const latitude =
+                    coordinateNumber(carregador.latitude);
+
+                const longitude =
+                    coordinateNumber(carregador.longitude);
+
+                const temLocalizacao =
+                    Number.isFinite(latitude) &&
+                    Number.isFinite(longitude);
+
+                const status =
+                    carregador.status ||
+                    "Não informado";
+
+                const potencia =
+                    carregador.potencia_maxima
+                        ? `${Number(
+                            carregador.potencia_maxima
+                        ).toFixed(1)} kW`
+                        : "--";
+
+                return `
+                    <article class="user-charger-card">
+
+                        <div class="user-charger-image">
+
+                            <img
+                                src="./assets/evcharger.png"
+                                alt="Carregador elétrico"
+                            >
+
+                        </div>
+
+                        <div class="user-charger-card-content">
+
+                            <div class="user-charger-card-top">
+
+                                <div>
+                                    <span class="section-label">
+                                        CARREGADOR
+                                    </span>
+
+                                    <h3>
+                                        ${escapeText(carregador.nome || "Carregador")}
+                                    </h3>
+                                </div>
+
+                                <span class="user-charger-status">
+                                    ${escapeText(status)}
+                                </span>
+
+                            </div>
+
+                            <p class="user-charger-location">
+                                ${escapeText(carregador.localizacao || "Localização não informada")}
+                            </p>
+
+                            <div class="user-charger-info">
+
+                                <div>
+                                    <span>Potência</span>
+                                    <strong>${potencia}</strong>
+                                </div>
+
+                                <div>
+                                    <span>Status</span>
+                                    <strong>${escapeText(status)}</strong>
+                                </div>
+
+                            </div>
+
+                            ${
+                                temLocalizacao
+                                    ? `
+                                        <button
+                                            type="button"
+                                            class="user-charger-maps-button"
+                                            data-lat="${latitude}"
+                                            data-lng="${longitude}"
+                                        >
+                                            Abrir no Google Maps
+                                        </button>
+                                    `
+                                    : `
+                                        <button
+                                            type="button"
+                                            class="user-charger-maps-button"
+                                            disabled
+                                        >
+                                            Localização indisponível
+                                        </button>
+                                    `
+                            }
+
+                        </div>
+
+                    </article>
+                `;
+
+            }
+        )
+        .join("");
+
+    container
+        .querySelectorAll(
+            ".user-charger-maps-button[data-lat]"
+        )
+        .forEach(
+            botao => {
+
+                botao.addEventListener(
+                    "click",
+                    () => {
+
+                        const latitude =
+                            botao.dataset.lat;
+
+                        const longitude =
+                            botao.dataset.lng;
+
+                        const url =
+                            `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+
+                        window.open(
+                            url,
+                            "_blank"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
 async function iniciarMapaCarregadores() {
 
     if (mapaCarregadores) {
@@ -1565,6 +2012,8 @@ async function iniciarMapaCarregadores() {
         const carregadores =
             dados.carregadores || [];
 
+        renderizarCardsCarregadores(carregadores);
+
 
         const pontosValidos =
             [];
@@ -1574,14 +2023,10 @@ async function iniciarMapaCarregadores() {
             carregador => {
 
                 const latitude =
-                    Number(
-                        carregador.latitude
-                    );
+                    coordinateNumber(carregador.latitude);
 
                 const longitude =
-                    Number(
-                        carregador.longitude
-                    );
+                    coordinateNumber(carregador.longitude);
 
 
                 if (
@@ -1647,16 +2092,16 @@ async function iniciarMapaCarregadores() {
                     <div class="charger-popup">
 
                         <strong>
-                            ${carregador.nome}
+                            ${escapeText(carregador.nome)}
                         </strong>
 
                         <p>
-                            ${carregador.localizacao || ""}
+                            ${escapeText(carregador.localizacao || "")}
                         </p>
 
                         <p>
                             <b>Status:</b>
-                            ${status}
+                            ${escapeText(status)}
                         </p>
 
                         <p>
@@ -1666,7 +2111,7 @@ async function iniciarMapaCarregadores() {
 
                         <p>
                             <b>Modelo:</b>
-                            ${modelo}
+                            ${escapeText(modelo)}
                         </p>
 
                     </div>
@@ -1982,7 +2427,7 @@ if (botaoRota) {
 
 
                 const resposta =
-                    await apiFetch(
+                    await fetch(
                         url
                     );
 
@@ -2182,7 +2627,7 @@ function adicionarMensagemAssistente(
 
         mensagem.innerHTML = `
             <div class="user-ai-bubble">
-                <p>${texto}</p>
+                <p>${escapeText(texto)}</p>
             </div>
         `;
 
@@ -2199,7 +2644,7 @@ function adicionarMensagemAssistente(
                     Assistente EV
                 </strong>
 
-                <p>${texto}</p>
+                <p>${escapeText(texto)}</p>
 
             </div>
         `;
@@ -2359,8 +2804,8 @@ function responderPerguntaUsuario(
         const ordenadas =
             [...sessoes].sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             );
 
 
@@ -2370,9 +2815,7 @@ function responderPerguntaUsuario(
 
         const data =
             ultima.inicio
-                ? new Date(
-                    ultima.inicio
-                ).toLocaleDateString(
+                ? sessionDate(ultima.inicio).toLocaleDateString(
                     "pt-BR"
                 )
                 : "--";
@@ -2452,6 +2895,78 @@ function responderPerguntaUsuario(
 
 }
 
+async function perguntarAssistenteBackend(
+    pergunta
+) {
+
+    try {
+
+        const resposta =
+            await apiFetch(
+                `${API_URL}/me/assistente`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+                        pergunta: pergunta
+                    })
+                }
+            );
+
+
+        if (resposta.status === 401) {
+
+            sessionStorage.removeItem("ev_chargeops_token"
+            );
+
+            sessionStorage.removeItem("ev_chargeops_usuario"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return null;
+        }
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                "Não foi possível consultar o assistente."
+            );
+        }
+
+
+        const dados =
+            await resposta.json();
+
+
+        return dados;
+
+    }
+
+    catch (erro) {
+
+        console.error(
+            "Erro ao consultar Assistente EV:",
+            erro
+        );
+
+
+        return {
+            resposta:
+                "Não consegui consultar seus dados agora."
+        };
+    }
+}
 
 
 async function enviarPerguntaAssistente(
@@ -2470,17 +2985,16 @@ async function enviarPerguntaAssistente(
 
 
     /* =========================================
-       MOSTRA PERGUNTA DO USUÁRIO
+       MOSTRA A MENSAGEM DO USUÁRIO
     ========================================= */
 
     adicionarMensagemAssistente(
-        "user",
-        pergunta
+        pergunta,
+        "user"
     );
 
-
     /* =========================================
-       LIMPA INPUT
+       LIMPA O CAMPO
     ========================================= */
 
     if (assistantInput) {
@@ -2491,7 +3005,7 @@ async function enviarPerguntaAssistente(
 
 
     /* =========================================
-       CONSULTA BACKEND
+       CONSULTA O BACKEND
     ========================================= */
 
     const dados =
@@ -2506,29 +3020,28 @@ async function enviarPerguntaAssistente(
 
 
     /* =========================================
-       MOSTRA RESPOSTA
+       MOSTRA A RESPOSTA DA IA
     ========================================= */
 
     adicionarMensagemAssistente(
-        "assistant",
-        dados.resposta
+        dados.resposta,
+        "assistant"
     );
 
 
     /* =========================================
-       AVISO OPCIONAL
+       AVISO, SE EXISTIR
     ========================================= */
 
     if (dados.aviso) {
 
-        adicionarMensagemAssistente(
-            "assistant",
-            dados.aviso
-        );
+    adicionarMensagemAssistente(
+        dados.aviso,
+        "assistant"
+    );
 
-    }
 }
-
+}
 
 
 if (assistantForm) {
@@ -2703,12 +3216,10 @@ async function perguntarAssistenteBackend(
 
         if (resposta.status === 401) {
 
-            sessionStorage.removeItem(
-                "ev_chargeops_token"
+            sessionStorage.removeItem("ev_chargeops_token"
             );
 
-            sessionStorage.removeItem(
-                "ev_chargeops_usuario"
+            sessionStorage.removeItem("ev_chargeops_usuario"
             );
 
             window.location.href =

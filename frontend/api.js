@@ -67,3 +67,17 @@ async function downloadInvoicePdf(url, filename) {
     }
     downloadBlob(await response.blob(), filename);
 }
+
+function escapeText(value) {
+    return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+}
+
+function coordinateNumber(value) {
+    return value === null || value === undefined || value === '' ? NaN : Number(value);
+}
+
+function requireFreshLogin() {
+    sessionStorage.removeItem('ev_chargeops_token');
+    sessionStorage.removeItem('ev_chargeops_usuario');
+    setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+}

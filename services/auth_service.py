@@ -67,3 +67,9 @@ def obter_usuario_atual(credentials: HTTPAuthorizationCredentials | None=Depends
     if credentials is None:
         raise HTTPException(401,'Autenticação necessária')
     return user_from_token(db,credentials.credentials)
+
+
+def obter_usuario_admin(user=Depends(obter_usuario_atual)):
+    if user.perfil != 'ADMIN':
+        raise HTTPException(403, 'Acesso permitido apenas para administradores')
+    return user

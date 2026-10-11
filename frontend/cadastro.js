@@ -1,5 +1,3 @@
-
-
 const formCadastro =
     document.getElementById(
         "form-cadastro"

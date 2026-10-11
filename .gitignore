@@ -10,3 +10,21 @@ backups/
 *.db
 *.db-*
 *.joblib
+
+# Arquivos do grupo e do sistema
+*.pyc
+# Python cache
+# Ambiente virtual
+venv/
+# Banco local
+banco.db
+*.sqlite
+# Variáveis de ambiente
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+# VS Code
+.vscode/
+# PyCharm
+.idea/
+docs/evidencias/video-funcionamento.mp4

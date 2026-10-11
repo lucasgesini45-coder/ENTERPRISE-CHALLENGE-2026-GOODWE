@@ -382,3 +382,56 @@ def test_public_signup_cannot_promote_to_admin(api):
     api.headers['Authorization']='Bearer '+token
     assert api.get('/sessoes/').status_code==403
     attempts.clear()
+
+
+def test_group_rfid_requires_admin_and_resident_sees_only_own_card(api):
+    token = login_token(api)
+    api.auth = None
+    api.headers['Authorization'] = 'Bearer ' + token
+    assert api.get('/rfid/').status_code == 403
+    assert api.post('/rfid/', json={'uid':'NEW-GROUP', 'usuario_id':1}).status_code == 403
+    assert api.get('/rfid/meu').json()['cartao']['uid'] == 'RFID-1'
+    admin_token = login_token(api, perfil='ADMIN')
+    api.headers['Authorization'] = 'Bearer ' + admin_token
+    card = api.post('/rfid/', json={'uid':'NEW-GROUP', 'usuario_id':1})
+    assert card.status_code == 201
+    assert card.json()['codigo'] == f"RFID-{card.json()['id']:04d}"
+    assert api.post('/rfid/', json={'uid':'NEW-GROUP', 'usuario_id':1}).status_code == 409
+    assert api.post('/rfid/', json={'uid':'   ', 'usuario_id':1}).status_code == 422
+    assert api.put('/rfid/1/status', json={'status':'CANCELADO'}).status_code == 200
+    assert api.put('/rfid/1/status', json={'status':'ATIVO'}).status_code == 409
+
+
+def test_rfid_metadata_migration_preserves_confirmed_billable_sessions(api):
+    start(api)
+    measure(api, encerrar=True)
+    with sqlite3.connect(api.path) as db:
+        before = db.execute('SELECT * FROM sessoes').fetchall()
+        db.execute("CREATE TABLE old_cards (id INTEGER PRIMARY KEY, uid VARCHAR(128) NOT NULL UNIQUE, usuario_id INTEGER REFERENCES usuarios(id), status VARCHAR NOT NULL)")
+        db.execute('INSERT INTO old_cards SELECT id, uid, usuario_id, status FROM cartoes_rfid')
+        db.execute('DROP TABLE cartoes_rfid')
+        db.execute('ALTER TABLE old_cards RENAME TO cartoes_rfid')
+    saved = migrate_sqlite(api.path)
+    assert saved and saved.exists()
+    with sqlite3.connect(api.path) as db:
+        assert db.execute('SELECT * FROM sessoes').fetchall() == before
+        assert db.execute('SELECT confirmado FROM sessoes').fetchone() == (1,)
+    with sqlite3.connect(saved) as db:
+        assert 'codigo' not in {c[1] for c in db.execute('PRAGMA table_info(cartoes_rfid)')}
+    assert migrate_sqlite(api.path) is None
+
+
+def test_personal_summary_bills_only_confirmed_sessions(api):
+    start(api)
+    measure(api, encerrar=True)
+    with api.maker() as db:
+        db.add(Sessao(usuario_id=1, carregador_id=1, inicio=datetime(2026,1,1), status='PENDENTE_CONCILIACAO', consumo_kwh=99, valor_total=99))
+        db.commit()
+    token = login_token(api)
+    api.auth = None
+    api.headers['Authorization'] = 'Bearer ' + token
+    summary = api.get('/me/sessoes').json()
+    assert summary['total_sessoes'] == 1
+    assert summary['consumo_total_kwh'] == 3.5
+    assert summary['valor_total'] == 3.33
+    assert len(summary['sessoes']) == 2

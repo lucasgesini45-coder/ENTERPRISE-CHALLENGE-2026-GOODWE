@@ -27,6 +27,8 @@ def criar_novo_cartao(db, cartao):
     _usuario(db, cartao.usuario_id)
     novo = CartaoRFID(**cartao.model_dump())
     db.add(novo)
+    db.flush()
+    novo.codigo = f"RFID-{novo.id:04d}"
     db.commit()
     db.refresh(novo)
     return novo

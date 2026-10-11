@@ -13,7 +13,7 @@ from services.security import require_admin
 from services.recovery import reconcile_stale_sessions
 from database.models import Sessao
 from datetime import datetime, timedelta, timezone
-from routes import auth, pessoal, consumo, carregadores, sessoes, usuarios, cartoes, goodwe, dashboard, ia, assistente_ia
+from routes import rfid, auth, pessoal, consumo, carregadores, sessoes, usuarios, cartoes, goodwe, dashboard, ia, assistente_ia
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +43,7 @@ async def lifespan(app):
 app = FastAPI(title="EV ChargeOps API", version="1.1.0", lifespan=lifespan)
 for module in (consumo, carregadores, sessoes, usuarios, cartoes, goodwe, dashboard, ia, assistente_ia):
     app.include_router(module.router, dependencies=[Depends(require_admin)])
+app.include_router(rfid.router)
 app.include_router(auth.router)
 app.include_router(pessoal.router)
 app.mount("/painel", StaticFiles(directory=Path(__file__).parent / "frontend", html=True), name="painel")

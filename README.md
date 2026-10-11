@@ -2,7 +2,22 @@
 
 Aplicação FastAPI para cadastro de usuários, carregadores e cartões RFID, registro de sessões, importação GoodWe/SEMS, rateio, relatórios PDF e análise demonstrativa por IA.
 
-Esta branch parte de `tarefa-rfid-raphael` e integra os módulos compatíveis de `OPS-VERSAO-1.0`, `feature/goodwe` e o login/área pessoal de `feature/login-dashboard-usuario`. Ela não altera nem publica as branches de origem.
+A aplicação integra os módulos de RFID, GoodWe/SEMS, login e área pessoal com a recuperação de recargas. A integração com a `main` preserva as telas e evidências do grupo e mantém a autenticação e a confirmação de medições validadas na branch de contingência. O README do grupo está preservado em [docs/README-grupo.md](docs/README-grupo.md), e a documentação da primeira sprint em [sprint-01/README-sprint01.md](sprint-01/README-sprint01.md).
+
+## Atualização de instalações existentes
+
+Antes de atualizar, pare o servidor com Control+C. Após obter esta versão, com o ambiente virtual ativado, execute:
+
+```bash
+python -m scripts.migrate data/chargeops.db
+bash iniciar.sh
+```
+
+Em um banco de contingência já atualizado, a migração acrescenta apenas os campos de metadata RFID que faltarem, com backup automático. Preserva os IDs, as senhas, as medições, as sessões confirmadas e seus valores. Cartões antigos sem data de cadastro continuam sem uma data inventada. Não execute seed para atualizar. Em banco novo, execute diretamente `bash iniciar.sh`.
+
+As telas de RFID, localização de carregadores e assistente usam a mesma API do painel local. O morador consulta apenas seus próprios dados. A página de recuperação está acessível pelo menu do administrador. O dashboard geral indica todo o histórico; os filtros de período continuam nas telas de rateio e faturas.
+
+Os exemplos em `ocpp/` e `simulator/` foram preservados como material experimental do grupo. Não são iniciados por `iniciar.sh` e ainda precisam de adaptação e homologação antes de usar o banco de cobrança ou um carregador físico.
 
 ## Executar localmente
 

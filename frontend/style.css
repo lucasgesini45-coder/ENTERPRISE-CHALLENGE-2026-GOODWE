@@ -233,6 +233,30 @@ button {
     flex: 1;
 }
 
+.menu-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-top: 18px;
+}
+
+.menu-group-title {
+    padding:
+        0
+        13px;
+
+    margin-bottom: 5px;
+
+    color: var(--text-light);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.6px;
+}
 
 .menu-item {
     width: 100%;
@@ -3477,4 +3501,3033 @@ body.dark .session-status.authorized {
             1fr;
     }
 
+}
+
+/* =========================================
+   RFID - RESUMO
+========================================= */
+
+.rfid-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+}
+
+
+/* =========================================
+   RFID - SEÇÃO PRINCIPAL
+========================================= */
+
+.rfid-section {
+    overflow: hidden;
+}
+
+
+.rfid-demo-badge {
+    padding:
+        7px
+        10px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 999px;
+
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.9px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   RFID - GRID
+========================================= */
+
+.rfid-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 24px;
+}
+
+
+/* =========================================
+   RFID - ITEM
+========================================= */
+
+.rfid-item {
+    min-width: 0;
+}
+
+
+/* =========================================
+   RFID - CARTÃO VIRTUAL
+========================================= */
+
+.rfid-virtual-card {
+    position: relative;
+
+    min-height: 245px;
+
+    padding:
+        25px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #11131a 0%,
+            #1b1e27 48%,
+            #111219 100%
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 24px 48px
+        rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.rfid-virtual-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 230px;
+    height: 230px;
+
+    top: -100px;
+    right: -70px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 42, 150, 0.28),
+            transparent 68%
+        );
+}
+
+
+.rfid-virtual-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    left: -80px;
+    bottom: -110px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(81, 213, 146, 0.10),
+            transparent 68%
+        );
+}
+
+
+.rfid-item:hover
+.rfid-virtual-card {
+    transform:
+        translateY(-4px);
+
+    border-color:
+        rgba(255, 42, 150, 0.28);
+
+    box-shadow:
+        0 30px 60px
+        rgba(0, 0, 0, 0.24);
+}
+
+
+/* =========================================
+   RFID - TOPO DO CARTÃO
+========================================= */
+
+.rfid-card-top {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.rfid-card-brand {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 4px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.4px;
+}
+
+
+.rfid-card-brand > span {
+    color:
+        var(--primary);
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+
+.rfid-card-brand strong {
+    color:
+        var(--primary);
+}
+
+
+.rfid-card-type {
+    color:
+        rgba(255, 255, 255, 0.50);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.4px;
+}
+
+
+/* =========================================
+   RFID - CHIP
+========================================= */
+
+.rfid-chip {
+    position: relative;
+
+    z-index: 2;
+
+    width: 48px;
+    height: 36px;
+
+    margin-top: 34px;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e0c98c,
+            #aa8d4d
+        );
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 3px;
+
+    padding: 6px;
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(0, 0, 0, 0.15);
+}
+
+
+.rfid-chip span {
+    border:
+        1px solid
+        rgba(58, 45, 12, 0.35);
+
+    border-radius: 2px;
+}
+
+
+/* =========================================
+   RFID - NÚMERO
+========================================= */
+
+.rfid-number {
+    position: relative;
+
+    z-index: 2;
+
+    margin-top: 27px;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size:
+        clamp(
+            18px,
+            2vw,
+            24px
+        );
+
+    font-weight: 600;
+
+    letter-spacing: 3px;
+}
+
+
+/* =========================================
+   RFID - RODAPÉ DO CARTÃO
+========================================= */
+
+.rfid-card-bottom {
+    position: relative;
+
+    z-index: 2;
+
+    margin-top: 29px;
+
+    display: grid;
+
+    grid-template-columns:
+        1.4fr
+        0.8fr
+        auto;
+
+    align-items: end;
+
+    gap: 20px;
+}
+
+
+.rfid-card-bottom > div {
+    min-width: 0;
+}
+
+
+.rfid-small-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        rgba(255, 255, 255, 0.38);
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+}
+
+
+.rfid-card-bottom strong {
+    display: block;
+
+    overflow: hidden;
+
+    color:
+        rgba(255, 255, 255, 0.92);
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================
+   RFID - STATUS
+========================================= */
+
+.rfid-card-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+}
+
+
+.rfid-card-status span {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+}
+
+
+.rfid-card-status.active {
+    background:
+        rgba(81, 213, 146, 0.12);
+
+    color:
+        #73e7aa;
+}
+
+
+.rfid-card-status.active span {
+    background:
+        #51d592;
+}
+
+
+.rfid-card-status.blocked {
+    background:
+        rgba(255, 102, 133, 0.13);
+
+    color:
+        #ff829c;
+}
+
+
+.rfid-card-status.blocked span {
+    background:
+        #ff6685;
+}
+
+
+/* =========================================
+   RFID - INFORMAÇÕES ABAIXO
+========================================= */
+
+.rfid-card-info {
+    margin-top: 13px;
+
+    padding:
+        15px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 16px;
+
+    background:
+        var(--card);
+}
+
+
+.rfid-user {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.rfid-user-avatar {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        var(--primary-soft);
+
+    color:
+        var(--primary);
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.rfid-user > div:last-child {
+    min-width: 0;
+}
+
+
+.rfid-user strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    overflow: hidden;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.rfid-user span {
+    display: block;
+
+    overflow: hidden;
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.rfid-uid {
+    grid-column:
+        1 / -1;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-top: 11px;
+
+    border-top:
+        1px solid
+        var(--border);
+}
+
+
+.rfid-uid span {
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+.rfid-uid strong {
+    color:
+        var(--text);
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 10px;
+}
+
+
+.rfid-details-button {
+    justify-self: end;
+}
+
+
+/* =========================================
+   RFID - MODAL
+========================================= */
+
+.rfid-detail-modal {
+    max-width: 680px;
+}
+
+
+.rfid-detail-preview {
+    margin-bottom: 22px;
+
+    padding:
+        18px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 15px;
+
+    background:
+        var(--card-soft);
+}
+
+
+.rfid-detail-avatar {
+    width: 50px;
+    height: 50px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.rfid-detail-preview span,
+.rfid-detail-preview small {
+    display: block;
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+}
+
+
+.rfid-detail-preview strong {
+    display: block;
+
+    margin:
+        3px 0;
+
+    font-size: 14px;
+}
+
+
+.rfid-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+
+.rfid-detail-grid > div {
+    padding:
+        15px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 13px;
+
+    background:
+        var(--card);
+}
+
+
+.rfid-detail-grid span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+}
+
+
+.rfid-detail-grid strong {
+    font-size: 11px;
+}
+
+
+.rfid-detail-status {
+    color:
+        var(--success);
+}
+
+
+/* =========================================
+   RFID - AÇÕES DO MODAL
+========================================= */
+
+.rfid-detail-actions {
+    margin-top: 20px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+}
+
+
+.danger-action {
+    min-height: 40px;
+
+    padding:
+        0
+        16px;
+
+    border:
+        1px solid
+        rgba(217, 54, 94, 0.24);
+
+    border-radius: 10px;
+
+    background:
+        var(--danger-soft);
+
+    color:
+        var(--danger);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        background 0.18s ease;
+}
+
+
+.danger-action:hover {
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================
+   RFID - DARK MODE
+========================================= */
+
+body.dark
+.rfid-card-info {
+    background:
+        var(--card);
+}
+
+
+body.dark
+.rfid-demo-badge {
+    background:
+        var(--card-soft);
+}
+
+
+/* =========================================
+   RFID - RESPONSIVO
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .rfid-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 850px) {
+
+    .rfid-summary {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 620px) {
+
+    .rfid-virtual-card {
+        min-height: 220px;
+
+        padding:
+            20px;
+    }
+
+
+    .rfid-card-bottom {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .rfid-card-status {
+        grid-column:
+            1 / -1;
+
+        width: fit-content;
+    }
+
+
+    .rfid-number {
+        font-size: 16px;
+
+        letter-spacing: 2px;
+    }
+
+
+    .rfid-detail-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .rfid-detail-actions {
+        flex-direction: column;
+    }
+
+}
+
+/* =========================================
+   RFID - MODAL NOVO CARTÃO
+========================================= */
+
+#form-novo-rfid {
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+#form-novo-rfid .form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+#form-novo-rfid .form-full {
+    grid-column:
+        1 / -1;
+}
+
+
+#form-novo-rfid .form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+#form-novo-rfid .form-group label {
+    color: var(--text-soft);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.6px;
+
+    text-transform: uppercase;
+}
+
+
+#form-novo-rfid input,
+#form-novo-rfid select {
+    width: 100%;
+
+    min-height: 46px;
+
+    padding:
+        0
+        13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text);
+
+    font-size: 12px;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+#form-novo-rfid input::placeholder {
+    color:
+        var(--text-light);
+}
+
+
+#form-novo-rfid input:focus,
+#form-novo-rfid select:focus {
+    border-color:
+        var(--primary);
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(230, 0, 126, 0.08);
+}
+
+
+body.dark
+#form-novo-rfid input,
+body.dark
+#form-novo-rfid select {
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text);
+}
+
+
+#form-novo-rfid .modal-actions {
+    margin-top: 4px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+}
+
+
+#novo-rfid-message {
+    min-height: 18px;
+
+    font-size: 11px;
+}
+
+
+#novo-rfid-message.success {
+    color:
+        var(--success);
+}
+
+
+#novo-rfid-message.error {
+    color:
+        var(--danger);
+}
+
+
+@media (max-width: 620px) {
+
+    #form-novo-rfid .form-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    #form-novo-rfid .form-full {
+        grid-column:
+            auto;
+    }
+
+    #form-novo-rfid .modal-actions {
+        flex-direction: column;
+    }
+
+}
+
+/* =========================================
+   RFID - HISTÓRICO
+========================================= */
+
+.rfid-history-page {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+
+.rfid-history-hero {
+    padding: 18px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 16px;
+
+    background:
+        var(--card-soft);
+}
+
+
+.rfid-history-hero
+.rfid-detail-preview {
+    margin-bottom: 0;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+}
+
+
+.rfid-history-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+
+.rfid-history-summary-card {
+    position: relative;
+
+    padding: 17px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 14px;
+
+    background:
+        var(--card);
+}
+
+
+.rfid-history-summary-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 4px;
+    height: 100%;
+
+    background:
+        var(--primary);
+}
+
+
+.rfid-history-summary-card span {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.rfid-history-summary-card strong {
+    display: block;
+
+    color:
+        var(--text);
+
+    font-size: 20px;
+
+    font-weight: 800;
+}
+
+
+.rfid-history-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+.rfid-history-card {
+    padding: 18px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 16px;
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 8px 22px
+        rgba(24, 27, 40, 0.05);
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.rfid-history-card:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(230, 0, 126, 0.25);
+
+    box-shadow:
+        0 12px 28px
+        rgba(24, 27, 40, 0.08);
+}
+
+
+.rfid-history-card-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 15px;
+
+    padding-bottom: 13px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+
+.rfid-history-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+    text-transform: uppercase;
+}
+
+
+.rfid-history-card-header h3 {
+    margin: 0;
+
+    font-size: 18px;
+
+    color:
+        var(--text);
+}
+
+
+.rfid-history-badge {
+    padding:
+        6px
+        10px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+
+.rfid-history-badge.success {
+    background:
+        var(--success-soft);
+
+    color:
+        var(--success);
+}
+
+
+.rfid-history-badge.neutral {
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text-soft);
+}
+
+
+.rfid-history-card-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+
+.rfid-history-info {
+    padding: 12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+    background:
+        var(--card-soft);
+}
+
+
+.rfid-history-info span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+.rfid-history-info strong {
+    display: block;
+
+    color:
+        var(--text);
+
+    font-size: 10px;
+
+    line-height: 1.45;
+}
+
+
+.rfid-history-info:nth-child(3) strong {
+    color:
+        var(--primary);
+}
+
+
+.rfid-history-info:nth-child(4) strong {
+    color:
+        var(--success);
+}
+
+
+.rfid-history-page
+.rfid-detail-actions {
+    margin-top: 0;
+
+    justify-content: flex-start;
+}
+
+
+@media (max-width: 700px) {
+
+    .rfid-history-summary-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .rfid-history-card-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+/* =========================================
+   MENU DA CONTA
+========================================= */
+
+.account-menu {
+    position: relative;
+}
+
+
+.account-menu-toggle {
+    min-height: 46px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        5px
+        10px
+        5px
+        6px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 14px;
+
+    background:
+        var(--card);
+
+    color:
+        var(--text);
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+}
+
+
+.account-menu-toggle:hover {
+    transform:
+        translateY(-1px);
+
+    border-color:
+        rgba(230, 0, 126, 0.20);
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+.account-menu-user {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+}
+
+
+.account-menu-user strong {
+    font-size: 10px;
+}
+
+
+.account-menu-user span {
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+}
+
+
+.account-menu-arrow {
+    margin-left: 3px;
+
+    color:
+        var(--text-soft);
+
+    font-size: 13px;
+
+    transition:
+        transform 0.18s ease;
+}
+
+
+.account-menu.open
+.account-menu-arrow {
+    transform:
+        rotate(180deg);
+}
+
+
+/* =========================================
+   DROPDOWN
+========================================= */
+
+.account-dropdown {
+    position: absolute;
+
+    top:
+        calc(100% + 10px);
+
+    right: 0;
+
+    z-index: 1500;
+
+    width: 260px;
+
+    padding: 10px;
+
+    display: none;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 16px;
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 22px 55px
+        rgba(24, 27, 40, 0.14);
+}
+
+
+.account-dropdown.show {
+    display: block;
+}
+
+
+/* =========================================
+   CABEÇALHO
+========================================= */
+
+.account-dropdown-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        9px
+        8px;
+}
+
+
+.account-dropdown-header > div:last-child {
+    min-width: 0;
+}
+
+
+.account-dropdown-header strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 11px;
+}
+
+
+.account-dropdown-header span {
+    display: block;
+
+    color:
+        var(--text-soft);
+
+    font-size: 9px;
+}
+
+
+/* =========================================
+   DIVISOR
+========================================= */
+
+.account-dropdown-divider {
+    height: 1px;
+
+    margin:
+        8px
+        4px;
+
+    background:
+        var(--border);
+}
+
+
+/* =========================================
+   INFORMAÇÕES
+========================================= */
+
+.account-info-row {
+    padding:
+        8px
+        9px;
+
+    border-radius: 10px;
+}
+
+
+.account-info-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--text-light);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+}
+
+
+.account-info-row strong {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color:
+        var(--text);
+
+    font-size: 10px;
+}
+
+
+.account-status-online {
+    color:
+        var(--success) !important;
+}
+
+
+.account-status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background:
+        var(--success);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(20, 150, 87, 0.10);
+}
+
+
+/* =========================================
+   ITENS DO MENU
+========================================= */
+
+.account-menu-item {
+    width: 100%;
+
+    min-height: 40px;
+
+    padding:
+        0
+        9px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text-soft);
+
+    cursor: pointer;
+
+    text-align: left;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+
+.account-menu-item:hover {
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text);
+}
+
+
+.account-menu-icon {
+    width: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color:
+        var(--primary);
+
+    font-size: 14px;
+}
+
+
+.account-menu-logout {
+    color:
+        var(--danger);
+}
+
+
+.account-menu-logout
+.account-menu-icon {
+    color:
+        var(--danger);
+}
+
+
+.account-menu-logout:hover {
+    background:
+        var(--danger-soft);
+
+    color:
+        var(--danger);
+}
+
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+body.dark
+.account-dropdown {
+    box-shadow:
+        0 22px 55px
+        rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================
+   RESPONSIVO
+========================================= */
+
+@media (max-width: 620px) {
+
+    .account-menu-user {
+        display: none;
+    }
+
+
+    .account-dropdown {
+        width:
+            min(
+                280px,
+                calc(100vw - 30px)
+            );
+    }
+
+}
+
+/* =========================================
+   MENU DA FOTO DE PERFIL
+========================================= */
+
+.profile-photo-wrapper {
+    position: relative;
+}
+
+
+.profile-avatar {
+    border: none;
+    cursor: pointer;
+}
+
+
+.profile-photo-menu {
+    position: absolute;
+
+    top:
+        calc(100% + 8px);
+
+    left: 0;
+
+    z-index: 1700;
+
+    width: 150px;
+
+    padding: 6px;
+
+    display: none;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 16px 36px
+        rgba(24, 27, 40, 0.14);
+}
+
+
+.profile-photo-menu.show {
+    display: block;
+}
+
+
+.profile-photo-menu button {
+    width: 100%;
+
+    min-height: 36px;
+
+    padding:
+        0
+        10px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background:
+        transparent;
+
+    color:
+        var(--text-soft);
+
+    text-align: left;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.profile-photo-menu button:hover {
+    background:
+        var(--card-soft);
+
+    color:
+        var(--text);
+}
+
+.account-menu-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-menu-top .account-menu-toggle {
+    flex: 1;
+}
+
+.profile-photo-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* =========================================
+   CONFIGURAÇÕES
+========================================= */
+
+.config-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+}
+
+.config-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.config-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 22, 30, 0.48);
+    backdrop-filter: blur(4px);
+}
+
+.config-modal-dialog {
+    position: relative;
+    z-index: 1;
+    width: min(680px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--card);
+    box-shadow: 0 28px 70px rgba(20, 22, 30, 0.22);
+}
+
+.config-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.config-modal-header h2 {
+    margin: 4px 0 6px;
+    color: var(--text);
+    font-size: 24px;
+}
+
+.config-modal-header p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 11px;
+}
+
+.config-modal-close {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: var(--card-soft);
+    color: var(--text-soft);
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.config-modal-close:hover {
+    color: var(--text);
+}
+
+.config-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 24px;
+}
+
+.config-section {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card-soft);
+}
+
+.config-section-heading {
+    margin-bottom: 14px;
+}
+
+.config-section-heading h3 {
+    margin: 4px 0 0;
+    color: var(--text);
+    font-size: 15px;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.config-field {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+}
+
+.config-field span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-light);
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.config-field strong {
+    color: var(--text);
+    font-size: 10px;
+}
+
+.config-action-button {
+    width: 100%;
+    min-height: 42px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--card);
+    color: var(--text);
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.config-action-button:hover {
+    border-color: rgba(230, 0, 126, 0.25);
+    color: var(--primary);
+}
+
+.config-select-label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.config-select-label span {
+    color: var(--text-soft);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.config-select-label select {
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+}
+
+.config-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 18px 24px 22px;
+    border-top: 1px solid var(--border);
+}
+
+body.dark .config-modal-backdrop {
+    background: rgba(0, 0, 0, 0.62);
+}
+
+@media (max-width: 700px) {
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .config-modal.show {
+        padding: 12px;
+    }
+}
+
+/* =========================================
+   ALTERAR SENHA
+========================================= */
+
+.password-modal-dialog {
+    width: min(480px, 100%);
+}
+
+.password-form {
+    padding: 22px 24px 0;
+}
+
+.password-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 15px;
+}
+
+.password-field span {
+    color: var(--text-soft);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.password-field input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 13px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+}
+
+.password-field input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(230, 0, 126, 0.08);
+}
+
+.password-message {
+    min-height: 18px;
+    margin-top: 5px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.password-message.error {
+    color: var(--danger);
+}
+
+.password-message.success {
+    color: var(--success);
+}
+
+.password-modal-footer {
+    margin: 20px -24px 0;
+    gap: 10px;
+}
+
+/* =========================================
+   DETALHES DO CARREGADOR
+========================================= */
+
+.charger-detail-dialog {
+    width: min(620px, 100%);
+}
+
+.charger-detail-body {
+    padding: 22px 24px;
+}
+
+.charger-detail-hero {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card-soft);
+}
+
+.charger-detail-hero h3 {
+    margin: 4px 0 8px;
+    color: var(--text);
+    font-size: 18px;
+}
+
+.charger-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.charger-detail-info {
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+}
+
+.charger-detail-info span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-light);
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.charger-detail-info strong {
+    display: block;
+    color: var(--text);
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+@media (max-width: 620px) {
+    .charger-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================
+   FOTO DO CARREGADOR
+========================================= */
+
+.charger-symbol {
+    width: 110px;
+    height: 110px;
+
+    border-radius: 22px;
+
+    background: rgba(255, 0, 110, 0.10);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+}
+
+.charger-detail-image {
+    width: 78px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.charger-card-image {
+    width: 90px;
+    height: 110px;
+
+    display: block;
+
+    object-fit: contain;
+}
+
+/* =========================================
+   USUÁRIOS - CARDS
+========================================= */
+
+.user-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 260px);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.user-card {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card);
+    box-shadow:
+        0 10px 26px
+        rgba(24, 27, 40, 0.05);
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(230, 0, 126, 0.22);
+
+    box-shadow:
+        0 14px 32px
+        rgba(24, 27, 40, 0.08);
+}
+
+.user-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.user-avatar-large {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.user-id {
+    padding: 6px 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    background: var(--card-soft);
+
+    color: var(--text-soft);
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.user-card-content h3 {
+    margin: 0 0 5px;
+
+    color: var(--text);
+
+    font-size: 15px;
+}
+
+.user-card-content > p {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: var(--text-soft);
+
+    font-size: 9px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.user-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: var(--success);
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.user-status .status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+}
+
+.users-loading {
+    grid-column: 1 / -1;
+
+    padding: 30px;
+
+    text-align: center;
+
+    color: var(--text-soft);
+
+    font-size: 10px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1100px) {
+
+    .users-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .users-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+/* =========================================
+   MODAL - DETALHES DO USUÁRIO
+========================================= */
+
+.user-detail-modal {
+    width: min(620px, 100%);
+}
+
+.user-detail-profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 18px;
+    margin-bottom: 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    background: var(--card-soft);
+}
+
+.user-detail-avatar {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.user-detail-profile > div:last-child {
+    min-width: 0;
+}
+
+.user-detail-profile strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--text);
+
+    font-size: 15px;
+}
+
+.user-detail-profile span {
+    display: block;
+
+    overflow: hidden;
+
+    color: var(--text-soft);
+
+    font-size: 9px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.user-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.user-detail-grid > div {
+    padding: 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: var(--card);
+}
+
+.user-detail-grid span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-light);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.user-detail-grid strong {
+    color: var(--text);
+
+    font-size: 11px;
+}
+
+.user-detail-status {
+    color: var(--success) !important;
+}
+
+@media (max-width: 600px) {
+
+    .user-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* =========================================
+   MODAL - DETALHES DA SESSÃO
+========================================= */
+
+.session-detail-modal {
+    width: min(680px, 100%);
+}
+
+.session-detail-hero {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 18px;
+    margin-bottom: 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    background: var(--card-soft);
+}
+
+.session-detail-hero strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text);
+
+    font-size: 15px;
+}
+
+.session-detail-status {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 8px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+.session-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.session-detail-grid > div {
+    padding: 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: var(--card);
+}
+
+.session-detail-grid span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-light);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.session-detail-grid strong {
+    color: var(--text);
+
+    font-size: 11px;
+}
+
+@media (max-width: 600px) {
+
+    .session-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* =========================================
+   MODAL - DETALHES DO RATEIO
+========================================= */
+
+.rateio-detail-modal {
+    width: min(620px, 100%);
+}
+
+.rateio-detail-profile {
+    padding: 18px;
+    margin-bottom: 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    background: var(--card-soft);
+}
+
+.rateio-detail-profile strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text);
+
+    font-size: 15px;
+}
+
+.rateio-detail-profile span {
+    color: var(--text-soft);
+
+    font-size: 9px;
+}
+
+.rateio-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.rateio-detail-grid > div {
+    padding: 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: var(--card);
+}
+
+.rateio-detail-grid span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-light);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.rateio-detail-grid strong {
+    color: var(--text);
+
+    font-size: 11px;
+}
+
+#detail-rateio-value {
+    color: var(--primary);
+}
+
+@media (max-width: 600px) {
+
+    .rateio-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* =========================================
+   MAPA - LOCALIZAR CARREGADORES
+========================================= */
+
+.chargers-map {
+    width: 100%;
+    height: 520px;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    background: var(--card-soft);
+}
+
+/* =========================================
+   LOCALIZAR CARREGADORES - LAYOUT
+========================================= */
+
+.locator-shell {
+    position: relative;
+
+    min-height: 640px;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    background: var(--card);
+
+    box-shadow: var(--shadow);
+}
+
+.locator-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 16px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: var(--card);
+}
+
+.locator-search {
+    flex: 1;
+
+    max-width: 520px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 44px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    background: var(--card-soft);
+}
+
+.locator-search span {
+    color: var(--text-light);
+
+    font-size: 18px;
+}
+
+.locator-search input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+    color: var(--text);
+
+    font-size: 11px;
+}
+
+.locator-search input::placeholder {
+    color: var(--text-light);
+}
+
+.locator-filters {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+.locator-filter {
+    min-height: 38px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    background: var(--card-soft);
+    color: var(--text-soft);
+
+    font-size: 9px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.locator-filter.active {
+    border-color: var(--primary);
+
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.locator-map-wrapper {
+    position: relative;
+
+    min-height: 560px;
+}
+
+.locator-map-wrapper .chargers-map {
+    width: 100%;
+    height: 560px;
+
+    border: none;
+    border-radius: 0;
+
+    background: var(--card-soft);
+}
+
+.locator-panel {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    z-index: 500;
+
+    width: min(320px, calc(100% - 36px));
+
+    padding: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+
+    background: rgba(20, 22, 28, 0.58);
+
+    box-shadow:
+        0 14px 32px
+        rgba(0, 0, 0, 0.22);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.locator-panel h2 {
+    margin-bottom: 7px;
+
+    color: var(--text);
+
+    font-size: 17px;
+}
+
+.locator-panel > p {
+    margin-bottom: 18px;
+
+    color: var(--text-soft);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.locator-panel-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+}
+
+.locator-panel-info > div {
+    padding: 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+
+    background: var(--card-soft);
+}
+
+.locator-panel-info span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text-light);
+
+    font-size: 7px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+.locator-panel-info strong {
+    color: var(--text);
+
+    font-size: 9px;
+}
+
+.locator-route-button {
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+
+    .locator-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .locator-search {
+        max-width: none;
+    }
+
+    .locator-panel {
+        position: absolute;
+
+        left: 18px;
+        right: 18px;
+        top: auto;
+        bottom: 18px;
+
+        width: auto;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .locator-panel-info {
+        grid-template-columns: 1fr;
+    }
+
+    .locator-map-wrapper .chargers-map {
+        height: 620px;
+    }
+}
+
+/* =========================================
+   BOTÃO - MINHA LOCALIZAÇÃO
+========================================= */
+
+.locator-location-button {
+    position: absolute;
+
+    left: 18px;
+    bottom: 18px;
+
+    z-index: 500;
+
+    width: 46px;
+    height: 46px;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    background: var(--card);
+    color: var(--primary);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.14);
+
+    cursor: pointer;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.locator-location-button:hover {
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   MARCADORES DOS CARREGADORES
+========================================= */
+
+.charger-map-marker-wrapper {
+    background: transparent;
+    border: none;
+}
+
+.charger-map-marker {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 3px solid #ffffff;
+    border-radius: 12px;
+
+    background:
+        var(--marker-color);
+
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.28);
+
+    transform: rotate(45deg);
+}
+
+.charger-map-marker span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    transform: rotate(-45deg);
+}
+
+/* =========================================
+   CLIQUE NOS MARCADORES DO MAPA
+========================================= */
+
+.charger-map-marker-wrapper {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.charger-map-marker {
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+.charger-map-marker span {
+    pointer-events: none;
+}
+
+.leaflet-routing-container {
+    display: none !important;
+}
+
+.locator-route-button:disabled {
+    opacity: 0.75;
+    cursor: default;
+}
+
+.charger-map-marker.selected {
+    transform:
+        rotate(45deg)
+        scale(1.28);
+
+    box-shadow:
+        0 0 0 5px rgba(230, 0, 126, 0.22),
+        0 10px 28px rgba(0, 0, 0, 0.38);
+
+    z-index: 10;
 }

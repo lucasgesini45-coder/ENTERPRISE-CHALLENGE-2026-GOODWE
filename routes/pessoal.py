@@ -12,7 +12,13 @@ router=APIRouter(prefix='/me',tags=['Área pessoal'])
 
 @router.get('/sessoes')
 def sessions(user=Depends(obter_usuario_atual),db=Depends(get_db)):
-    return {'sessoes':db.query(Sessao).filter_by(usuario_id=user.id).order_by(Sessao.inicio.desc()).all()}
+    rows = db.query(Sessao).filter_by(usuario_id=user.id).order_by(Sessao.inicio.desc()).all()
+    billable = [s for s in rows if s.confirmado and s.status == 'CONCLUIDA']
+    consumption = round(sum(s.consumo_kwh or 0 for s in billable), 3)
+    return {'sessoes': rows, 'total_sessoes': len(billable),
+            'consumo_total_kwh': consumption,
+            'valor_total': round(sum(s.valor_total or 0 for s in billable), 2),
+            'media_consumo_kwh': round(consumption / len(billable), 3) if billable else 0}
 
 
 @router.get('/cartoes')

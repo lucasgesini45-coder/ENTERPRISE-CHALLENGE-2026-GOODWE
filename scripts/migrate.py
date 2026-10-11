@@ -22,7 +22,25 @@ def migrate_sqlite(path, legacy_timezone='UTC'):
     if all(name in tables and columns.issubset({c['name'] for c in inspector.get_columns(name)}) for name, columns in expected.items()):
         source_engine.dispose()
         return None
+    # OPS database: only add RFID metadata. Do not reclassify confirmed sessions.
+    current = {name: {c['name'] for c in inspector.get_columns(name)} for name in tables}
+    metadata = {'data_cadastro', 'codigo'}
+    ops_schema = all(name in current and (columns - metadata if name == 'cartoes_rfid' else columns).issubset(current[name])
+                     for name, columns in expected.items())
+    missing = metadata - current.get('cartoes_rfid', set())
     source_engine.dispose()
+    if ops_schema and missing:
+        stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%f')
+        saved = backup(path, path.parent / 'backups' / f'{path.name}.{stamp}.bak')
+        with sqlite3.connect(path) as connection:
+            connection.execute('BEGIN IMMEDIATE')
+            if 'data_cadastro' in missing:
+                connection.execute('ALTER TABLE cartoes_rfid ADD COLUMN data_cadastro DATETIME')
+            if 'codigo' in missing:
+                connection.execute('ALTER TABLE cartoes_rfid ADD COLUMN codigo VARCHAR')
+            connection.execute('CREATE UNIQUE INDEX IF NOT EXISTS ux_cartoes_rfid_codigo ON cartoes_rfid(codigo)')
+        validate(path)
+        return saved
     if not {'usuarios', 'sessoes'}.issubset(tables) or not ({'carregadores', 'chargers'} & tables):
         raise ValueError('Schema desconhecido; origem não foi alterada')
     permitted = set(expected) | {'chargers', 'sqlite_sequence'}
@@ -74,6 +92,8 @@ def migrate_sqlite(path, legacy_timezone='UTC'):
             for model, table in ((CartaoRFID,'cartoes_rfid'),(EventoSessao,'eventos_sessao'),(RelatorioSEMS,'relatorios_sems'),(TelemetriaCarregador,'telemetria_carregador')):
                 if table in tables:
                     for row in rows(table):
+                        if table == 'cartoes_rfid':
+                            row['data_cadastro'] = dt(row.get('data_cadastro'))
                         if table == 'relatorios_sems':
                             row['recebido_em'] = dt(row['recebido_em'])
                         dst.add(model(**{key:value for key,value in row.items() if key in model.__table__.columns.keys()}))

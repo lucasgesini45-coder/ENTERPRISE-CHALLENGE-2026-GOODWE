@@ -51,3 +51,16 @@ A execução visual em navegador não foi concluída: o navegador de testes não
 - Não há descarte automático de medições recusadas. O operador deve conferir o horário e o estado da sessão antes de selecionar uma tentativa.
 
 Validação: testes de autenticação do download, erro de login, conversão UTC, cancelamento de descarte e falha de armazenamento do arquivo; testes existentes de repetição idempotente e recuperação; inspeção visual do PDF com quatro sessões.
+
+
+## Integração com a main de outubro de 2026
+
+- Conflitos resolvidos entre `fix/contingencia-geral` (`8a55a46`) e `main` (`8a8de54`), preservando ambas as ancestrais no commit de merge.
+- Telas do grupo (RFID, mapa, assistente, configurações, área do morador e landing), evidências e documentação mantidas.
+- Autenticação com chave persistente, hashes compatíveis, autorização administrativa, escopo pessoal e revogação após alteração de senha mantidos. Não foi restaurada a chave JWT fixa nem o fornecimento público de tokens de recuperação.
+- Sessões, telemetria, importação e faturamento conservam confirmação e idempotência. PDF autenticado, horários UTC/SP e arquivo da fila preservados.
+- RFID novo usa os mesmos cartões do fluxo de recuperação; cartões cancelados não podem ser reativados pela tela nova. Códigos internos são persistidos na transação de criação e há identificação compatível para cartões anteriores.
+- Migração específica de metadata RFID faz backup e acrescenta colunas sem reclassificar sessões de contingência já confirmadas. A migração de bancos legados continua separada.
+- Não há novo período fictício no dashboard. Geolocalização sem coordenadas não vira um carregador em 0,0. Mapa ausente não lança erro ao abrir a tela.
+
+Validação: 50 testes Python e 10 testes JavaScript passaram. Sintaxe de todos os scripts e `git diff --check` verificados. Exercício das telas em DOM simulado ligado à API local: resumo administrativo, navegação, RFID do morador e assistente pessoal. Esse exercício não valida o desenho visual, as bibliotecas de mapa no navegador nem o hardware físico; estes pontos continuam para homologação. OCPP/simulador foram preservados como experimentais e não entram na inicialização da API.

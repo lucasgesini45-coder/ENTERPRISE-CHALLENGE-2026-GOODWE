@@ -726,6 +726,15 @@ const iniciarFaturasUI = () => {
                 criarQueryPeriodo();
 
 
+            const token =
+                sessionStorage.getItem("ev_chargeops_token"
+                );
+
+            const headersAutenticados = {
+                "Authorization":
+                    `Bearer ${token}`
+            };
+
             const [
                 respostaRateio,
                 respostaUsuarios
@@ -733,11 +742,21 @@ const iniciarFaturasUI = () => {
                 await Promise.all([
 
                     apiFetch(
-                        `${API_URL}/consumo/rateio-mensal?${query}`
+                        `${API_URL}/consumo/rateio-mensal?${query}`,
+                        {
+                            method: "GET",
+                            headers:
+                                headersAutenticados
+                        }
                     ),
 
                     apiFetch(
-                        `${API_URL}/usuarios/`
+                        `${API_URL}/usuarios/`,
+                        {
+                            method: "GET",
+                            headers:
+                                headersAutenticados
+                        }
                     )
 
                 ]);
@@ -1156,9 +1175,21 @@ const iniciarFaturasUI = () => {
                 criarQueryPeriodo();
 
 
+            const token =
+                sessionStorage.getItem("ev_chargeops_token"
+                );
+
             const resposta =
                 await apiFetch(
-                    `${API_URL}/consumo/fatura-usuario/${usuarioId}?${query}`
+                    `${API_URL}/consumo/fatura-usuario/${usuarioId}?${query}`,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${token}`
+                        }
+                    }
                 );
 
 
@@ -1457,30 +1488,11 @@ const iniciarFaturasUI = () => {
        PDF
     ========================================= */
 
-    async function abrirPdf(
-        usuarioId
-    ) {
-
-        const query =
-            criarQueryPeriodo();
-
-
-        const url =
-            `${API_URL}/consumo/fatura-usuario/${usuarioId}/pdf?${query}`;
-
-
+    async function abrirPdf(usuarioId) {
         try {
-            await downloadInvoicePdf(url, `fatura-usuario-${usuarioId}.pdf`);
-        } catch (erro) {
-            window.alert(`PDF: ${erro.message}`);
-        }
-
+            await downloadInvoicePdf(`${API_URL}/consumo/fatura-usuario/${usuarioId}/pdf?${criarQueryPeriodo()}`, `fatura-${usuarioId}.pdf`);
+        } catch (erro) { alert(erro.message); }
     }
-
-
-    /* =========================================
-       FECHAR MODAL
-    ========================================= */
 
     function fecharModal() {
 
