@@ -477,7 +477,7 @@ const iniciarSessoesUI = () => {
 
 
         const objeto =
-            new Date(data);
+            sessionDate(data);
 
 
         if (
@@ -523,13 +523,13 @@ const iniciarSessoesUI = () => {
         ) {
 
             const inicio =
-                new Date(
+                sessionDate(
                     sessao.inicio
                 );
 
 
             const fim =
-                new Date(
+                sessionDate(
                     sessao.fim
                 );
 
@@ -948,8 +948,8 @@ const iniciarSessoesUI = () => {
         const ordenadas =
             [...sessoes].sort(
                 (a, b) =>
-                    new Date(b.inicio) -
-                    new Date(a.inicio)
+                    sessionDate(b.inicio) -
+                    sessionDate(a.inicio)
             );
 
 

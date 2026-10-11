@@ -36,3 +36,34 @@ window.addEventListener('DOMContentLoaded', () => {
     check();
     setInterval(check, 30000);
 });
+
+// Session timestamps without an offset are stored as UTC by the API.
+function sessionDate(value) {
+    if (!value) return new Date(NaN);
+    const text = String(value);
+    return new Date(/[zZ]$|[+-]\d{2}:?\d{2}$/.test(text) ? text : text + 'Z');
+}
+
+function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+async function downloadInvoicePdf(url, filename) {
+    const response = await apiFetch(url);
+    if (!response.ok) {
+        let message = `Não foi possível baixar o PDF (${response.status}).`;
+        try {
+            const data = await response.json();
+            if (typeof data.detail === 'string') message = data.detail;
+        } catch {}
+        throw Error(message);
+    }
+    downloadBlob(await response.blob(), filename);
+}

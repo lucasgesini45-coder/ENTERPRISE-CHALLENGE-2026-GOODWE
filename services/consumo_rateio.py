@@ -6,7 +6,7 @@ from database.models import (
     Usuario,
     Carregador
 )
-from datetime import datetime
+from datetime import datetime, timezone
 
 def calcular_valor_individual(
     consumo_kwh: float,
@@ -105,7 +105,7 @@ def gerar_relatorio_rateio(db: Session):
         "usuarios": rateio
     }
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def gerar_rateio_por_periodo(
@@ -280,7 +280,7 @@ def gerar_fatura_usuario(
     numero_fatura = "FAT-" + hashlib.sha256(identity.encode()).hexdigest()[:24]
 
 
-    data_emissao = datetime.now()
+    data_emissao = datetime.now(timezone.utc)
 
     detalhes = []
 

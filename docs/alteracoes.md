@@ -40,3 +40,14 @@ Sem validação nesta entrega: comunicação física/OCPP, uso offline do firmwa
 - Inicialização em banco novo, acesso às rotas e persistência após reinício em outro processo.
 
 A execução visual em navegador não foi concluída: o navegador de testes não estava instalado e o download não ficou disponível nesta sessão. Os testes JavaScript da fila usam um DOM simulado; a revisão visual e o teste com hardware permanecem para homologação.
+
+
+## Correções após validação manual de outubro de 2026
+
+- O botão PDF baixa o documento usando o token do login atual. Não abre uma URL sem autenticação nem exige configurar uma segunda senha para esse botão.
+- Horários UTC das sessões são interpretados corretamente no navegador. No PDF, horários de início e emissão usam America/Sao_Paulo, com identificação do fuso.
+- O painel sem filtro passa a indicar "Todo o histórico", conforme os totais retornados pela API.
+- A recuperação permite selecionar tentativas revisadas, confirmar o descarte e arquivá-las no navegador antes de removê-las da fila. Nenhuma sessão do banco é alterada. É possível baixar uma cópia da fila e do arquivo em JSON.
+- Não há descarte automático de medições recusadas. O operador deve conferir o horário e o estado da sessão antes de selecionar uma tentativa.
+
+Validação: testes de autenticação do download, erro de login, conversão UTC, cancelamento de descarte e falha de armazenamento do arquivo; testes existentes de repetição idempotente e recuperação; inspeção visual do PDF com quatro sessões.

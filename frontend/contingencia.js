@@ -70,6 +70,75 @@ document.getElementById('report').addEventListener('submit',async event=>{
 });
 const inspectButton=document.createElement('button');
 inspectButton.textContent='Ver a fila de medições';
-inspectButton.addEventListener('click',()=>{try{display(queue());}catch(error){display(error.message);}});
+inspectButton.addEventListener('click',()=>{try{renderQueue();}catch(error){display(error.message);}});
 document.getElementById('queue-status').after(inspectButton);
 try {saveQueue(queue());} catch(error){display(error.message);}
+
+const archiveKey = queueKey + '-archive';
+function discardReviewed(selected) {
+    const current = queue();
+    const discarded = current.filter(item => selected.has(JSON.stringify(item)));
+    if (!discarded.length) throw Error('Selecione as tentativas que já foram revisadas.');
+    if (!window.confirm(`Arquivar e retirar ${discarded.length} tentativa(s) da fila? Confira antes se as sessões estão corretas. Isso não altera as sessões nem as faturas.`)) return false;
+    const archive = JSON.parse(localStorage.getItem(archiveKey) || '[]');
+    if (!Array.isArray(archive)) throw Error('Arquivo local inválido. A fila foi preservada.');
+    // Archive first. If storage fails, no pending measurement is discarded.
+    archive.push({archivedAt: new Date().toISOString(), items: discarded});
+    localStorage.setItem(archiveKey, JSON.stringify(archive));
+    saveQueue(current.filter(item => !selected.has(JSON.stringify(item))));
+    return true;
+}
+function renderQueue() {
+    const items = queue();
+    const panel = document.getElementById('queue-review');
+    panel.hidden = false;
+    panel.replaceChildren();
+    const title = document.createElement('h2');
+    title.textContent = 'Revisar tentativas pendentes';
+    panel.append(title);
+    const note = document.createElement('p');
+    note.textContent = 'Selecione somente tentativas já conferidas. O descarte não modifica as sessões no banco. As tentativas ficam arquivadas neste navegador.';
+    panel.append(note);
+    const selected = new Set();
+    for (const item of items) {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.style.width = 'auto';
+        checkbox.addEventListener('change', () => {
+            const key = JSON.stringify(item);
+            if (checkbox.checked) selected.add(key); else selected.delete(key);
+        });
+        const description = document.createElement('span');
+        const instant = sessionDate(item.body.instante);
+        description.textContent = ` ${item.path} — ${instant.toLocaleString('pt-BR')} — ${item.body.consumo_kwh} kWh — ${item.body.encerrar ? 'encerramento' : 'medição'}`;
+        label.append(checkbox, description);
+        panel.append(label);
+    }
+    if (!items.length) {
+        const empty = document.createElement('p');
+        empty.textContent = 'Nenhuma tentativa pendente.';
+        panel.append(empty);
+    }
+    const discard = document.createElement('button');
+    discard.textContent = 'Arquivar e descartar selecionadas';
+    discard.disabled = !items.length;
+    discard.addEventListener('click', () => {
+        try {
+            if (discardReviewed(selected)) {
+                renderQueue();
+                display('Tentativas selecionadas arquivadas. As sessões no banco foram preservadas.');
+            }
+        } catch (error) {display(error.message);}
+    });
+    panel.append(discard);
+    const exportButton = document.createElement('button');
+    exportButton.textContent = 'Baixar cópia da fila e do arquivo';
+    exportButton.addEventListener('click', () => {
+        try {
+            const data = {pending: queue(), archived: JSON.parse(localStorage.getItem(archiveKey) || '[]')};
+            downloadBlob(new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'}), 'tentativas-recarga.json');
+        } catch (error) {display(error.message);}
+    });
+    panel.append(exportButton);
+}

@@ -678,7 +678,7 @@ const iniciarFaturasUI = () => {
 
 
         const data =
-            new Date(valor);
+            sessionDate(valor);
 
 
         return data.toLocaleString(
@@ -1457,7 +1457,7 @@ const iniciarFaturasUI = () => {
        PDF
     ========================================= */
 
-    function abrirPdf(
+    async function abrirPdf(
         usuarioId
     ) {
 
@@ -1469,10 +1469,11 @@ const iniciarFaturasUI = () => {
             `${API_URL}/consumo/fatura-usuario/${usuarioId}/pdf?${query}`;
 
 
-        window.open(
-            url,
-            "_blank"
-        );
+        try {
+            await downloadInvoicePdf(url, `fatura-usuario-${usuarioId}.pdf`);
+        } catch (erro) {
+            window.alert(`PDF: ${erro.message}`);
+        }
 
     }
 
