@@ -7,3 +7,4 @@ reportlab>=4,<5
 numpy>=1.26,<3
 PyJWT>=2.10,<3
 bcrypt>=4,<6
+psycopg[binary]>=3.2,<4
