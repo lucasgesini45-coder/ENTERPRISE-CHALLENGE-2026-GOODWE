@@ -14,6 +14,7 @@ from services.recovery import reconcile_stale_sessions
 from database.models import Sessao
 from datetime import datetime, timedelta, timezone
 from routes import rfid, auth, pessoal, consumo, carregadores, sessoes, usuarios, cartoes, goodwe, dashboard, ia, assistente_ia
+from fastapi.middleware.cors import CORSMiddleware
 
 logger = logging.getLogger(__name__)
 
