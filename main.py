@@ -41,13 +41,52 @@ async def lifespan(app):
         await task
 
 
-app = FastAPI(title="EV ChargeOps API", version="1.1.0", lifespan=lifespan)
-for module in (consumo, carregadores, sessoes, usuarios, cartoes, goodwe, dashboard, ia, assistente_ia):
-    app.include_router(module.router, dependencies=[Depends(require_admin)])
+app = FastAPI(
+    title="EV ChargeOps API",
+    version="1.1.0",
+    lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://chargevision.vercel.app",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+for module in (
+    consumo,
+    carregadores,
+    sessoes,
+    usuarios,
+    cartoes,
+    goodwe,
+    dashboard,
+    ia,
+    assistente_ia
+):
+    app.include_router(
+        module.router,
+        dependencies=[Depends(require_admin)]
+    )
+
 app.include_router(rfid.router)
 app.include_router(auth.router)
 app.include_router(pessoal.router)
-app.mount("/painel", StaticFiles(directory=Path(__file__).parent / "frontend", html=True), name="painel")
+
+app.mount(
+    "/painel",
+    StaticFiles(
+        directory=Path(__file__).parent / "frontend",
+        html=True
+    ),
+    name="painel"
+)
 
 
 @app.exception_handler(SQLAlchemyError)
