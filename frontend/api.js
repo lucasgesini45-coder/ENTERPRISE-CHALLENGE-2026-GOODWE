@@ -19,24 +19,83 @@ async function apiFetch(url, options = {}) {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    const banner = document.createElement('div');
-    banner.id = 'connection-status';
-    banner.setAttribute('role', 'status');
-    banner.style.cssText = 'padding:12px;background:#fff3cd;color:#332701;text-align:center;position:sticky;top:0;z-index:1000';
-    banner.textContent = 'Verificando conexão. Os dados exibidos podem estar desatualizados.';
-    document.body.prepend(banner);
+window.addEventListener("DOMContentLoaded", () => {
+
     const check = async () => {
+
+        let banner =
+            document.getElementById(
+                "connection-status"
+            );
+
         try {
-            const response = await apiFetch(`${API_URL}/health`);
-            if (!response.ok) throw Error('Banco indisponível');
-            banner.textContent = `Banco acessível. Última verificação: ${new Date().toLocaleString('pt-BR')}. As medições têm seus próprios horários.`;
-        } catch {
-            banner.textContent = 'Sem conexão confirmada. Os dados exibidos podem estar desatualizados; tente novamente antes de alterar registros.';
+
+            const response =
+                await apiFetch(
+                    `${API_URL}/health`
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Banco indisponível"
+                );
+
+            }
+
+            if (banner) {
+
+                banner.remove();
+
+            }
+
+        } catch (erro) {
+
+            if (!banner) {
+
+                banner =
+                    document.createElement(
+                        "div"
+                    );
+
+                banner.id =
+                    "connection-status";
+
+                banner.setAttribute(
+                    "role",
+                    "status"
+                );
+
+                banner.style.cssText = `
+                    padding: 12px;
+                    background: #fff3cd;
+                    color: #332701;
+                    text-align: center;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1000;
+                `;
+
+                document.body.prepend(
+                    banner
+                );
+
+            }
+
+            banner.textContent =
+                "Sem conexão confirmada. Os dados exibidos podem estar desatualizados.";
+
         }
+
     };
+
     check();
-    setInterval(check, 30000);
+
+    setInterval(
+        check,
+        30000
+    );
+
 });
 
 // Session timestamps without an offset are stored as UTC by the API.
