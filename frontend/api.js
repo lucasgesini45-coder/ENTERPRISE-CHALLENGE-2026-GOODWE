@@ -1,4 +1,6 @@
-const API_URL = window.EV_CHARGEOPS_API_URL || window.location.origin;
+const API_URL =
+    window.EV_CHARGEOPS_API_URL ||
+    "https://enterprise-challenge-2026-goodwe.onrender.com";
 
 async function apiFetch(url, options = {}) {
     const controller = new AbortController();
