@@ -434,12 +434,39 @@ async function carregarPrevisoes() {
                 `${API_URL}/ia/previsao-consumo?dias=7`
             );
 
+        if (!resposta.ok) {
+
+            throw new Error(
+                "Não foi possível carregar a previsão."
+            );
+
+        }
+
         const dados =
             await resposta.json();
 
-        if (!dados.sucesso) {
+
+        console.log(
+            "Previsão recebida:",
+            dados
+        );
+
+
+        if (
+            !dados.sucesso ||
+            !Array.isArray(dados.previsoes) ||
+            dados.previsoes.length === 0
+        ) {
+
+            console.warn(
+                "Nenhuma previsão disponível para o gráfico.",
+                dados
+            );
+
             return;
+
         }
+
 
         const labels =
             dados.previsoes.map(
@@ -450,6 +477,7 @@ async function carregarPrevisoes() {
                             item.data
                         );
 
+
                     return (
                         `${String(
                             data.getDate()
@@ -458,19 +486,54 @@ async function carregarPrevisoes() {
                             data.getMonth() + 1
                         ).padStart(2, "0")}`
                     );
+
                 }
             );
+
 
         const valores =
             dados.previsoes.map(
                 item =>
-                    item.consumo_previsto_kwh
+                    Number(
+                        item.consumo_previsto_kwh
+                    )
             );
 
-        criarGrafico(
-            labels,
+
+        console.log(
+            "Labels gráfico:",
+            labels
+        );
+
+
+        console.log(
+            "Valores gráfico:",
             valores
         );
+
+
+        /*
+         * Aguarda a Visão Geral terminar
+         * de ser renderizada.
+         */
+        requestAnimationFrame(
+            () => {
+
+                setTimeout(
+                    () => {
+
+                        criarGrafico(
+                            labels,
+                            valores
+                        );
+
+                    },
+                    150
+                );
+
+            }
+        );
+
 
     } catch (erro) {
 
@@ -478,7 +541,9 @@ async function carregarPrevisoes() {
             "Erro na previsão:",
             erro
         );
+
     }
+
 }
 
 
@@ -492,162 +557,375 @@ function criarGrafico(
             "grafico-consumo"
         );
 
+
     if (!canvas) {
+
+        console.error(
+            "Canvas grafico-consumo não encontrado."
+        );
+
         return;
+
     }
 
+
+    if (
+        typeof Chart ===
+        "undefined"
+    ) {
+
+        console.error(
+            "Chart.js não foi carregado."
+        );
+
+        return;
+
+    }
+
+
+    const container =
+        canvas.parentElement;
+
+
+    console.log(
+        "Container gráfico:",
+        container
+    );
+
+
+    console.log(
+        "Tamanho gráfico:",
+        container?.offsetWidth,
+        container?.offsetHeight
+    );
+
+
+    /*
+     * Força o canvas a ocupar
+     * todo o espaço disponível.
+     */
+    canvas.style.width =
+        "100%";
+
+    canvas.style.height =
+        "100%";
+
+
     const contexto =
-        canvas.getContext("2d");
+        canvas.getContext(
+            "2d"
+        );
+
+
+    if (!contexto) {
+
+        console.error(
+            "Não foi possível obter contexto 2D."
+        );
+
+        return;
+
+    }
+
 
     const cores =
         obterCoresGrafico();
+
 
     const gradiente =
         contexto.createLinearGradient(
             0,
             0,
             0,
-            260
+            270
         );
+
 
     gradiente.addColorStop(
         0,
-        document.body.classList.contains(
-            "dark"
-        )
+
+        document.body
+            .classList
+            .contains(
+                "dark"
+            )
+
             ? "rgba(255,42,150,0.28)"
+
             : "rgba(230,0,126,0.25)"
     );
+
 
     gradiente.addColorStop(
         1,
         "rgba(230,0,126,0)"
     );
 
-    if (graficoPrevisao) {
+
+    /*
+     * Remove gráfico anterior
+     * antes de recriar.
+     */
+    if (
+        graficoPrevisao
+    ) {
+
         graficoPrevisao.destroy();
+
+        graficoPrevisao =
+            null;
+
     }
+
 
     graficoPrevisao =
         new Chart(
             contexto,
             {
-                type: "line",
+
+                type:
+                    "line",
+
 
                 data: {
-                    labels,
+
+                    labels:
+                        labels,
+
 
                     datasets: [
                         {
-                            data: valores,
+
+                            label:
+                                "Consumo previsto",
+
+
+                            data:
+                                valores,
+
 
                             borderColor:
                                 cores.linha,
 
+
                             backgroundColor:
                                 gradiente,
 
-                            fill: true,
 
-                            tension: 0.42,
+                            fill:
+                                true,
 
-                            borderWidth: 3,
 
-                            pointRadius: 4,
+                            tension:
+                                0.4,
 
-                            pointHoverRadius: 6,
+
+                            borderWidth:
+                                3,
+
+
+                            pointRadius:
+                                4,
+
+
+                            pointHoverRadius:
+                                6,
+
 
                             pointBackgroundColor:
                                 cores.ponto,
 
+
                             pointBorderColor:
                                 cores.linha,
 
-                            pointBorderWidth: 2
+
+                            pointBorderWidth:
+                                2
+
                         }
                     ]
+
                 },
 
+
                 options: {
-                    responsive: true,
+
+                    responsive:
+                        true,
+
 
                     maintainAspectRatio:
                         false,
 
+
                     interaction: {
-                        intersect: false,
-                        mode: "index"
+
+                        intersect:
+                            false,
+
+                        mode:
+                            "index"
+
                     },
 
+
                     plugins: {
+
                         legend: {
-                            display: false
+
+                            display:
+                                false
+
                         },
 
+
                         tooltip: {
+
                             backgroundColor:
                                 cores.tooltip,
 
-                            padding: 12,
+
+                            padding:
+                                12,
+
 
                             displayColors:
                                 false,
 
+
                             callbacks: {
-                                label(context) {
+
+                                label(
+                                    context
+                                ) {
+
                                     return (
-                                        context.raw +
+                                        Number(
+                                            context.raw
+                                        ).toFixed(
+                                            2
+                                        ) +
                                         " kWh"
                                     );
+
                                 }
+
                             }
+
                         }
+
                     },
 
+
                     scales: {
+
                         x: {
+
                             grid: {
-                                display: false
+
+                                display:
+                                    false
+
                             },
+
 
                             border: {
-                                display: false
+
+                                display:
+                                    false
+
                             },
 
+
                             ticks: {
+
                                 color:
                                     cores.texto
+
                             }
+
                         },
 
+
                         y: {
-                            beginAtZero: true,
+
+                            beginAtZero:
+                                true,
+
 
                             border: {
-                                display: false
+
+                                display:
+                                    false
+
                             },
+
 
                             grid: {
+
                                 color:
                                     cores.grade
+
                             },
 
+
                             ticks: {
+
                                 color:
                                     cores.texto,
 
-                                callback(valor) {
+
+                                callback(
+                                    valor
+                                ) {
+
                                     return (
                                         valor +
                                         " kWh"
                                     );
+
                                 }
+
                             }
+
                         }
+
                     }
+
                 }
+
             }
         );
+
+
+    /*
+     * Força o Chart.js a recalcular
+     * o tamanho depois de criado.
+     */
+    setTimeout(
+        () => {
+
+            if (
+                graficoPrevisao
+            ) {
+
+                graficoPrevisao.resize();
+
+                graficoPrevisao.update();
+
+            }
+
+        },
+        100
+    );
+
+
+    console.log(
+        "Gráfico criado com sucesso.",
+        graficoPrevisao
+    );
+
 }
 
 
@@ -1542,45 +1820,40 @@ async function iniciarAplicacao() {
 
     verificarAPI();
 
+
+    /*
+     * Primeiro carregamos todos
+     * os indicadores do dashboard.
+     */
     await Promise.all([
+
         carregarDashboard(),
+
         carregarIndicadoresIA(),
-        carregarPrevisoes(),
+
         carregarAnomalias(),
+
         carregarRateio()
+
     ]);
-}
 
 
-iniciarAplicacao();
-
-const botaoLogout =
-    document.getElementById(
-        "btn-logout"
-    );
-
-
-if (botaoLogout) {
-
-    botaoLogout.addEventListener(
-        "click",
+    /*
+     * O gráfico é carregado depois,
+     * quando a Visão Geral já possui
+     * tamanho e layout definidos.
+     */
+    setTimeout(
         () => {
 
-            sessionStorage.removeItem("ev_chargeops_token"
-            );
+            carregarPrevisoes();
 
-
-            sessionStorage.removeItem("ev_chargeops_usuario"
-            );
-
-
-            window.location.href =
-                "login.html";
-
-        }
+        },
+        250
     );
 
 }
+iniciarAplicacao();
 
 const accountMenuToggle =
     document.getElementById(
