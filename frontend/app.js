@@ -280,46 +280,144 @@ async function carregarIndicadoresIA() {
 
     try {
 
-        const resposta =
-            await apiFetch(
-                `${API_URL}/ia/indicadores?dias=7`
-            );
+        const [
+            respostaPrevisao,
+            respostaAnomalias
+        ] = await Promise.all([
 
-        const dados =
-            await resposta.json();
+            apiFetch(
+                `${API_URL}/ia/previsao-consumo?dias=7`
+            ),
 
-        document.getElementById(
-            "previsao-consumo"
-        ).textContent =
-            dados.consumo_previsto_kwh ?? "--";
+            apiFetch(
+                `${API_URL}/ia/anomalias`
+            )
 
-        document.getElementById(
-            "horario-pico"
-        ).textContent =
-            dados.horario_pico_previsto ?? "--";
+        ]);
 
-        document.getElementById(
-            "nivel-demanda"
-        ).textContent =
-            dados.nivel_demanda ?? "--";
 
-        document.getElementById(
-            "total-anomalias"
-        ).textContent =
-            dados.total_anomalias ?? 0;
+        const previsao =
+            await respostaPrevisao.json();
 
-        document.getElementById(
-            "nivel-atencao"
-        ).textContent =
-            dados.nivel_atencao ?? "NORMAL";
+        const anomalias =
+            await respostaAnomalias.json();
+
+
+        /* ==============================
+           PREVISÃO
+        ============================== */
+
+        if (previsao?.sucesso) {
+
+            document.getElementById(
+                "previsao-consumo"
+            ).textContent =
+                previsao
+                    .consumo_total_previsto_kwh ??
+                "--";
+
+
+            document.getElementById(
+                "horario-pico"
+            ).textContent =
+                previsao
+                    .horario_pico_previsto ??
+                "--";
+
+
+            document.getElementById(
+                "nivel-demanda"
+            ).textContent =
+                previsao
+                    .nivel_demanda ??
+                "--";
+
+        } else {
+
+            document.getElementById(
+                "previsao-consumo"
+            ).textContent =
+                "--";
+
+
+            document.getElementById(
+                "horario-pico"
+            ).textContent =
+                "--";
+
+
+            document.getElementById(
+                "nivel-demanda"
+            ).textContent =
+                "--";
+
+        }
+
+
+        /* ==============================
+           ANOMALIAS
+        ============================== */
+
+        if (anomalias?.sucesso) {
+
+            const total =
+                anomalias
+                    .total_anomalias ?? 0;
+
+
+            document.getElementById(
+                "total-anomalias"
+            ).textContent =
+                total;
+
+
+            let nivel =
+                "NORMAL";
+
+
+            if (total > 2) {
+
+                nivel =
+                    "CRITICO";
+
+            } else if (total > 0) {
+
+                nivel =
+                    "ATENCAO";
+
+            }
+
+
+            document.getElementById(
+                "nivel-atencao"
+            ).textContent =
+                nivel;
+
+        } else {
+
+            document.getElementById(
+                "total-anomalias"
+            ).textContent =
+                "--";
+
+
+            document.getElementById(
+                "nivel-atencao"
+            ).textContent =
+                "--";
+
+        }
+
 
     } catch (erro) {
 
         console.error(
-            "Erro na IA:",
+            "Erro nos indicadores IA:",
             erro
         );
+
     }
+
 }
 
 
