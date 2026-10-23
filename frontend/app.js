@@ -1822,37 +1822,37 @@ async function iniciarAplicacao() {
 
 
     /*
-     * Primeiro carregamos todos
-     * os indicadores do dashboard.
+     * Primeiro carrega os dados comuns.
      */
     await Promise.all([
-
         carregarDashboard(),
-
-        carregarIndicadoresIA(),
-
-        carregarAnomalias(),
-
         carregarRateio()
-
     ]);
 
 
     /*
-     * O gráfico é carregado depois,
-     * quando a Visão Geral já possui
-     * tamanho e layout definidos.
+     * Depois executa os indicadores da IA.
      */
-    setTimeout(
-        () => {
+    await carregarIndicadoresIA();
 
-            carregarPrevisoes();
 
-        },
-        250
-    );
+    /*
+     * Carrega o detalhe das anomalias.
+     */
+    await carregarAnomalias();
+
+
+    /*
+     * Por último gera o gráfico.
+     */
+    await carregarPrevisoes();
 
 }
+
+
+/*
+ * Inicia a aplicação uma única vez.
+ */
 iniciarAplicacao();
 
 const accountMenuToggle =

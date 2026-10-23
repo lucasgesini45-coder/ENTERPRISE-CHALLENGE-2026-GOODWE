@@ -4,7 +4,10 @@ const API_URL =
 
 async function apiFetch(url, options = {}) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const timeout = setTimeout(
+    () => controller.abort(),
+    60000
+    );
     const cancel = () => controller.abort();
     if (options.signal?.aborted) cancel();
     options.signal?.addEventListener('abort', cancel, {once: true});
