@@ -2,60 +2,55 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from database.database import get_db
-from services.ia_service import (
-    prever_consumo,
-    detectar_anomalias
-)
-router = APIRouter(
-    prefix="/ia",
-    tags=["Inteligencia Artificial"]
-)
+from services.ia_service import prever_consumo, detectar_anomalias
+
+router = APIRouter(prefix="/ia", tags=["Inteligencia Artificial"])
 
 
 @router.get("/previsao-consumo")
 def previsao_consumo(
     dias: int = Query(default=7, ge=1, le=30),
-    db: Session = Depends(get_db)
+    incluir_nao_confirmadas: bool = Query(default=False),
+    db: Session = Depends(get_db),
 ):
     return prever_consumo(
-        db=db,
-        dias_previsao=dias
+        db=db, dias_previsao=dias, incluir_nao_confirmadas=incluir_nao_confirmadas
     )
+
 
 @router.get("/anomalias")
 def anomalias(
-    db: Session = Depends(get_db)
+    incluir_nao_confirmadas: bool = Query(default=False), db: Session = Depends(get_db)
 ):
-    return detectar_anomalias(db)
+    return detectar_anomalias(db, incluir_nao_confirmadas)
+
 
 @router.get("/resumo")
 def resumo_ia(
     dias: int = Query(default=7, ge=1, le=30),
-    db: Session = Depends(get_db)
+    incluir_nao_confirmadas: bool = Query(default=False),
+    db: Session = Depends(get_db),
 ):
     previsao = prever_consumo(
-        db=db,
-        dias_previsao=dias
+        db=db, dias_previsao=dias, incluir_nao_confirmadas=incluir_nao_confirmadas
     )
 
-    anomalias = detectar_anomalias(db)
+    anomalias = detectar_anomalias(db, incluir_nao_confirmadas)
 
-    return {
-        "previsao": previsao,
-        "anomalias": anomalias
-    }
+    return {"previsao": previsao, "anomalias": anomalias}
+
 
 @router.get("/indicadores")
 def indicadores_ia(
     dias: int = Query(default=7, ge=1, le=30),
-    db: Session = Depends(get_db)
+    incluir_nao_confirmadas: bool = Query(default=False),
+    db: Session = Depends(get_db),
 ):
     previsao = prever_consumo(
-        db=db,
-        dias_previsao=dias
+        db=db, dias_previsao=dias, incluir_nao_confirmadas=incluir_nao_confirmadas
     )
 
-    anomalias = detectar_anomalias(db)
+    anomalias = detectar_anomalias(db, incluir_nao_confirmadas)
 
     if not previsao.get("sucesso"):
         return previsao
@@ -75,24 +70,11 @@ def indicadores_ia(
         nivel_atencao = "CRITICO"
 
     return {
-        "consumo_previsto_kwh":
-            previsao["consumo_total_previsto_kwh"],
-
-        "horario_pico_previsto":
-            previsao["horario_pico_previsto"],
-
-        "maior_consumo_previsto_kwh":
-            previsao["maior_consumo_previsto_kwh"],
-
-        "media_consumo_sessao_kwh":
-            previsao["media_consumo_sessao_kwh"],
-
-        "nivel_demanda":
-            previsao["nivel_demanda"],
-
-        "total_anomalias":
-            total_anomalias,
-
-        "nivel_atencao":
-            nivel_atencao
+        "consumo_previsto_kwh": previsao["consumo_total_previsto_kwh"],
+        "horario_pico_previsto": previsao["horario_pico_previsto"],
+        "maior_consumo_previsto_kwh": previsao["maior_consumo_previsto_kwh"],
+        "media_consumo_sessao_kwh": previsao["media_consumo_sessao_kwh"],
+        "nivel_demanda": previsao["nivel_demanda"],
+        "total_anomalias": total_anomalias,
+        "nivel_atencao": nivel_atencao,
     }
