@@ -380,8 +380,249 @@ def gerar_historico():
     finally:
 
         db.close()
+def gerar_recargas_recentes():
 
+    db = SessionLocal()
+
+    try:
+
+        carregadores = (
+            db.query(Carregador)
+            .order_by(Carregador.id)
+            .all()
+        )
+
+        usuarios = (
+            db.query(Usuario)
+            .order_by(Usuario.id)
+            .all()
+        )
+
+        if not carregadores or not usuarios:
+            print(
+                "[RECENTES] Sem usuários ou carregadores."
+            )
+            return
+
+
+        agora = datetime.now()
+
+        quantidade = 40
+
+        criadas = 0
+        ignoradas = 0
+
+
+        for indice in range(
+            quantidade
+        ):
+
+            chave = (
+                f"DEMO-RECENTE-{indice + 1:04d}"
+            )
+
+
+            existente = (
+                db.query(Sessao)
+                .filter(
+                    Sessao.chave_operacao ==
+                    chave
+                )
+                .first()
+            )
+
+
+            if existente:
+
+                ignoradas += 1
+                continue
+
+
+            usuario = (
+                usuarios[
+                    indice %
+                    len(usuarios)
+                ]
+            )
+
+
+            carregador = (
+                carregadores[
+                    indice %
+                    len(carregadores)
+                ]
+            )
+
+
+            # Últimos 7 dias
+            dias_atras = (
+                randomizador.randint(
+                    0,
+                    6
+                )
+            )
+
+
+            hora = (
+                randomizador.choice(
+                    [
+                        7, 8, 9, 10,
+                        11, 12, 13,
+                        14, 15, 16,
+                        17, 18, 19,
+                        20, 21
+                    ]
+                )
+            )
+
+
+            minuto = (
+                randomizador.randint(
+                    0,
+                    59
+                )
+            )
+
+
+            inicio = (
+                agora -
+                timedelta(
+                    days=dias_atras
+                )
+            ).replace(
+                hour=hora,
+                minute=minuto,
+                second=0,
+                microsecond=0
+            )
+
+
+            duracao = (
+                randomizador.randint(
+                    35,
+                    150
+                )
+            )
+
+
+            consumo = round(
+                randomizador.uniform(
+                    5.0,
+                    17.5
+                ),
+                2
+            )
+
+
+            fim = (
+                inicio +
+                timedelta(
+                    minutes=duracao
+                )
+            )
+
+
+            valor_total = round(
+                consumo *
+                TARIFA_KWH,
+                2
+            )
+
+
+            sessao = Sessao(
+
+                usuario_id=
+                    usuario.id,
+
+                carregador_id=
+                    carregador.id,
+
+                inicio=
+                    inicio,
+
+                fim=
+                    fim,
+
+                consumo_kwh=
+                    consumo,
+
+                duracao=
+                    float(
+                        duracao
+                    ),
+
+                tarifa=
+                    TARIFA_KWH,
+
+                valor_total=
+                    valor_total,
+
+                status=
+                    "CONCLUIDA",
+
+                confirmado=
+                    True,
+
+                ultima_medicao=
+                    fim,
+
+                origem=
+                    "DEMO",
+
+                chave_operacao=
+                    chave
+
+            )
+
+
+            db.add(
+                sessao
+            )
+
+            criadas += 1
+
+
+        db.commit()
+
+
+        print()
+        print(
+            "=============================="
+        )
+        print(
+            " RECARGAS RECENTES ADICIONADAS"
+        )
+        print(
+            "=============================="
+        )
+
+        print(
+            f"Criadas: {criadas}"
+        )
+
+        print(
+            f"Já existentes: {ignoradas}"
+        )
+
+
+    except Exception as erro:
+
+        db.rollback()
+
+        print(
+            "[RECENTES] ERRO:",
+            erro
+        )
+
+        raise
+
+
+    finally:
+
+        db.close()
 
 if __name__ == "__main__":
 
     gerar_historico()
+    
+    gerar_recargas_recentes()
