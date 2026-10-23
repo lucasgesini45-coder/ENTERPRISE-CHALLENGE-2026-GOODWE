@@ -2,11 +2,7 @@ from datetime import datetime, timedelta
 import random
 
 from database.database import SessionLocal
-from database.models import (
-    Usuario,
-    Carregador,
-    Sessao
-)
+from database.models import Usuario, Carregador, Sessao
 
 
 QUANTIDADE_SESSOES = 140
@@ -24,6 +20,7 @@ def gerar_historico():
 
         carregadores = (
             db.query(Carregador)
+            .order_by(Carregador.id)
             .all()
         )
 
@@ -32,45 +29,93 @@ def gerar_historico():
             print(
                 "[SEED] Nenhum carregador encontrado."
             )
+
             return
 
-        usuarios = (
-            db.query(Usuario)
-            .all()
-        )
 
+        # Mantém SOMENTE os carregadores
+        # que já existem no banco.
         print(
             f"[SEED] Carregadores encontrados: "
             f"{len(carregadores)}"
         )
+
+        for carregador in carregadores:
+
+            print(
+                f" - {carregador.id}: "
+                f"{carregador.nome}"
+            )
+
+
+        usuarios = (
+            db.query(Usuario)
+            .order_by(Usuario.id)
+            .all()
+        )
+
+
+        if not usuarios:
+
+            print(
+                "[SEED] Nenhum usuário encontrado."
+            )
+
+            return
+
 
         print(
             f"[SEED] Usuários encontrados: "
             f"{len(usuarios)}"
         )
 
+
         agora = datetime.now()
 
         criadas = 0
         ignoradas = 0
 
+
         for indice in range(
             QUANTIDADE_SESSOES
         ):
 
-            carregador = (
-                randomizador.choice(
-                    carregadores
-                )
+            usuario = (
+                usuarios[
+                    indice %
+                    len(usuarios)
+                ]
             )
 
-            usuario = (
-                randomizador.choice(
-                    usuarios
-                )
-                if usuarios
-                else None
+            carregador = (
+                carregadores[
+                    indice %
+                    len(carregadores)
+                ]
             )
+
+
+            chave_operacao = (
+                f"DEMO-RECARGA-{indice + 1:04d}"
+            )
+
+
+            existente = (
+                db.query(Sessao)
+                .filter(
+                    Sessao.chave_operacao ==
+                    chave_operacao
+                )
+                .first()
+            )
+
+
+            if existente:
+
+                ignoradas += 1
+
+                continue
+
 
             dias_atras = (
                 randomizador.randint(
@@ -78,6 +123,7 @@ def gerar_historico():
                     DIAS_HISTORICO
                 )
             )
+
 
             hora = randomizador.choices(
                 population=[
@@ -97,6 +143,7 @@ def gerar_historico():
                     20,
                     21
                 ],
+
                 weights=[
                     2,
                     4,
@@ -114,8 +161,10 @@ def gerar_historico():
                     3,
                     2
                 ],
+
                 k=1
             )[0]
+
 
             minuto = (
                 randomizador.randint(
@@ -123,6 +172,7 @@ def gerar_historico():
                     59
                 )
             )
+
 
             inicio = (
                 agora -
@@ -136,30 +186,26 @@ def gerar_historico():
                 microsecond=0
             )
 
+
             duracao_minutos = (
                 randomizador.randint(
-                    25,
+                    30,
                     180
                 )
             )
 
-            fim = (
-                inicio +
-                timedelta(
-                    minutes=duracao_minutos
-                )
-            )
 
             consumo_kwh = round(
                 randomizador.uniform(
-                    3.5,
+                    4.0,
                     18.0
                 ),
                 2
             )
 
-            # Algumas sessões propositalmente
-            # fora do padrão para a IA/anomalias.
+
+            # Algumas sessões diferentes
+            # para a IA detectar anomalias.
             if indice in (
                 17,
                 53,
@@ -169,7 +215,7 @@ def gerar_historico():
 
                 consumo_kwh = round(
                     randomizador.uniform(
-                        25.0,
+                        26.0,
                         38.0
                     ),
                     2
@@ -177,17 +223,19 @@ def gerar_historico():
 
                 duracao_minutos = (
                     randomizador.randint(
-                        180,
+                        190,
                         300
                     )
                 )
 
-                fim = (
-                    inicio +
-                    timedelta(
-                        minutes=duracao_minutos
-                    )
+
+            fim = (
+                inicio +
+                timedelta(
+                    minutes=duracao_minutos
                 )
+            )
+
 
             valor_total = round(
                 consumo_kwh *
@@ -195,97 +243,139 @@ def gerar_historico():
                 2
             )
 
-            existente = (
-                db.query(Sessao)
-                .filter(
-                    Sessao.carregador_id ==
-                    carregador.id,
-                    Sessao.inicio ==
-                    inicio
-                )
-                .first()
-            )
-
-            if existente:
-
-                ignoradas += 1
-                continue
 
             sessao = Sessao(
-                usuario_id=(
-                    usuario.id
-                    if usuario
-                    else None
-                ),
 
-                carregador_id=(
-                    carregador.id
-                ),
+                usuario_id=
+                    usuario.id,
 
-                inicio=inicio,
-                fim=fim,
+                carregador_id=
+                    carregador.id,
 
-                consumo_kwh=(
-                    consumo_kwh
-                ),
+                inicio=
+                    inicio,
 
-                duracao=(
+                fim=
+                    fim,
+
+                consumo_kwh=
+                    consumo_kwh,
+
+                duracao=
                     float(
                         duracao_minutos
-                    )
-                ),
+                    ),
 
-                tarifa=(
-                    TARIFA_KWH
-                ),
+                tarifa=
+                    TARIFA_KWH,
 
-                valor_total=(
-                    valor_total
-                ),
+                valor_total=
+                    valor_total,
 
-                status="CONCLUIDA"
+                status=
+                    "CONCLUIDA",
+
+                confirmado=
+                    True,
+
+                ultima_medicao=
+                    fim,
+
+                origem=
+                    "DEMO",
+
+                chave_operacao=
+                    chave_operacao
+
             )
 
-            db.add(sessao)
+
+            db.add(
+                sessao
+            )
 
             criadas += 1
 
+
         db.commit()
+
 
         print()
         print(
-            "[SEED] Histórico concluído."
+            "================================"
         )
 
         print(
-            f"[SEED] Sessões criadas: "
+            " HISTÓRICO CRIADO COM SUCESSO"
+        )
+
+        print(
+            "================================"
+        )
+
+        print(
+            f"Sessões criadas: "
             f"{criadas}"
         )
 
         print(
-            f"[SEED] Sessões já existentes: "
+            f"Sessões já existentes: "
             f"{ignoradas}"
         )
+
+        print(
+            f"Usuários utilizados: "
+            f"{len(usuarios)}"
+        )
+
+        print(
+            f"Carregadores utilizados: "
+            f"{len(carregadores)}"
+        )
+
 
         total = (
             db.query(Sessao)
             .count()
         )
 
+
+        confirmadas = (
+            db.query(Sessao)
+            .filter(
+                Sessao.status ==
+                "CONCLUIDA",
+
+                Sessao.confirmado.is_(
+                    True
+                )
+            )
+            .count()
+        )
+
+
         print(
-            f"[SEED] Total no banco: "
+            f"Total de sessões: "
             f"{total}"
         )
+
+        print(
+            f"Sessões válidas para IA: "
+            f"{confirmadas}"
+        )
+
 
     except Exception as erro:
 
         db.rollback()
 
         print(
-            f"[SEED] Erro: {erro}"
+            f"[SEED] Erro: "
+            f"{erro}"
         )
 
         raise
+
 
     finally:
 
@@ -293,4 +383,5 @@ def gerar_historico():
 
 
 if __name__ == "__main__":
+
     gerar_historico()
